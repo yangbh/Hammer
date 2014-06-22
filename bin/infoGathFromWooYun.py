@@ -6,29 +6,27 @@ Author: Yangbh
 Func: Gather company information from wooyun.org, including company name and host
 '''
 import urllib2
-import sqlite3
 import re
+import socket
 
-WooYunDB = '../cache/wooyun.sqlite3'
+import sys
+sys.path.insert(0, '../lib')
 
-# --------------------------------------------------
-# 
-# --------------------------------------------------
-def runsql(sql):
-    '''execute a sql'''
-    conn = sqlite3.connect(WooYunDB)
-    conn.execute(sql)
-    conn.commit()
-    conn.close()
-# --------------------------------------------------
-# 
-# -------------------------------------------------
-def geturl(url):
-	pass
+try:
+		import mysql_class
+except ImportError:
+		print '[!] mysql_class not found.'
+		print sys.path
+		sys.exit(0)
+
 # --------------------------------------------------
 # 
 # --------------------------------------------------
 def main():
+
+	sql = mysql_class.MySQLHelper('192.168.1.2','mac_usr','mac_pwd')
+	sql.selectDb('hammer')
+
 	comps=[]
 	for x in xrange(1,50):
 		url = 'http://wooyun.org/corps/page/'+str(x)
@@ -39,12 +37,43 @@ def main():
 			for eachcomp in comps:
 				#print eachcomp[0],eachcomp[1].decode('utf-8'),eachcomp[2]
 				print eachcomp[0],eachcomp[1],eachcomp[2]
+				sqlcmd="INSERT INTO company(Name,Remark) VALUES('"+eachcomp[1]+"','"+eachcomp[0]+"')"
+				print sqlcmd
+				sql.cur.execute(sqlcmd)
+				
+				# IP表
+				sqlcmd="SELECT * FROM company WHERE Name='%s' LIMIT 1" % eachcomp[1]
+				print sqlcmd
+				sql.cur.execute(sqlcmd)
+				comp_id=sql.cur.fetchone()[0]
+				host=re.search('http[s]?://([^/]+)',eachcomp[2])
+				host=host.group(1)
+				print host
+				ip_addr=socket.gethostbyname(host)
+				sqlcmd="INSERT INTO IP(Addr,Comp_ID) VALUES('%s',%d)" %(ip_addr,comp_id)
+				print sqlcmd
+				sql.cur.execute(sqlcmd)
+
+				# host表
+				sqlcmd="SELECT * FROM ip WHERE Addr='%s' LIMIT 1" % ip_addr
+				print sqlcmd
+				sql.cur.execute(sqlcmd)
+				ip_id=sql.cur.fetchone()[0]
+				sqlcmd="INSERT INTO host(Value,IP_ID,Comp_ID) VALUES('%s',%d,%d)" %(host,ip_id,comp_id)
+				print sqlcmd
+				sql.cur.execute(sqlcmd)
+
 			if len(comps) != 20:
 				break
 
 		except urllib2.URLError, e:  
-		    print e.reason 	
+		    print e
+		except socket.gaierror, e:
+			print e
 	
+	sql.commit()
+	sql.close()
+
 # --------------------------------------------------
 # 
 # --------------------------------------------------
