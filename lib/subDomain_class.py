@@ -277,25 +277,38 @@ if __name__ == '__main__':
 		print sb.found
 
 		for each_found in sb.found:
-			# IP表
-			sqlcmd="SELECT * FROM company WHERE Name='搜狐' LIMIT 1"
-			print sqlcmd
-			sql.cur.execute(sqlcmd)
-			comp_id=sql.cur.fetchone()[0]
-			
-			ip_addr=each_found[0]
-			sqlcmd="INSERT INTO IP(Addr,Comp_ID) VALUES('%s',%d)" %(ip_addr,comp_id)
-			print sqlcmd
-			sql.cur.execute(sqlcmd)
+			try:
+				# IP表
+				sqlcmd="SELECT * FROM company WHERE Name='搜狐' LIMIT 1"
+				print sqlcmd
+				sql.cur.execute(sqlcmd)
+				comp_id=sql.cur.fetchone()[0]
+				
+				ip_addr=each_found[0]
+				sqlcmd="INSERT INTO IP(Addr,Comp_ID) VALUES('%s',%d)" %(ip_addr,comp_id)
+				print sqlcmd
+				sql.cur.execute(sqlcmd)
 
-			# host表
-			host=each_found[1]
-			sqlcmd="SELECT * FROM ip WHERE Addr='%s' AND Comp_ID=%d LIMIT 1" % (ip_addr,comp_id)
-			print sqlcmd
-			sql.cur.execute(sqlcmd)
-			ip_id=sql.cur.fetchone()[0]
-			sqlcmd="INSERT INTO host(Value,IP_ID,Comp_ID) VALUES('%s',%d,%d)" %(host,ip_id,comp_id)
-			print sqlcmd
-			sql.cur.execute(sqlcmd)
-	except MySQLdb.IntegrityError,e:
-		print '_mysql_exceptions.IntegrityError',e
+				# host表
+				host=each_found[1]
+				sqlcmd="SELECT * FROM ip WHERE Addr='%s' AND Comp_ID=%d LIMIT 1" % (ip_addr,comp_id)
+				print sqlcmd
+				sql.cur.execute(sqlcmd)
+				ip_id=sql.cur.fetchone()[0]
+				sqlcmd="INSERT INTO host(Value,IP_ID,Comp_ID) VALUES('%s',%d,%d)" %(host,ip_id,comp_id)
+				print sqlcmd
+				sql.cur.execute(sqlcmd)
+				sql.conn.commit()
+
+			except MySQLdb.IntegrityError,e:
+				print e
+			except MySQLdb.OperationalError,e:
+				sql = mysql_class.MySQLHelper('192.168.1.2','mac_usr','mac_pwd')
+				sql.selectDb('hammer')
+				print e
+
+		sql.conn.commit()
+		sql.cur.close()
+		sql.conn.close()
+	except TypeError,e:
+		print e
