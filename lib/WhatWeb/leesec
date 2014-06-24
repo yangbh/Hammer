@@ -1,0 +1,167 @@
+http://www.leesec.com [200] Adobe-Flash, Country[JAPAN][JP], Email[geoff@deconcept.com], HTML5, HTTPServer[nginx], IP[106.187.37.47], JQuery[1.11.0], MetaGenerator[WordPress 3.9.1], PHP[5.3.28], Script[text/javascript], Title[Leesec&#039;s Blog | 专注网络安全、编程], UncommonHeaders[x-pingback], WordPress[3.9.1], X-Powered-By[PHP/5.3.28], nginx, x-pingback[http://www.leesec.com/xmlrpc.php]
+<log>
+<target>
+	<uri>http://www.leesec.com</uri>
+	<http-status>200</http-status>
+	<plugin>
+		<name>x-pingback</name>
+		<string>http://www.leesec.com/xmlrpc.php</string>
+	</plugin>
+	<plugin>
+		<name>WordPress</name>
+		<version>3.9.1</version>
+	</plugin>
+	<plugin>
+		<name>HTML5</name>
+	</plugin>
+	<plugin>
+		<name>JQuery</name>
+		<version>1.11.0</version>
+	</plugin>
+	<plugin>
+		<name>HTTPServer</name>
+		<string>nginx</string>
+	</plugin>
+	<plugin>
+		<name>PHP</name>
+		<version>5.3.28</version>
+	</plugin>
+	<plugin>
+		<name>X-Powered-By</name>
+		<string>PHP/5.3.28</string>
+	</plugin>
+	<plugin>
+		<name>UncommonHeaders</name>
+		<string>x-pingback</string>
+	</plugin>
+	<plugin>
+		<name>MetaGenerator</name>
+		<string>WordPress 3.9.1</string>
+	</plugin>
+	<plugin>
+		<name>Script</name>
+		<string>text/javascript</string>
+	</plugin>
+	<plugin>
+		<name>Country</name>
+		<string>JAPAN</string>
+		<module>JP</module>
+	</plugin>
+	<plugin>
+		<name>Email</name>
+		<string>geoff@deconcept.com</string>
+	</plugin>
+	<plugin>
+		<name>nginx</name>
+	</plugin>
+	<plugin>
+		<name>IP</name>
+		<string>106.187.37.47</string>
+	</plugin>
+	<plugin>
+		<name>Title</name>
+		<string>Leesec&amp;#039;s Blog | %E4%B8%93%E6%B3%A8%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E3%80%81%E7%BC%96%E7%A8%8B</string>
+	</plugin>
+	<plugin>
+		<name>Adobe-Flash</name>
+	</plugin>
+</target>
+</log>
+URL    : http://www.leesec.com
+Status : 200
+   Adobe-Flash ----------------------------------------------------------------
+	Description: This plugin identifies instances of embedded adobe flash 
+	             files. 
+
+   Country --------------------------------------------------------------------
+	Description: Shows the country the IPv4 address belongs to. This uses 
+	             the GeoIP IP2Country database from 
+	             http://software77.net/geo-ip/. Instructions on updating the 
+	             database are in the plugin comments. 
+	String     : JAPAN
+	Module     : JP
+
+   Email ----------------------------------------------------------------------
+	Description: Extract email addresses. Find valid email address and 
+	             syntactically invalid email addresses from mailto: link 
+	             tags. We match syntactically invalid links containing 
+	             mailto: to catch anti-spam email addresses, eg. bob at 
+	             gmail.com. This uses the simplified email regular 
+	             expression from 
+	             http://www.regular-expressions.info/email.html for valid 
+	             email add 
+	String     : geoff@deconcept.com
+
+   HTML5 ----------------------------------------------------------------------
+	Description: HTML version 5, detected by the doctype declaration 
+
+   HTTPServer -----------------------------------------------------------------
+	Description: HTTP server header string. This plugin also attempts to 
+	             identify the operating system from the server header. 
+	String     : nginx (from server string)
+
+   IP -------------------------------------------------------------------------
+	Description: IP address of the target, if available. 
+	String     : 106.187.37.47
+
+   JQuery ---------------------------------------------------------------------
+	Description: A fast, concise, JavaScript that simplifies how to traverse 
+	             HTML documents, handle events, perform animations, and add 
+	             AJAX. - Homepage: http://jquery.com/ 
+	Version    : 1.11.0
+
+   MetaGenerator --------------------------------------------------------------
+	Description: This plugin identifies meta generator tags and extracts its 
+	             value. 
+	String     : WordPress 3.9.1
+
+   PHP ------------------------------------------------------------------------
+	Description: PHP is a widely-used general-purpose scripting language 
+	             that is especially suited for Web development and can be 
+	             embedded into HTML. This plugin identifies PHP errors, 
+	             modules and versions and extracts the local file path and 
+	             username if present. - Homepage: http://www.php.net/ 
+	Version    : 5.3.28
+
+   Script ---------------------------------------------------------------------
+	Description: This plugin detects instances of script HTML elements and 
+	             returns the script language/type. 
+	String     : text/javascript
+
+   Title ----------------------------------------------------------------------
+	Description: The HTML page title 
+	String     : Leesec&#039;s Blog | 专注网络安全、编程 (from page title)
+
+   UncommonHeaders ------------------------------------------------------------
+	Description: Uncommon HTTP server headers. The blacklist includes all 
+	             the standard headers and many non standard but common ones. 
+	             Interesting but fairly common headers should have their own 
+	             plugins, eg. x-powered-by, server and x-aspnet-version. 
+	             Info about headers can be found at www.http-stats.com 
+	String     : x-pingback (from headers)
+
+   WordPress ------------------------------------------------------------------
+	Description: WordPress is an opensource blogging system commonly used as 
+	             a CMS. Homepage: http://www.wordpress.org/ 
+	Version    : 3.9.1
+
+   X-Powered-By ---------------------------------------------------------------
+	Description: X-Powered-By HTTP header 
+	String     : PHP/5.3.28 (from x-powered-by string)
+
+   nginx ----------------------------------------------------------------------
+	Description: Nginx (Engine-X) is a free, open-source, high-performance 
+	             HTTP server and reverse proxy, as well as an IMAP/POP3 
+	             proxy server. - Homepage: http://nginx.net/ 
+
+   x-pingback -----------------------------------------------------------------
+	Description: A pingback is one of three types of linkbacks, methods for 
+	             Web authors to request notification when somebody links to 
+	             one of their documents. This enables authors to keep track 
+	             of who is linking to, or referring to their articles. Some 
+	             weblog software, such as Movable Type, Serendipity, 
+	             WordPress and Telligent Community, support automatic 
+	             pingbacks 
+	String     : http://www.leesec.com/xmlrpc.php
+
+{"target":"http://www.leesec.com","http_status":200,"plugins":{"x-pingback":{"string":["http://www.leesec.com/xmlrpc.php"]},"WordPress":{"version":["3.9.1"]},"HTML5":{},"JQuery":{"version":["1.11.0"]},"HTTPServer":{"string":["nginx"]},"PHP":{"version":["5.3.28"]},"X-Powered-By":{"string":["PHP/5.3.28"]},"UncommonHeaders":{"string":["x-pingback"]},"MetaGenerator":{"string":["WordPress 3.9.1"]},"Script":{"string":["text/javascript"]},"Country":{"string":["JAPAN"],"module":["JP"]},"Email":{"string":["geoff@deconcept.com"]},"nginx":{},"IP":{"string":["106.187.37.47"]},"Title":{"string":["Leesec&#039;s Blog | 专注网络安全、编程"]},"Adobe-Flash":{}}}
