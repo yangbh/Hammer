@@ -22,6 +22,7 @@ except ImportError:
 		sys.exit(0)
 
 result = []
+mutex = threading.Lock()
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
@@ -52,7 +53,7 @@ def getInterfaces():
 # 
 # ----------------------------------------------------------------------------------------------------
 def getTime(interface,basicurl='http://www.baidu.com'):
-	global result
+	global result, mutex
 
 	proxyurl = interface[2].lower() + '://' + interface[0] + ':' +interface[1]
 
@@ -61,7 +62,7 @@ def getTime(interface,basicurl='http://www.baidu.com'):
 	
 	start = time.time()
 	try:
-		opener.open(basicurl,timeout=300)
+		opener.open(basicurl,timeout=60)
 	except urllib2.URLError,e:
 		print 'urllib2.URLError',e
 		start = 0
@@ -80,9 +81,10 @@ def getTime(interface,basicurl='http://www.baidu.com'):
 	tmp = tuple(tmp)
 	#print tmp
 
-	result.append(tmp)
-
-	print proxyurl,'\t\ttimesec=',timesec
+	if mutex.acquire(1):
+		print proxyurl,'\t\ttimesec=',timesec
+		result.append(tmp)
+		mutex.release()
 
 	return timesec
 # ----------------------------------------------------------------------------------------------------
@@ -104,7 +106,7 @@ def main():
 			thread.start_new_thread(getTime,(interfaces[i+j],basicurl))
 			j +=1
 			i +=1
-		time.sleep(5)
+		time.sleep(1)
 
 	# step 3: insert into mysql db
 	#sql = mysql_class.MySQLHelper('192.168.1.2','mac_usr','mac_pwd')
