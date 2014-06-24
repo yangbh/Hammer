@@ -1,0 +1,69 @@
+{"target":"http://www.leesec.com","http_status":200,"plugins":{"x-pingback":{"string":["http://www.leesec.com/xmlrpc.php"]},"WordPress":{"version":["3.9.1"]},"HTML5":{},"JQuery":{"version":["1.11.0"]},"HTTPServer":{"string":["nginx"]},"PHP":{"version":["5.3.28"]},"X-Powered-By":{"string":["PHP/5.3.28"]},"UncommonHeaders":{"string":["x-pingback"]},"MetaGenerator":{"string":["WordPress 3.9.1"]},"Script":{"string":["text/javascript"]},"Country":{"string":["JAPAN"],"module":["JP"]},"Email":{"string":["geoff@deconcept.com"]},"nginx":{},"IP":{"string":["106.187.37.47"]},"Title":{"string":["Leesec&#039;s Blog | 专注网络安全、编程"]},"Adobe-Flash":{}}}
+<log>
+<target>
+	<uri>http://www.leesec.com</uri>
+	<http-status>200</http-status>
+	<plugin>
+		<name>x-pingback</name>
+		<string>http://www.leesec.com/xmlrpc.php</string>
+	</plugin>
+	<plugin>
+		<name>WordPress</name>
+		<version>3.9.1</version>
+	</plugin>
+	<plugin>
+		<name>HTML5</name>
+	</plugin>
+	<plugin>
+		<name>JQuery</name>
+		<version>1.11.0</version>
+	</plugin>
+	<plugin>
+		<name>HTTPServer</name>
+		<string>nginx</string>
+	</plugin>
+	<plugin>
+		<name>PHP</name>
+		<version>5.3.28</version>
+	</plugin>
+	<plugin>
+		<name>X-Powered-By</name>
+		<string>PHP/5.3.28</string>
+	</plugin>
+	<plugin>
+		<name>UncommonHeaders</name>
+		<string>x-pingback</string>
+	</plugin>
+	<plugin>
+		<name>MetaGenerator</name>
+		<string>WordPress 3.9.1</string>
+	</plugin>
+	<plugin>
+		<name>Script</name>
+		<string>text/javascript</string>
+	</plugin>
+	<plugin>
+		<name>Country</name>
+		<string>JAPAN</string>
+		<module>JP</module>
+	</plugin>
+	<plugin>
+		<name>Email</name>
+		<string>geoff@deconcept.com</string>
+	</plugin>
+	<plugin>
+		<name>nginx</name>
+	</plugin>
+	<plugin>
+		<name>IP</name>
+		<string>106.187.37.47</string>
+	</plugin>
+	<plugin>
+		<name>Title</name>
+		<string>Leesec&amp;#039;s Blog | %E4%B8%93%E6%B3%A8%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8%E3%80%81%E7%BC%96%E7%A8%8B</string>
+	</plugin>
+	<plugin>
+		<name>Adobe-Flash</name>
+	</plugin>
+</target>
+</log>
