@@ -100,7 +100,7 @@ def getTime(interface,basicurl='http://www.baidu.com'):
 	
 	timetotal = 0
 	printresult = proxyurl + '\r\n'
-	for x in xrange(0,repeattimes):
+	for x in xrange(1,repeattimes+1):
 		printresult += '\t'+str(x)+':\t'
 		timesec = 600
 		start = time.time()
@@ -118,6 +118,7 @@ def getTime(interface,basicurl='http://www.baidu.com'):
 		except socket.error, e:
 			printresult += 'socket.error' + str(e)
 
+		printresult +='\r\n'
 		timetotal += int(timesec)
 
 	timeavrage = int(timetotal/repeattimes)
