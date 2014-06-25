@@ -22,7 +22,8 @@ except ImportError:
 	print '[!] mysql_class not found.'
 	sys.exit(0)
 
-maxinterfaces = 100
+maxinterfaces = 1000
+maxthreads = 20
 maxarticles = 1
 maxpages = 10
 repeattimes = 2
@@ -128,13 +129,14 @@ def getTime(interface,basicurl='http://www.baidu.com'):
 	tmp.append(timesec)
 	tmp = tuple(tmp)
 
-	if mutex.acquire(5):
+	while mutex.acquire(1):
 		#print tmp
 		if printresult:
 			print printresult
-		if timeavrage<60:
-			result.append(tmp)
+		#if timeavrage<60:
+		result.append(tmp)
 		mutex.release()
+		break
 
 	return timesec
 # ----------------------------------------------------------------------------------------------------
@@ -142,23 +144,27 @@ def getTime(interface,basicurl='http://www.baidu.com'):
 # ----------------------------------------------------------------------------------------------------
 def main():
 	''' '''
-	maxthread = 10
 	basicurl = 'http://www.baidu.com'
 	# step 1: get interfaces
 	interfaces = getInterfaces()
-	#print interfaces
+	print 'len(interfaces)=', len(interfaces)
 
 	# step 2: get each interface timesec
 	i = 0
 	length = len(interfaces) if len(interfaces)<maxinterfaces else maxinterfaces
-	while i<length:
+	while i<length-maxthreads:
 		j = 0
-		while j<maxthread:
+		while j<maxthreads:
 			thread.start_new_thread(getTime,(interfaces[i+j],basicurl))
 			j +=1
-			i +=1
-		i+=1
+		i+=maxthreads
 		time.sleep(1)
+
+	print 'i=',i
+
+	while len(result)<i:
+		time.sleep(1)
+		print 'len(result)=', len(result)
 
 	tmp = sorted(result, key=lambda result : result[-1])
 	sort_result = []
@@ -169,16 +175,16 @@ def main():
 		tt += list(each_tmp[2::])
 		#print tt
 		sort_result.append(tuple(tt))
-	#print sort_result
+	print 'len(sort_result)=', len(sort_result)
 
 	# step 3: insert into mysql db
 	try:
-		sql = mysql_class.MySQLHelper('localhost','ham_usr','ham_pwd')
+		sql = mysql_class.MySQLHelper('192.168.1.2','mac_usr','mac_pwd')
 		sql.selectDb('hammer')
 		sql.cur.execute('DELETE FROM Proxy')
 		sql.cur.execute('ALTER TABLE  Proxy AUTO_INCREMENT = 1')
-		#sqlcmd = "INSERT INTO Proxy(IP_Addr,Port,Http_Type,Address,Time) VALUES(%s,%s,%s,%s,%s)"
-		#sql.cur.executemany(sqlcmd,sort_result)
+		sqlcmd = "INSERT INTO Proxy(IP_Addr,Port,Http_Type,Address,Time) VALUES(%s,%s,%s,%s,%s)"
+		sql.cur.executemany(sqlcmd,sort_result)
 		sql.commit()
 		sql.close()
 	except MySQLdb.Error,e:
