@@ -99,8 +99,8 @@ def getTime(interface,basicurl='http://www.baidu.com'):
 	opener = urllib2.build_opener(proxy_handler)
 	
 	timetotal = 0
-	printresult = proxyurl
-	for x in xrange(1,repeattimes):
+	printresult = proxyurl + '\r\n'
+	for x in xrange(0,repeattimes):
 		printresult += '\t'+str(x)+':\t'
 		timesec = 600
 		start = time.time()
@@ -118,10 +118,10 @@ def getTime(interface,basicurl='http://www.baidu.com'):
 		except socket.error, e:
 			printresult += 'socket.error' + str(e)
 
-		timetotal + = int(timesec)
+		timetotal += int(timesec)
 
 	timeavrage = int(timetotal/repeattimes)
-	printresult += '\ttimeavrage=\t'+str(timeavrage)
+	printresult += '\ttimeavrage=\t' + str(timeavrage) + '\r\n'
 
 	tmp = list(interface)
 	tmp.append(timesec)
@@ -131,8 +131,8 @@ def getTime(interface,basicurl='http://www.baidu.com'):
 		#print tmp
 		if printresult:
 			print printresult
-		print proxyurl,'\t\ttimesec=',timesec
-		result.append(tmp)
+		if timeavrage<60:
+			result.append(tmp)
 		mutex.release()
 
 	return timesec
