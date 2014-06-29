@@ -34,6 +34,7 @@ mutex = thread.allocate_lock()
 # 
 # ----------------------------------------------------------------------------------------------------
 def getInterfaces():
+	''' '''
 	readnum = 10
 	interfaces = []
 
@@ -92,6 +93,7 @@ def getInterfaces():
 # 
 # ----------------------------------------------------------------------------------------------------
 def getTime(interface,basicurl='http://www.baidu.com'):
+	''' '''
 	global result, mutex
 
 	proxyurl = interface[2].lower() + '://' + interface[0] + ':' +interface[1]
