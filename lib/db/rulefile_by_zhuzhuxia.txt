@@ -1,0 +1,33 @@
+#%username% = 用户名
+#%domain% = 公司域名
+
+%username%%domain%
+%username%1
+%username%12
+%username%123
+%username%1234
+%username%12345
+%username%123456
+%username%@123
+%username%@123.com
+%username%@163
+%username%@163.com
+%username%163
+%username%8
+%username%88
+%username%888
+%username%999
+%username%666
+%username%2008
+%username%2009
+%username%2010
+%username%2011
+%username%2012
+%username%2013
+%username%@2008
+%username%@2009
+%username%@2010
+%username%@2011
+%username%@2012
+%username%@2013
+%username%!@#
