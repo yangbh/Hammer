@@ -5,6 +5,7 @@
 '''
 import os
 import hashlib
+import json
 
 class WhatWeb(object):
 	"""WhatWeb class"""
@@ -16,7 +17,7 @@ class WhatWeb(object):
 		else:
 			self.outfile = '../cache/whatweb/' + hashlib.md5(url).hexdigest() + '.json'
 
-	def  scan(self):
+	def scan(self):
 		'''start whatweb scan'''
 		url = self.url
 		outfile = self.outfile
@@ -25,3 +26,24 @@ class WhatWeb(object):
 		if os.path.isfile(outfile):
 			os.remove(outfile)
 		os.system(shellcmd)
+
+	def getResult(self,format='json'):
+		''' '''
+		try:
+			fp = open(self.outfile,'r')
+			
+			if format == 'str':
+				cont = fp.read()
+				linesep_len = len(os.linesep)
+				cont = cont[:-lensep_len]
+				ret = cont
+			elif format == 'dict':
+				ret = json.load(fp)
+			else:
+				ret = FALSE
+
+			fp.close()
+		except TypeError,e:
+			print 'TypeError',e
+
+		return ret
