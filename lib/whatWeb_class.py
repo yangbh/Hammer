@@ -6,6 +6,7 @@
 import os
 import hashlib
 import json
+CURRENT_PATH=os.path.dirname(__file__)
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
@@ -17,19 +18,19 @@ class WhatWeb(object):
 		if outfile:
 			self.outfile = outfile
 		else:
-			self.outfile = '../cache/whatweb/' + hashlib.md5(url).hexdigest() + '.json'
+			self.outfile = CURRENT_PATH + '/' + '../cache/whatweb/' + hashlib.md5(url).hexdigest() + '.json'
 
 	def scan(self):
 		'''start whatweb scan'''
 		url = self.url
 		outfile = self.outfile
-		shellcmd='./WhatWeb/whatweb -q --log-json=' +outfile +' '+url
+		shellcmd = CURRENT_PATH + '/' + './WhatWeb/whatweb -q --log-json=' +outfile +' '+url
 		print 'shellcmd=',shellcmd
 		if os.path.isfile(outfile):
 			os.remove(outfile)
 		os.system(shellcmd)
 
-	def getResult(self,format='json'):
+	def getResult(self,format='dict'):
 		''' '''
 		try:
 			fp = open(self.outfile,'r')
@@ -53,4 +54,6 @@ class WhatWeb(object):
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-	pass
+	leesec = WhatWeb('www.leesec.com')
+	leesec.scan()
+	print leesec.getResult()
