@@ -12,6 +12,8 @@
 # 				{'ip':'111.111.111.111',
 # 				'port','21'}}
 
+import urllib2
+
 class Robots():
 	"""docstring for robots"""
 	info = [
@@ -20,22 +22,20 @@ class Robots():
 		['TIME','20140701'],
 		['WEB','']
 		]
-	def run():
-		if 'http' in service.keys:
-			try:
-				url = service['http']['type'] + '://' + service['http']['host'] +':' +service['http']['port'] +'/robots.txt'
-				ret = urllib2.urlopen(urlopen).read()
-
-				sensitive_info = url + ret
-				security_info = {'level':'low','content',sensitive_info}
-				audit_result.append(security_info)
-				
-			except HTTPError,e:
-				pass
-
+		
+	def run(self,services):
+			if services.has_key('url'):
+				try:
+					url = services['url'] + 'robots.txt'
+					print url
+					ret = urllib2.urlopen(url).read()
+					security_info = {'type':'sensitive info','level':'low','content':url+ret}
+				#except urllib2.HTTPError,e:
+				except TypeError, e:
+					pass
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	from dummy import *
-	Robots.run()
+	rb = Robots()
+	rb.run(services)

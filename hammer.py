@@ -2,30 +2,29 @@
 #coding:utf-8
 import sys
 import getopt
+sys.path.append(sys.path[0]+'/lib')
+#print sys.path
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
 def usage():
 	print "Usage: hammer.py [options] -h host\n"
 	print "       -h: host"
-	print "       -p: port, default 80"
 	print "\nExamples:"
 	print "         ./hammer.py -h www.sohu.com\n"
 
 def main():
+	# step1: get arguments
 	try :
-		opts, args = getopt.getopt(sys.argv[1:], "h:p:")
+		opts, args = getopt.getopt(sys.argv[1:], "h:")
 	except getopt.GetoptError:
 		usage()
 
 	_host = None
-	_port = 80
 
 	for opt, arg in opts:
 		if opt == '-h':
 			_host = arg
-		elif opt == '-p':
-			_port = arg
 		else:
 			pass
 	#bScanAllDomains = False
@@ -34,13 +33,22 @@ def main():
 		usage()
 		sys.exit()
 
-	services = {'http':{'host':_host,
-					'port':_port,
-					'cms':{'name':'WordPress',
-						'version':'3.9.3'}}}
-	print services
-	
+	# step2: get global services
+	import lib.dummy
+	from lib.nmap_class import NmapScanner
+	np = NmapScanner(_host)
+		
+	lib.dummy.services = np.scanPorts()
+	print lib.dummy.services
 
+	# step3: load plugins
+	from lib.pluginLoader_class import PluginLoader
+	pl = PluginLoader('plugins')
+	pl.loadPlugins()
+	print pl.plugindict
+
+	# step4: run plugins
+	pl.runPlugins()
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------

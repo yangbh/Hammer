@@ -9,11 +9,11 @@ import nmap
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
-class nmapScanner(object):
+class NmapScanner(object):
 	"""docstring for nmapScanner_class"""
 	commonports = '21,22,23,25,110,53,67,80,443,1521,1526,3306,3389,8080,8580'
 	def __init__(self, hosts,ports=commonports,arguments='-sV'):
-		super(nmapScanner, self).__init__()
+		super(NmapScanner, self).__init__()
 		# arg is a dict
 		# arg = {'hosts':'192.168.1.1/24',
 		#	'ports':'21,22,23,25,110,53,67,80,443,1521,1526,3306,3389,8080,8580',
@@ -37,12 +37,12 @@ class nmapScanner(object):
 		# clear state:closed port
 		ret = {}
 		for host in self.nm.all_hosts():
-			if self.nm[host].state() == 'down':
+			if self.nm[host].state() != 'up':
 				continue
 			else:
 				ret[host] = self.nm[host]
 				for port in ret[host]['tcp'].keys():
-					if ret[host]['tcp'][port]['state'] == 'closed':
+					if ret[host]['tcp'][port]['state'] != 'open':
 						ret[host]['tcp'].pop(port)
 		
 		return ret
@@ -50,6 +50,6 @@ class nmapScanner(object):
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-	np = nmapScanner('172.16.5.24')
+	np = NmapScanner('172.16.5.24')
 	print np.scanPorts()
 
