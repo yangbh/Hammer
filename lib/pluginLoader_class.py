@@ -15,14 +15,15 @@ class PluginLoader(object):
 		if pluginpath[-1] =='/':
 			pluginpath = pluginpath[:-1]
 		self.path = pluginpath
-		print self.path
+		#print self.path
 		if self.path not in sys.path:
 			sys.path.append(sys.path)
 
 		self.plugindict = {}
-		self.retinfo = {}
+		self.retinfo = []
 
 	def loadPlugins(self, path=None):
+		print '>>>loading plugins'
 		if path == None:
 			path = self.path
 		ret = {}
@@ -36,27 +37,27 @@ class PluginLoader(object):
 		#print self.plugindict
 
 	def runEachPlugin(self,pluginfilepath,services):
+		print '>>>running plugin:',pluginfilepath
 		if os.path.basename == '__init__.py':
 			return
-		print pluginfilepath
 		modulepath = pluginfilepath.replace(self.path+'/','')
 		modulepath = modulepath.replace('.py','')
 		modulepath = modulepath.replace('.','')
 		modulepath = modulepath.replace('/','.')
-		print modulepath
+		#print modulepath
 
 		importcmd = 'from ' + modulepath + ' import *'
 		exec(importcmd)
-		print importcmd
-		print os.getcwd()
+		#print importcmd
+		#print os.getcwd()
 		
 		if locals().has_key('Assign'):
-			print 'Plugin function Assign loaded'
+			print '\tPlugin function Assign loaded'
 			Assign()
 		if locals().has_key('Audit'):
-			print 'Plugin function Audit loaded'
-			Audit(services)
-
+			print '\tPlugin function Audit loaded'
+			tmp = Audit(services)
+			self.retinfo.append(tmp)
 		# fp = open(pluginfilepath)
 		# code = fp.read()
 		# fp.close()
@@ -81,7 +82,6 @@ class PluginLoader(object):
 
 # ----------------------------------------------------------------------------------------------------
 #
-
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	pl = PluginLoader()

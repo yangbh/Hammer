@@ -1,54 +1,64 @@
 #!/usr/bin/python2.7
 #coding:utf-8
+
 import sys
 import getopt
-sys.path.append(sys.path[0]+'/lib')
-#print sys.path
+
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
+def show():
+	print'''
+	####################################################
+	##
+	##
+	##
+	##	
+	##	author	:  yangbh
+	##	email  	:  
+	####################################################
+	'''
+
 def usage():
-	print "Usage: hammer.py [options] -h host\n"
-	print "       -h: host"
+	print "Usage: hammer.py [options] -u url\n"
+	print "       -u --url: url address, like http://www.leesec.com/"
+	print "       -h: help"
 	print "\nExamples:"
-	print "         ./hammer.py -h www.sohu.com\n"
+	print "         ./hammer.py -u http://www.leesec.com/\n"
+	sys.exit(0)
 
 def main():
 	# step1: get arguments
+	show()
 	try :
-		opts, args = getopt.getopt(sys.argv[1:], "h:")
+		opts, args = getopt.getopt(sys.argv[1:], "hu:")
 	except getopt.GetoptError:
 		usage()
 
-	_host = None
+	_url = None
 
 	for opt, arg in opts:
 		if opt == '-h':
-			_host = arg
+			usage()
+		elif opt == '-u':
+			_url = arg
 		else:
 			pass
-	#bScanAllDomains = False
-
-	if _host == None:
+	if _url == None:
 		usage()
-		sys.exit()
 
-	# step2: get global services
-	import lib.dummy
-	from lib.nmap_class import NmapScanner
-	np = NmapScanner(_host)
-		
-	lib.dummy.services = np.scanPorts()
-	print lib.dummy.services
+	# step2: init syspath
+	basepath = sys.path[0]
+	sys.path.append(basepath +'/lib')
+	sys.path.append(basepath +'/plugins')
+	sys.path.append(basepath +'/bin')
 
-	# step3: load plugins
-	from lib.pluginLoader_class import PluginLoader
-	pl = PluginLoader('plugins')
-	pl.loadPlugins()
-	print pl.plugindict
-
-	# step4: run plugins
-	pl.runPlugins()
+	# step3: run scans
+	from lib.scanner_class import Scanner
+	
+	sn =Scanner(_url)
+	sn.getServices()
+	print sn.startScan()
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
