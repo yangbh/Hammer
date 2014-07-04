@@ -35,7 +35,6 @@ class Scanner(object):
 		''' '''
 		np = NmapScanner(self.host,self.ports)
 		sc = np.scanPorts()
-		print sc
 		try:
 			self.services['url'] = self.url
 			self.services['host'] = self.host
@@ -45,21 +44,24 @@ class Scanner(object):
 				self.services['ports'] .update(sc[sc.keys()[0]]['tcp'])
 			if sc[sc.keys()[0]].has_key('udp'):
 				self.services['ports'] .update(sc[sc.keys()[0]]['udp'])
-			
+		
+			#print self.services
 		except KeyError,e:
 			pass
 
-	def runPlugins(self):
+	def runPlugins(self,services=None):
 		''' '''
-		pluginpath=os.path.dirname(__file__)+'/../plugins'
-		pl = PluginLoader(pluginpath)
+		if services == None:
+			services = self.services
+		pl = PluginLoader()
 		pl.loadPlugins()
-		pl.runPlugins(self.services)
+		pl.runPlugins(services)
 		
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
+	sys.path.append('/root/workspace/Hammer/plugins')
 	sn =Scanner('http://www.leesec.com')
 	sn.getServices()
 	sn.runPlugins()
