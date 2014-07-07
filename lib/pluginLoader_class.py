@@ -8,7 +8,7 @@ import re
 # ----------------------------------------------------------------------------------------------------
 class PluginLoader(object):
 	"""docstring for PluginLoader"""
-	def __init__(self, pluginpath=None):
+	def __init__(self, pluginpath=None, services = None):
 		super(PluginLoader, self).__init__()
 		if pluginpath == None:
 			pluginpath = os.path.dirname(__file__)[:-3] +'plugins'
@@ -18,6 +18,7 @@ class PluginLoader(object):
 		#print self.path
 		if self.path not in sys.path:
 			sys.path.append(sys.path)
+		self.services = services
 
 		self.plugindict = {}
 		self.retinfo = []
@@ -36,7 +37,10 @@ class PluginLoader(object):
 		self.plugindict = ret
 		print self.plugindict
 
-	def runEachPlugin(self,pluginfilepath,services):
+	def runEachPlugin(self, pluginfilepath, services=None):
+		if services == None:
+			services = self.services
+
 		print '>>>running plugin:',pluginfilepath
 		if os.path.basename == '__init__.py':
 			return
@@ -46,19 +50,20 @@ class PluginLoader(object):
 		modulepath = modulepath.replace('/','.')
 		#print modulepath
 
-		importcmd = 'from ' + modulepath + ' import *'
+		importcmd = 'global services'
+		importcmd += os.linesep+'from ' + modulepath + ' import *'
+
+
 		exec(importcmd)
-		#print importcmd
-		#print os.getcwd()
+
 		
-		if locals().has_key('Scan'):
-			print '\tPlugin function Assign loaded'
-			Scan(services)
 		if locals().has_key('Audit'):
 			print '\tPlugin function Audit loaded'
-			tmp = Audit(services)
-			self.retinfo.append(tmp)
-
+			ret = Audit(services)
+			if self.services != services:
+				self.services = services
+			if ret:
+				self.retinfo.append(ret)
 
 		# fp = open(pluginfilepath)
 		# code = fp.read()
@@ -77,7 +82,9 @@ class PluginLoader(object):
 		# 	print security_info()
 		# #del security_info
 
-	def runPlugins(self,services):
+	def runPlugins(self, services=None):
+		if services == None:
+			services = self.services
 		# find auxiliary path and 
 		for path in self.plugindict:
 			if path[-9:]=='auxiliary':
@@ -85,19 +92,20 @@ class PluginLoader(object):
 				break
 		# step1: run auxiliary plugins
 		for eachfile in self.plugindict[auxpath]:
-			self.runEachPlugin(auxpath+'/'+eachfile,services)
+			self.runEachPlugin(auxpath+'/'+eachfile)
 
 		# step2: run other plugins
 		for path in self.plugindict:
 			if path != auxpath:
 				for eachfile in self.plugindict[path]:
-					self.runEachPlugin(path+'/'+eachfile,services)
+					self.runEachPlugin(path+'/'+eachfile)
 
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	pl = PluginLoader()
-	print pl.loadPlugins()
 	services={}
-	pl.runPlugins(services)
+	pl = PluginLoader(None,services)
+	print pl.loadPlugins()
+	pl.runPlugins()
+	print pl.retinfo

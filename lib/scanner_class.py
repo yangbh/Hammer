@@ -5,6 +5,7 @@ import sys
 import re
 from nmap_class import NmapScanner
 from pluginLoader_class import PluginLoader
+from mysql_class import MySQLHelper
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
@@ -38,6 +39,27 @@ class Scanner(object):
 
 	def getServices(self) :
 		''' '''
+		# services type: dict
+		# services = {
+		# 	url:'http://www.leesec.com/',
+		# 	ip:'106.187.37.47',
+		# 	port:[22,80,3306],
+		# 	host: 'www.leesec.com',
+		# 	cms:'wordpress',
+		# 	cmsversion:'3.9.1'
+		# }
+		# if host is a neiboorhost
+		# services ={
+		# 	'host':'***.***.***'
+		# 	'mainhost':'www.leesec.com',
+		# 	...
+		# }
+		# if domain is a sondomain
+		# services ={
+		# 	'host':'mail.leesec.com',
+		# 	'fardomain':'www.leesec.com',
+		# 	...
+		# }		# 
 		print '>>>getting services'
 		np = NmapScanner(self.host,self.ports)
 		sc = np.scanPorts()
@@ -45,12 +67,20 @@ class Scanner(object):
 			self.services['url'] = self.url
 			self.services['host'] = self.host
 			self.services['ip'] = sc.keys()[0]
-			self.services['ports'] ={}
+			self.services['ports'] = []
+			self.services['detail'] = {}
 			if sc[sc.keys()[0]].has_key('tcp'):
-				self.services['ports'] .update(sc[sc.keys()[0]]['tcp'])
+				self.services['detail'].update(sc[sc.keys()[0]]['tcp'])
+				for eachport in sc[sc.keys()[0]]['tcp']:
+					self.services['ports'].append(eachport)
 			if sc[sc.keys()[0]].has_key('udp'):
-				self.services['ports'] .update(sc[sc.keys()[0]]['udp'])
-		
+				self.services['detail'].update(sc[sc.keys()[0]]['udp'])
+				for eachport in sc[sc.keys()[0]]['udp']:
+					self.services['ports'].append(eachport)
+			
+			# neiborhood weisites
+			self.services['http'] = []
+
 			print 'services:\t',self.services
 		except KeyError,e:
 			pass
@@ -60,17 +90,26 @@ class Scanner(object):
 		print '>>>starting scan'
 		if services == None:
 			services = self.services
-		pl = PluginLoader()
+		pl = PluginLoader(None,services)
 		pl.loadPlugins()
-		pl.runPlugins(services)
-		return pl.retinfo
+		pl.runPlugins()
+		self.result = pl.retinfo
+		print pl.retinfo
+
+	def saveResult(self, sqlcur):
+		''' '''
+		print '>>>saving scan result'
+		sqlcmd = 'INSERT INTO '
 
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	sys.path.append('/root/workspace/Hammer/plugins')
+	sys.path.append('../plugins')
 	sn =Scanner('http://www.leesec.com')
 	sn.getServices()
+	print ">>>scan starting:"
+	sn.startScan()
 	print ">>>scan result:"
-	print sn.startScan()
+	print sn.result

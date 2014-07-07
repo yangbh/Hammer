@@ -46,6 +46,6 @@ class NmapScanner(object):
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-	np = NmapScanner('172.16.5.24')
+	np = NmapScanner('www.leesec.com')
 	print np.scanPorts()
 
