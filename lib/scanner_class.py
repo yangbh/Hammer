@@ -51,7 +51,7 @@ class Scanner(object):
 			if sc[sc.keys()[0]].has_key('udp'):
 				self.services['ports'] .update(sc[sc.keys()[0]]['udp'])
 		
-			#print self.services
+			print 'services:\t',self.services
 		except KeyError,e:
 			pass
 

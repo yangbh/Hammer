@@ -34,7 +34,7 @@ class PluginLoader(object):
 					ret[root].append(eachfile)
 
 		self.plugindict = ret
-		#print self.plugindict
+		print self.plugindict
 
 	def runEachPlugin(self,pluginfilepath,services):
 		print '>>>running plugin:',pluginfilepath
@@ -51,13 +51,15 @@ class PluginLoader(object):
 		#print importcmd
 		#print os.getcwd()
 		
-		if locals().has_key('Assign'):
+		if locals().has_key('Scan'):
 			print '\tPlugin function Assign loaded'
-			Assign()
+			Scan(services)
 		if locals().has_key('Audit'):
 			print '\tPlugin function Audit loaded'
 			tmp = Audit(services)
 			self.retinfo.append(tmp)
+
+
 		# fp = open(pluginfilepath)
 		# code = fp.read()
 		# fp.close()
@@ -76,9 +78,20 @@ class PluginLoader(object):
 		# #del security_info
 
 	def runPlugins(self,services):
+		# find auxiliary path and 
 		for path in self.plugindict:
-			for eachfile in self.plugindict[path]:
-				self.runEachPlugin(path+'/'+eachfile,services)
+			if path[-9:]=='auxiliary':
+				auxpath = path
+				break
+		# step1: run auxiliary plugins
+		for eachfile in self.plugindict[auxpath]:
+			self.runEachPlugin(auxpath+'/'+eachfile,services)
+
+		# step2: run other plugins
+		for path in self.plugindict:
+			if path != auxpath:
+				for eachfile in self.plugindict[path]:
+					self.runEachPlugin(path+'/'+eachfile,services)
 
 # ----------------------------------------------------------------------------------------------------
 #
@@ -86,3 +99,5 @@ class PluginLoader(object):
 if __name__=='__main__':
 	pl = PluginLoader()
 	print pl.loadPlugins()
+	services={}
+	pl.runPlugins(services)

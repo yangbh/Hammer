@@ -21,10 +21,10 @@ def show():
 
 def usage():
 	print "Usage: hammer.py [options] -u url\n"
-	print "       -u --url: url address, like http://www.leesec.com/"
-	print "       -h: help"
+	print "\t-u --url: url address, like http://www.leesec.com/"
+	print "\t-h: help"
 	print "\nExamples:"
-	print "         ./hammer.py -u http://www.leesec.com/\n"
+	print "\thammer.py -u http://www.leesec.com/\n"
 	sys.exit(0)
 
 def main():

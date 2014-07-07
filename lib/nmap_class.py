@@ -14,10 +14,6 @@ class NmapScanner(object):
 	commonports = '21,22,23,25,110,53,67,80,443,1521,1526,3306,3389,8080,8580'
 	def __init__(self, hosts,ports=commonports,arguments='-sV'):
 		super(NmapScanner, self).__init__()
-		# arg is a dict
-		# arg = {'hosts':'192.168.1.1/24',
-		#	'ports':'21,22,23,25,110,53,67,80,443,1521,1526,3306,3389,8080,8580',
-		#	'arguments':''}
 		self.hosts = hosts
 		self.ports = ports
 		self.arguments = arguments
