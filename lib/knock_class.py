@@ -4,7 +4,8 @@
 
 '''
 import sys
-sys.path.insert(0, 'knock/modules')
+from dummy import LIBDIR
+sys.path.insert(0, LIBDIR +'/knock/modules')
 
 try:
 		import knockcore
@@ -31,7 +32,7 @@ class SubDomain(object):
 	COLOR_BOLD  = '\033[1m'
 	COLOR_END   = '\033[0m'
 
-	def __init__(self, host, wordlist="knock/wordlist.txt"):
+	def __init__(self, host, wordlist=LIBDIR + "/knock/wordlist.txt"):
 		super(SubDomain, self).__init__()
 		self.host 		= host
 		self.wordlist	= wordlist

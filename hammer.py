@@ -3,6 +3,7 @@
 
 import sys
 import getopt
+import re
 
 # ----------------------------------------------------------------------------------------------------
 # 
@@ -47,13 +48,39 @@ def main():
 	if _url == None:
 		usage()
 
+	m = re.match('(http[s]?)://([^:^/]+):?([^/]*)/',_url)
+	_http_type,_host,_ports,_domain = None,None,None,None
+	if m:
+		_http_type = m.group(1)
+		_host = m.group(2)
+		_ports = m.group(3)
+		_domain = _host[(_host.find('.')+1):]
+		print _http_type,_host,_ports,_domain
+
 	# step2: init syspath
 	basepath = sys.path[0]
 	sys.path.append(basepath +'/lib')
 	sys.path.append(basepath +'/plugins')
 	sys.path.append(basepath +'/bin')
 
-	# step3: run scans
+	# step3: get subdomains
+	from lib.knock_class import SubDomain
+
+	checksubdomain = True
+	if checksubdomain == True:
+		
+		sb = SubDomain(_domain)
+		#sb.help()
+		if 	sb.CheckForWildcard(sb.host) != False:
+			sys.exit(1)
+
+		sb.checkzone(sb.host)
+		sb.subscan(sb.host,sb.wordlist)
+		print sb.found
+	
+	sys.exit(0)
+
+	# step4: run scans
 	from lib.scanner_class import Scanner
 	
 	sn =Scanner(_url)
