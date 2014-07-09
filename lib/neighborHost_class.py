@@ -4,14 +4,15 @@
 
 '''
 import os
+import urllib
 import urllib2
 import re
 import socket
 
-class neiborDomain(object):
+class NeighborHost(object):
 	"""docstring for neiborDomain"""
 	def __init__(self, ip):
-		super(neiborDomain, self).__init__()
+		super(NeighborHost, self).__init__()
 		m = re.match('(?<![\.\d])(?:\d{1,3}\.){3}\d{1,3}(?![\.\d])',ip)
 		if m:
 			self.ip = m.group(0)
@@ -31,7 +32,15 @@ class neiborDomain(object):
 		ret = urllib2.urlopen(req).read()
 		return ret
 
-	
+	def getFromChinaZ(self,ip=None):
+		if ip == None:
+			ip = self.ip
+		url = 'http://tool.chinaz.com/Same/'
+		post = {'s':ip}
+		post = urllib.urlencode(post)
+		content = urllib2.urlopen(url, post).read()
+		hosts = re.findall('target=_blank>([^<]*)</a></li>',content)
+		return hosts
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------

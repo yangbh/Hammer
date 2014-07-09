@@ -3,7 +3,9 @@
 import os
 import sys
 import re
+import socket
 import threading
+
 from nmap_class import NmapScanner
 from pluginLoader_class import PluginLoader
 from mysql_class import MySQLHelper
@@ -122,36 +124,53 @@ class Scanner(object):
 		except KeyError,e:
 			pass
 
-	def getSubDomains(self,domain=None):
-		if domain == None:
-			domain = self.domain
-		return [self.host]
-
-		pl = PluginLoader(None,services)
-		pl.loadPlugins(PLUGINDIR+'/Info_Collect')
-		pl.runPlugins()
-		print pl.services
-
-	def getNeiboorHosts(self,host=None):
+	def getSubDomains(self,host=None):
 		if host == None:
 			host = self.host
-		return [self.host, 'www.hengtiansoft.com']
+		services={}
+		services['host'] = host
+		pl = PluginLoader(None,services)
+		pl.runEachPlugin(PLUGINDIR+'/Info_Collect/subdomain.py')
+		subdomains = pl.services['subdomains']
+		return subdomains
+
+	def getNeiboorHosts(self,ip=None):
+		if ip == None:
+			ip = self.ip
+		services={}
+		services['ip'] = ip
+		pl = PluginLoader(None,services)
+		pl.runEachPlugin(PLUGINDIR+'/Info_Collect/neighborhost.py')
+		neighborhosts = pl.services['neighborhosts']
+		return neighborhosts
 
 	def startScan(self,services=None):
 		''' '''
 		print '>>>starting scan'
+		#
 		print '>>>collecting subdomain info'
-		subdomains = self.getSubDomains(self.domain)
+		subdomains = self.getSubDomains(self.host)
 		print 'subdomains:\t',subdomains
-		domains=[]
+		
+		#
+		hosts={}
 		print '>>>for each subdomain, collecting neiborhood host info'
 		for eachdomain in subdomains:
 			tmp={}
-			tmp['domain'] = eachdomain
-			tmp['hosts'] = self.getNeiboorHosts()
-			domains.append(tmp)
-			print 'for subdomain',eachdomain,'neiborhood hosts are:\t',tmp['hosts']
+			tmpip = socket.gethostbyname(eachdomain)
+			if tmpip not in hosts.keys():
+				tmphosts = self.getNeiboorHosts(tmpip)
+				hosts[tmpip] = tmphosts
+				if eachdomain not in tmphosts:
+					hosts[tmpip].append(eachdomain)
+				
+			else:
+				if eachdomain not in hosts[tmpip]:
+					hosts[tmpip].append(eachdomain)
 
+		print 'host:\t',hosts
+
+		sys.exit(0)
 		print '>>>starting scan each host'
 		
 		pls = []
@@ -196,12 +215,13 @@ class Scanner(object):
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	basepath = BASEDIR
+	sys.path.append(basepath)
 	sys.path.append(basepath +'/lib')
 	sys.path.append(basepath +'/plugins')
 	sys.path.append(basepath +'/bin')
-	sys.path.append('/root/workspace/Hammer')
+	
 
-	sn =Scanner('http://www.leesec.com')
+	sn =Scanner('http://www.hengtiansoft.com')
 	sn.startScan()
 	print ">>>scan result:"
 	print sn.result

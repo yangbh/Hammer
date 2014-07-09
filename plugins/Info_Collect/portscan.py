@@ -9,7 +9,7 @@ info = {
 	'TIME':'20140707',
 	'WEB':'',
 }
-		
+
 def Audit(services):
 	if services.has_key('host') and 'mainhost' not in services.keys():
 		host = services['host']

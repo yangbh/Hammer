@@ -126,7 +126,7 @@ class SubDomain(object):
 			ip       = result[1][0]
 			#print 4
 			print ip+"\t"+hostname
-			#self.found.append([ip, hostname])
+			self.found.append([ip, hostname])
 
 	def loadwordlist(self,wordlist):
 		wlist = knockcore.loadfile(wordlist)
