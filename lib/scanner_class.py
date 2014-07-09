@@ -3,9 +3,38 @@
 import os
 import sys
 import re
+import threading
 from nmap_class import NmapScanner
 from pluginLoader_class import PluginLoader
 from mysql_class import MySQLHelper
+from dummy import PLUGINDIR, BASEDIR
+# ----------------------------------------------------------------------------------------------------
+# 
+# ----------------------------------------------------------------------------------------------------
+class MutiScanner(threading.Thread):
+	def __init__(self, lock, threadName,pluginheader):  
+		'''@summary: 初始化对象。 	
+	 	@param lock: 琐对象。 
+		@param threadName: 线程名称。 
+		'''
+		super(MutiScanner, self).__init__(name = threadName)  #注意：一定要显式的调用父类的初始 化函数。  
+		self.lock = lock
+		self.threadName = threadName
+
+		if type(pluginheader) == PluginLoader:
+			self.pl = pluginheader
+		else:
+			print 'pl is not a pluginLoader_class.PluginLoader class'
+
+	def run(self):  
+		''''''  
+		self.lock.acquire() 
+		print self.threadName, 'staring'
+		self.lock.release()
+
+		self.pl.loadPlugins()
+		self.pl.runPlugins()
+
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
@@ -22,6 +51,7 @@ class Scanner(object):
 			self.http_type = m.group(1)
 			self.host = m.group(2)
 			self.ports = m.group(3)
+			self.domain = self.host[self.host.find('.')+1:]
 		else:
 			print 'not a valid url',url
 			sys.exit(0)
@@ -33,9 +63,16 @@ class Scanner(object):
 
 		# every plugin's input argument services
 		self.services = {}
+		self.services['url'] = self.url
+		self.services['host'] = self.host
+		self.services['ports'] = [self.ports]
+		self.services['http'] = []
 		
 		# scan result
 		self.result = {}
+
+		# thread arguments
+		self.lock = threading.Lock()  
 
 	def getServices(self) :
 		''' '''
@@ -85,16 +122,69 @@ class Scanner(object):
 		except KeyError,e:
 			pass
 
+	def getSubDomains(self,domain=None):
+		if domain == None:
+			domain = self.domain
+		return [self.host]
+
+		pl = PluginLoader(None,services)
+		pl.loadPlugins(PLUGINDIR+'/Info_Collect')
+		pl.runPlugins()
+		print pl.services
+
+	def getNeiboorHosts(self,host=None):
+		if host == None:
+			host = self.host
+		return [self.host, 'www.hengtiansoft.com']
+
 	def startScan(self,services=None):
 		''' '''
 		print '>>>starting scan'
-		if services == None:
-			services = self.services
-		pl = PluginLoader(None,services)
-		pl.loadPlugins()
-		pl.runPlugins()
-		self.result = pl.retinfo
-		print pl.retinfo
+		print '>>>collecting subdomain info'
+		subdomains = self.getSubDomains(self.domain)
+		print 'subdomains:\t',subdomains
+		domains=[]
+		print '>>>for each subdomain, collecting neiborhood host info'
+		for eachdomain in subdomains:
+			tmp={}
+			tmp['domain'] = eachdomain
+			tmp['hosts'] = self.getNeiboorHosts()
+			domains.append(tmp)
+			print 'for subdomain',eachdomain,'neiborhood hosts are:\t',tmp['hosts']
+
+		print '>>>starting scan each host'
+		
+		pls = []
+		for eachdomain in domains:
+			for eachhost in eachdomain['hosts']:
+				services = {}
+				if eachdomain['domain'] != self.host:
+					services['fardomain'] = self.domain
+				if eachdomain['domain'] !=eachhost:
+					services['mainhost'] = eachdomain
+				services['url'] = 'http://' + eachhost + '/'
+				services['host'] = eachhost
+
+				pl = PluginLoader(None,services)
+				pls.append(pl)
+				print pl.services
+
+		print pls
+		mthpls=[]
+		for eachpl in pls:
+			mthpl = MutiScanner(self.lock,eachpl.services['host'],eachpl)
+			mthpls.append(mthpl)
+
+		for eachmthpl in mthpls:
+			eachmthpl.start()
+
+		for eachmthpl in mthpls:
+			eachmthpl.join()
+
+		for eachpl in pls:
+		# 	eachpl.loadPlugins()
+		# 	eachpl.runPlugins()
+		 	self.result[eachpl.services['host']] = eachpl.retinfo
 
 	def saveResult(self, sqlcur):
 		''' '''
@@ -105,11 +195,13 @@ class Scanner(object):
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	sys.path.append('/root/workspace/Hammer/plugins')
-	sys.path.append('../plugins')
+	basepath = BASEDIR
+	sys.path.append(basepath +'/lib')
+	sys.path.append(basepath +'/plugins')
+	sys.path.append(basepath +'/bin')
+	sys.path.append('/root/workspace/Hammer')
+
 	sn =Scanner('http://www.leesec.com')
-	sn.getServices()
-	print ">>>scan starting:"
 	sn.startScan()
 	print ">>>scan result:"
 	print sn.result

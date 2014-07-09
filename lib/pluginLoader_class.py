@@ -3,6 +3,7 @@
 import os
 import sys
 import re
+from dummy import PLUGINDIR
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
@@ -42,8 +43,10 @@ class PluginLoader(object):
 			services = self.services
 
 		print '>>>running plugin:',pluginfilepath
-		if os.path.basename == '__init__.py':
+		# 1. do not execute __init__.py
+		if os.path.basename(pluginfilepath) == '__init__.py':
 			return
+
 		modulepath = pluginfilepath.replace(self.path+'/','')
 		modulepath = modulepath.replace('.py','')
 		modulepath = modulepath.replace('.','')
@@ -63,6 +66,7 @@ class PluginLoader(object):
 			if self.services != services:
 				self.services = services
 			if ret:
+				ret['type'] = info['NAME']
 				self.retinfo.append(ret)
 
 		# fp = open(pluginfilepath)
@@ -86,10 +90,12 @@ class PluginLoader(object):
 		if services == None:
 			services = self.services
 		# find auxiliary path and 
+		
 		for path in self.plugindict:
-			if path[-9:]=='auxiliary':
+			if path[-12:]=='Info_Collect':
 				auxpath = path
 				break
+
 		# step1: run auxiliary plugins
 		for eachfile in self.plugindict[auxpath]:
 			self.runEachPlugin(auxpath+'/'+eachfile)

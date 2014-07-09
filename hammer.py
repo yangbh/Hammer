@@ -43,6 +43,8 @@ def main():
 			usage()
 		elif opt == '-u':
 			_url = arg
+			if _url[-1] != '/':
+				_url += '/'
 		else:
 			pass
 	if _url == None:
@@ -66,7 +68,7 @@ def main():
 	# step3: get subdomains
 	from lib.knock_class import SubDomain
 
-	checksubdomain = True
+	checksubdomain = False
 	if checksubdomain == True:
 		
 		sb = SubDomain(_domain)
@@ -78,16 +80,22 @@ def main():
 		sb.subscan(sb.host,sb.wordlist)
 		print sb.found
 	
-	sys.exit(0)
-
+	_suburls = []
 	# step4: run scans
 	from lib.scanner_class import Scanner
 	
-	sn =Scanner(_url)
-	sn.getServices()
+	sn = Scanner(_url)
+	#sn.getServices()
 	sn.startScan()
 	print ">>>scan result:"
 	print sn.result
+
+	for eachurl in _suburls:
+		sn = Scanner(_url)
+		#sn.getServices()
+		sn.startScan()
+		print ">>>scan result:"
+		print sn.result
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
