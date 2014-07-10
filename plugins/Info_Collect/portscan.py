@@ -31,7 +31,7 @@ def Audit(services):
 					services['ports'].append(eachport)
 
 			#print 'services:\t',services
-
+			output += 'services:\t' + str(services) + os.linesep
 			retinfo = {'level':'info','content':str(services['ports'])}
 
 		except IndexError,e:

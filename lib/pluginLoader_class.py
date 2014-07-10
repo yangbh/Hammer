@@ -58,8 +58,8 @@ class PluginLoader(object):
 		modulepath = modulepath.replace('.','')
 		modulepath = modulepath.replace('/','.')
 		#print modulepath
-		importcmd = 'global output'
-		importcmd = 'global services'
+
+		importcmd = 'global services, output'
 		importcmd += os.linesep+'from ' + modulepath + ' import *'
 
 
