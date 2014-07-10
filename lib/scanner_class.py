@@ -54,6 +54,7 @@ class Scanner(object):
 			self.http_type = m.group(1)
 			self.host = m.group(2)
 			self.ports = m.group(3)
+			self.ip = socket.gethostbyname(self.host)
 			self.domain = self.host[self.host.find('.')+1:]
 		else:
 			print 'not a valid url',url
@@ -153,17 +154,21 @@ class Scanner(object):
 		# get all opened ports
 		pl = PluginLoader(None,services)
 		pl.runEachPlugin(PLUGINDIR+'/Info_Collect/portscan.py')
-		ports = pl.services['detail']
-		print ports
+		ports = {}
+		if pl.services.has_key('detail'):
+			ports = pl.services['detail']
+
 		# get http ports
 		httpports = []
 		for eachport in ports.keys():
 			if ports[eachport]['name'] == 'http':
 				httpports.append(eachport)
-		print httpports
+		print 'httpports:\t',httpports
 		return httpports
 
 	def generateUrl(self,ip=None,hosts=None,ports=None):
+		''''''
+		# url redict  hasn't been considered
 		urls = []
 		if hosts == None:
 			pass
@@ -265,29 +270,47 @@ class Scanner(object):
 		print 'urls\t',urls
 		# get services
 
-		sys.exit(0)
 		print '>>>starting scan each host'
 		
 		pls = []
-		for eachdomain in domains:
-			for eachhost in eachdomain['hosts']:
+		# ip type scan
+		for eachip in urls.keys():
+			services = {}
+			if eachip !=  self.ip:
+				services['issubdomain'] = True
+			services['ip'] = eachip
+			pl = PluginLoader(None,services)
+			pls.append(pl)
+			print 'scan start:\t',pl.services
+
+		# http type scan
+		for eachip in urls.keys():
+			for eachurl in urls[eachip]:
 				services = {}
-				if eachdomain['domain'] != self.host:
-					services['fardomain'] = self.domain
-				if eachdomain['domain'] !=eachhost:
-					services['mainhost'] = eachdomain
+				# not subdomain
+				if self.domain not in eachurl:
+					services['isneighborhost'] = True
 				
-				services['url'] = 'http://' + eachhost + '/'
-				services['host'] = eachhost
+				services['url'] = eachurl
 
 				pl = PluginLoader(None,services)
 				pls.append(pl)
-				print pl.services
+				print 'scan start:\t',pl.services
 
-		print pls
+		#print pls
 		mthpls=[]
 		for eachpl in pls:
-			mthpl = MutiScanner(self.lock,eachpl.services['host'],eachpl)
+			#print eachpl.services
+			if eachpl.services.has_key('ip'):
+				threadName = eachpl.services['ip']
+			elif eachpl.services.has_key('url'):
+				threadName = eachpl.services['url']
+			else:
+				threadName = 'Unknow'
+				print 'An unknow scanner services found:\t',eachpl.services
+				sys.exit(0)
+
+			mthpl = MutiScanner(self.lock,threadName,eachpl)
 			mthpls.append(mthpl)
 
 		for eachmthpl in mthpls:
@@ -297,9 +320,18 @@ class Scanner(object):
 			eachmthpl.join()
 
 		for eachpl in pls:
-		# 	eachpl.loadPlugins()
-		# 	eachpl.runPlugins()
-		 	self.result[eachpl.services['host']] = eachpl.retinfo
+			if eachpl.services.has_key('ip'):
+				threadName = eachpl.services['ip']
+			elif eachpl.services.has_key('url'):
+				threadName = eachpl.services['url']
+		 	self.result[threadName] = eachpl.retinfo
+		 	print '>>>>>>scan:\t',threadName,'\t<<<<<<'
+		 	print '>>>scan output:'
+		 	print eachpl.output
+		 	print '>>>scan services:'
+		 	print eachpl.services
+		 	print '>>>scan result:'
+		 	print eachpl.retinfo
 
 	def saveResult(self, sqlcur):
 		''' '''
@@ -310,7 +342,7 @@ class Scanner(object):
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	sn =Scanner('http://www.hengtiansoft.com')
+	sn =Scanner('http://www.leesec.com/')
 	sn.startScan()
 	print ">>>scan result:"
-	print sn.result
+	#print sn.result

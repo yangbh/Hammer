@@ -23,9 +23,11 @@ class PluginLoader(object):
 
 		self.plugindict = {}
 		self.retinfo = []
+		self.output = ''
 
 	def loadPlugins(self, path=None):
-		print '>>>loading plugins'
+		#print '>>>loading plugins'
+		self.output += '>>>loading plugins'  + os.linesep
 		if path == None:
 			path = self.path
 		ret = {}
@@ -36,13 +38,17 @@ class PluginLoader(object):
 					ret[root].append(eachfile)
 
 		self.plugindict = ret
-		print self.plugindict
+		#print self.plugindict
+		self.output += str(self.plugindict) + os.linesep
 
 	def runEachPlugin(self, pluginfilepath, services=None):
+		#print '>>>running plugin:',pluginfilepath
+		self.output += '>>>running plugin:' + pluginfilepath  + os.linesep
+		
 		if services == None:
 			services = self.services
+		output = ''
 
-		print '>>>running plugin:',pluginfilepath
 		# 1. do not execute __init__.py
 		if os.path.basename(pluginfilepath) == '__init__.py':
 			return
@@ -52,7 +58,7 @@ class PluginLoader(object):
 		modulepath = modulepath.replace('.','')
 		modulepath = modulepath.replace('/','.')
 		#print modulepath
-
+		importcmd = 'global output'
 		importcmd = 'global services'
 		importcmd += os.linesep+'from ' + modulepath + ' import *'
 
@@ -61,13 +67,18 @@ class PluginLoader(object):
 
 		
 		if locals().has_key('Audit'):
-			print '\tPlugin function Audit loaded'
+			#print '\tPlugin function Audit loaded'
 			ret = Audit(services)
 			if self.services != services:
 				self.services = services
+				print 'services changed:\t', services
+				
 			if ret:
 				ret['type'] = info['NAME']
 				self.retinfo.append(ret)
+
+			if output != '':
+				self.output += output
 
 		# fp = open(pluginfilepath)
 		# code = fp.read()

@@ -12,7 +12,7 @@ info = {
 }
 
 def Audit(services):
-	if services.has_key('ip') and 'maindomain' not in services.keys():
+	if services.has_key('ip') and 'isneighborhost' not in services.keys():
 		neighborhosts = []
 		nbh = NeighborHost(services['ip'])
 		neighborhosts = nbh.getFromChinaZ()

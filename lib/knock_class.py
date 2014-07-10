@@ -1,8 +1,6 @@
 #!/usr/bin/python2.7
 #coding:utf-8
-'''
 
-'''
 import sys
 from dummy import LIBDIR
 sys.path.insert(0, LIBDIR +'/knock/modules')

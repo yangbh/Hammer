@@ -1,7 +1,7 @@
 #!/usr/bin/python2.7
 #coding:utf-8
 
-
+import os
 from lib.nmap_class import NmapScanner
 
 info = {
@@ -12,10 +12,11 @@ info = {
 }
 
 def Audit(services):
-	if services.has_key('ip') and 'mainhost' not in services.keys():
+	if services.has_key('ip') and 'isneighborhost' not in services.keys():
 		ip = services['ip']
 		np = NmapScanner(ip)
 		sc = np.scanPorts()
+		#print sc
 		try:
 			services['ip'] = sc.keys()[0]
 			services['ports'] = []
@@ -29,11 +30,16 @@ def Audit(services):
 				for eachport in sc[sc.keys()[0]]['udp']:
 					services['ports'].append(eachport)
 
-			print 'services:\t',services
+			#print 'services:\t',services
+
 			retinfo = {'level':'info','content':str(services['ports'])}
 
+		except IndexError,e:
+			print 'IndexError:',e
+			output += 'IndexError: ' + str(e) + os.linesep
 		except KeyError,e:
-			pass
+			print 'KeyError:',e
+			output += 'KeyError: ' + str(e) + os.linesep
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------

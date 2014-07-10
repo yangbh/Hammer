@@ -25,7 +25,7 @@ class WhatWeb(object):
 		url = self.url
 		outfile = self.outfile
 		shellcmd = CURRENT_PATH + '/' + './WhatWeb/whatweb -q --log-json=' +outfile +' '+url
-		print 'shellcmd=',shellcmd
+		#print 'shellcmd=',shellcmd
 		if os.path.isfile(outfile):
 			os.remove(outfile)
 		os.system(shellcmd)

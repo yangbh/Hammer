@@ -110,6 +110,7 @@ def start(argv):
 		search.process()
 		all_emails=search.get_emails()
 		all_hosts=search.get_hostnames()
+		#print word,limit,start,all_hosts
 	if engine == "exalead":
 		print "[-] Searching in Exalead:"
 		search=exaleadsearch.search_exalead(word,limit,start)
