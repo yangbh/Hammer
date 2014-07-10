@@ -19,3 +19,8 @@ BASEDIR = BASEDIR.replace('/lib/dummy.py','')
 LIBDIR = BASEDIR + '/lib'
 PLUGINDIR = BASEDIR + '/plugins'
 CACHEDIR = BASEDIR + '/cache'
+
+# system path
+sys.path.append(BASEDIR)
+sys.path.append(LIBDIR)
+sys.path.append(PLUGINDIR)

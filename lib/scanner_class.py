@@ -5,6 +5,7 @@ import sys
 import re
 import socket
 import threading
+import urllib2
 
 from nmap_class import NmapScanner
 from pluginLoader_class import PluginLoader
@@ -144,15 +145,99 @@ class Scanner(object):
 		neighborhosts = pl.services['neighborhosts']
 		return neighborhosts
 
+	def getHttpPorts(self,ip=None):
+		if ip == None:
+			ip = self.ip
+		services={}
+		services['ip'] = ip
+		# get all opened ports
+		pl = PluginLoader(None,services)
+		pl.runEachPlugin(PLUGINDIR+'/Info_Collect/portscan.py')
+		ports = pl.services['detail']
+		print ports
+		# get http ports
+		httpports = []
+		for eachport in ports.keys():
+			if ports[eachport]['name'] == 'http':
+				httpports.append(eachport)
+		print httpports
+		return httpports
+
+	def generateUrl(self,ip=None,hosts=None,ports=None):
+		urls = []
+		if hosts == None:
+			pass
+		else:
+			for eachhost in hosts:
+				url = 'http://' + eachhost
+				try:
+					urllib2.urlopen(url)
+					urls.append(url)
+					continue
+				except urllib2.URLError,e:
+					print 'urllib2.URLError',e,url
+				except urllib2.HTTPError,e:
+					print 'urllib2.HTTPError',e,url
+				except urllib2.socket.timeout,e:
+					print 'urllib2.socket.timeout',e,url
+				except urllib2.socket.error,e:
+					print 'urllib2.socket.error',e,url
+
+				url = 'https://' + eachhost
+				try:
+					urllib2.urlopen(url)
+					urls.append(url)
+				except urllib2.URLError,e:
+					print 'urllib2.URLError',e,url
+				except urllib2.HTTPError,e:
+					print 'urllib2.HTTPError',e,url
+				except urllib2.socket.timeout,e:
+					print 'urllib2.socket.timeout',e,url
+				except urllib2.socket.error,e:
+					print 'urllib2.socket.error',e,url
+
+		if ip == None or ports == None:
+			pass
+		else:
+			for eachport in ports:
+				url = 'http://' + ip + ':' + str(eachport)
+				try:
+					urllib2.urlopen(url)
+					urls.append(url)
+					continue
+				except urllib2.URLError,e:
+					print 'urllib2.URLError',e,url
+				except urllib2.HTTPError,e:
+					print 'urllib2.HTTPError',e,url
+				except urllib2.socket.timeout,e:
+					print 'urllib2.socket.timeout',e,url
+				except urllib2.socket.error,e:
+					print 'urllib2.socket.error',e,url
+
+				url = 'https://' + ip + ':' + str(eachport)
+				try:
+					urllib2.urlopen(url)
+					urls.append(url)
+				except urllib2.URLError,e:
+					print 'urllib2.URLError',e,url
+				except urllib2.HTTPError,e:
+					print 'urllib2.HTTPError',e,url
+				except urllib2.socket.timeout,e:
+					print 'urllib2.socket.timeout',e,url
+				except urllib2.socket.error,e:
+					print 'urllib2.socket.error',e,url
+
+		return urls
+
 	def startScan(self,services=None):
 		''' '''
 		print '>>>starting scan'
-		#
+		# get subdomains
 		print '>>>collecting subdomain info'
 		subdomains = self.getSubDomains(self.host)
 		print 'subdomains:\t',subdomains
 		
-		#
+		# get hosts
 		hosts={}
 		print '>>>for each subdomain, collecting neiborhood host info'
 		for eachdomain in subdomains:
@@ -168,7 +253,17 @@ class Scanner(object):
 				if eachdomain not in hosts[tmpip]:
 					hosts[tmpip].append(eachdomain)
 
-		print 'host:\t',hosts
+		print 'hosts:\t',hosts
+
+		# get urls
+		urls = {}
+		for eachip in hosts.keys():
+			ip_hosts = hosts[eachip]
+			httpports = self.getHttpPorts(eachip)
+			urls[eachip] = self.generateUrl(eachip,ip_hosts,httpports)
+
+		print 'urls\t',urls
+		# get services
 
 		sys.exit(0)
 		print '>>>starting scan each host'
@@ -181,6 +276,7 @@ class Scanner(object):
 					services['fardomain'] = self.domain
 				if eachdomain['domain'] !=eachhost:
 					services['mainhost'] = eachdomain
+				
 				services['url'] = 'http://' + eachhost + '/'
 				services['host'] = eachhost
 
@@ -214,13 +310,6 @@ class Scanner(object):
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	basepath = BASEDIR
-	sys.path.append(basepath)
-	sys.path.append(basepath +'/lib')
-	sys.path.append(basepath +'/plugins')
-	sys.path.append(basepath +'/bin')
-	
-
 	sn =Scanner('http://www.hengtiansoft.com')
 	sn.startScan()
 	print ">>>scan result:"

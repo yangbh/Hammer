@@ -1,6 +1,7 @@
 #!/usr/bin/python2.7
 #coding:utf-8
 
+
 from lib.nmap_class import NmapScanner
 
 info = {
@@ -11,9 +12,9 @@ info = {
 }
 
 def Audit(services):
-	if services.has_key('host') and 'mainhost' not in services.keys():
-		host = services['host']
-		np = NmapScanner(host)
+	if services.has_key('ip') and 'mainhost' not in services.keys():
+		ip = services['ip']
+		np = NmapScanner(ip)
 		sc = np.scanPorts()
 		try:
 			services['ip'] = sc.keys()[0]
@@ -33,3 +34,9 @@ def Audit(services):
 
 		except KeyError,e:
 			pass
+# ----------------------------------------------------------------------------------------------------
+#
+# ----------------------------------------------------------------------------------------------------
+if __name__=='__main__':
+	services={'ip':'124.160.91.86'}
+	Audit(services)

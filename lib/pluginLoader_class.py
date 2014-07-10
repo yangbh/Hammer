@@ -32,7 +32,7 @@ class PluginLoader(object):
 		for root, dis, files in os.walk(path):  
 			ret[root] =[]
 			for eachfile in files:
-				if eachfile != '__init__.py' and '.pyc' not in eachfile:
+				if eachfile != '__init__.py' and '.pyc' not in eachfile and eachfile != 'dummy.py':
 					ret[root].append(eachfile)
 
 		self.plugindict = ret
