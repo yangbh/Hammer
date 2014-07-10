@@ -25,7 +25,7 @@ class WhatWeb(object):
 		url = self.url
 		outfile = self.outfile
 		shellcmd = CURRENT_PATH + '/' + './WhatWeb/whatweb -q --log-json=' +outfile +' '+url
-		#print 'shellcmd=',shellcmd
+		print 'shellcmd=',shellcmd
 		if os.path.isfile(outfile):
 			os.remove(outfile)
 		os.system(shellcmd)
@@ -54,6 +54,6 @@ class WhatWeb(object):
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-	leesec = WhatWeb('www.leesec.com')
+	leesec = WhatWeb('canju.hengtiansoft.com')
 	leesec.scan()
 	print leesec.getResult()

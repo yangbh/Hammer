@@ -12,7 +12,7 @@ info = {
 	'WEB':'',
 }
 
-def Audit(services):
+def Audit(services,output=''):
 	if services.has_key('host') and 'issubdomain' not in services.keys():
 		subdomains = []
 		# step1: get host domain

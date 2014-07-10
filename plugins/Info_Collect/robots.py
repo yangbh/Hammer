@@ -11,7 +11,7 @@ info = {
 	'WEB':'',
 }
 
-def Audit(services):
+def Audit(services,output=''):
 	if services.has_key('url'):
 		try:
 			url = services['url']

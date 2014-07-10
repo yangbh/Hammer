@@ -14,19 +14,11 @@ info = {
 	'WEB':'',
 }
 
-def Audit(services):
+def Audit(services,output=''):
 	if services.has_key('url'):
 		try:
 			url = services['url']
-			if url[-1]!='/':
-				url += '/'
-			m = re.match('(http[s]?)://([^:^/]+):?([^/]*)/',url)
-			if m:
-				host = m.group(2)
-			else:
-				return
-
-			wb = WhatWeb(host)
+			wb = WhatWeb(url)
 			wb.scan()
 			ret = wb.getResult()
 			#print ret
@@ -35,8 +27,10 @@ def Audit(services):
 			if ret.has_key('plugins'):
 				# wordpress
 				if ret['plugins'].has_key('WordPress'):
+					#print services
 					services['cms'] = 'WordPress'
-					services['cmsversion'] = ret['plugins']['WordPress']['version']
+					if ret['plugins']['WordPress'].has_key('version'):
+						services['cmsversion'] = ret['plugins']['WordPress']['version']
 					
 			elif False:
 				pass

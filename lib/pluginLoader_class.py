@@ -59,8 +59,8 @@ class PluginLoader(object):
 		modulepath = modulepath.replace('/','.')
 		#print modulepath
 
-		importcmd = 'global services, output'
-		importcmd += os.linesep+'from ' + modulepath + ' import *'
+		importcmd = 'global services, output' + os.linesep
+		importcmd += 'from ' + modulepath + ' import *'
 
 
 		exec(importcmd)
@@ -68,17 +68,17 @@ class PluginLoader(object):
 		
 		if locals().has_key('Audit'):
 			#print '\tPlugin function Audit loaded'
-			ret = Audit(services)
+			ret = Audit(services,output)
+			
+			if output != '':
+				self.output += output
 			if self.services != services:
 				self.services = services
-				print 'services changed:\t', services
-				
+				#print 'services changed:\t', services
+				self.output += 'services changed:\t' + str(services)
 			if ret:
 				ret['type'] = info['NAME']
 				self.retinfo.append(ret)
-
-			if output != '':
-				self.output += output
 
 		# fp = open(pluginfilepath)
 		# code = fp.read()

@@ -12,15 +12,15 @@ from pluginLoader_class import PluginLoader
 from mysql_class import MySQLHelper
 from dummy import PLUGINDIR, BASEDIR
 # ----------------------------------------------------------------------------------------------------
-# 
+#
 # ----------------------------------------------------------------------------------------------------
 class MutiScanner(threading.Thread):
-	def __init__(self, lock, threadName,pluginheader):  
-		'''@summary: 初始化对象。 	
-	 	@param lock: 琐对象。 
-		@param threadName: 线程名称。 
+	def __init__(self, lock, threadName,pluginheader):
+		'''@summary: 初始化对象。
+	 	@param lock: 琐对象。
+		@param threadName: 线程名称。
 		'''
-		super(MutiScanner, self).__init__(name = threadName)  #注意：一定要显式的调用父类的初始 化函数。  
+		super(MutiScanner, self).__init__(name = threadName)  #注意：一定要显式的调用父类的初始 化函数。
 		self.lock = lock
 		self.threadName = threadName
 
@@ -29,17 +29,17 @@ class MutiScanner(threading.Thread):
 		else:
 			print 'pl is not a pluginLoader_class.PluginLoader class'
 
-	def run(self):  
-		''''''  
-		self.lock.acquire() 
-		print self.threadName, 'staring'
+	def run(self):
+		''''''
+		self.lock.acquire()
+		#print self.threadName, 'staring'
 		self.lock.release()
 
 		self.pl.loadPlugins()
 		self.pl.runPlugins()
 
 # ----------------------------------------------------------------------------------------------------
-# 
+#
 # ----------------------------------------------------------------------------------------------------
 class Scanner(object):
 	"""docstring for Scanner"""
@@ -71,12 +71,12 @@ class Scanner(object):
 		self.services['host'] = self.host
 		self.services['ports'] = [self.ports]
 		self.services['http'] = []
-		
+
 		# scan result
 		self.result = {}
 
 		# thread arguments
-		self.lock = threading.Lock()  
+		self.lock = threading.Lock()
 
 	def getServices(self) :
 		''' '''
@@ -100,7 +100,7 @@ class Scanner(object):
 		# 	'host':'mail.leesec.com',
 		# 	'fardomain':'www.leesec.com',
 		# 	...
-		# }		# 
+		# }		#
 		print '>>>getting services'
 		np = NmapScanner(self.host,self.ports)
 		sc = np.scanPorts()
@@ -118,7 +118,7 @@ class Scanner(object):
 				self.services['detail'].update(sc[sc.keys()[0]]['udp'])
 				for eachport in sc[sc.keys()[0]]['udp']:
 					self.services['ports'].append(eachport)
-			
+
 			# neiborhood weisites
 			self.services['http'] = []
 
@@ -170,67 +170,36 @@ class Scanner(object):
 		''''''
 		# url redict  hasn't been considered
 		urls = []
-		if hosts == None:
-			pass
-		else:
+		tmpurls = []
+		if hosts != None:
 			for eachhost in hosts:
 				url = 'http://' + eachhost
-				try:
-					urllib2.urlopen(url)
-					urls.append(url)
-					continue
-				except urllib2.URLError,e:
-					print 'urllib2.URLError',e,url
-				except urllib2.HTTPError,e:
-					print 'urllib2.HTTPError',e,url
-				except urllib2.socket.timeout,e:
-					print 'urllib2.socket.timeout',e,url
-				except urllib2.socket.error,e:
-					print 'urllib2.socket.error',e,url
-
+				tmpurls.append(url)
 				url = 'https://' + eachhost
-				try:
-					urllib2.urlopen(url)
-					urls.append(url)
-				except urllib2.URLError,e:
-					print 'urllib2.URLError',e,url
-				except urllib2.HTTPError,e:
-					print 'urllib2.HTTPError',e,url
-				except urllib2.socket.timeout,e:
-					print 'urllib2.socket.timeout',e,url
-				except urllib2.socket.error,e:
-					print 'urllib2.socket.error',e,url
+				tmpurls.append(url)
 
-		if ip == None or ports == None:
-			pass
-		else:
+		if ip != None and ports != None:
 			for eachport in ports:
 				url = 'http://' + ip + ':' + str(eachport)
-				try:
-					urllib2.urlopen(url)
-					urls.append(url)
-					continue
-				except urllib2.URLError,e:
-					print 'urllib2.URLError',e,url
-				except urllib2.HTTPError,e:
-					print 'urllib2.HTTPError',e,url
-				except urllib2.socket.timeout,e:
-					print 'urllib2.socket.timeout',e,url
-				except urllib2.socket.error,e:
-					print 'urllib2.socket.error',e,url
-
+				tmpurls.append(url)
 				url = 'https://' + ip + ':' + str(eachport)
-				try:
-					urllib2.urlopen(url)
+				tmpurls.append(url)
+
+		for url in tmpurls:
+			try:
+				respone = urllib2.urlopen(url)
+				redirected = respone.geturl()
+				if redirected == url:
 					urls.append(url)
-				except urllib2.URLError,e:
-					print 'urllib2.URLError',e,url
-				except urllib2.HTTPError,e:
-					print 'urllib2.HTTPError',e,url
-				except urllib2.socket.timeout,e:
-					print 'urllib2.socket.timeout',e,url
-				except urllib2.socket.error,e:
-					print 'urllib2.socket.error',e,url
+				continue
+			except urllib2.URLError,e:
+				print 'urllib2.URLError',e,url
+			except urllib2.HTTPError,e:
+				print 'urllib2.HTTPError',e,url
+			except urllib2.socket.timeout,e:
+				print 'urllib2.socket.timeout',e,url
+			except urllib2.socket.error,e:
+				print 'urllib2.socket.error',e,url
 
 		return urls
 
@@ -241,7 +210,7 @@ class Scanner(object):
 		print '>>>collecting subdomain info'
 		subdomains = self.getSubDomains(self.host)
 		print 'subdomains:\t',subdomains
-		
+
 		# get hosts
 		hosts={}
 		print '>>>for each subdomain, collecting neiborhood host info'
@@ -253,7 +222,7 @@ class Scanner(object):
 				hosts[tmpip] = tmphosts
 				if eachdomain not in tmphosts:
 					hosts[tmpip].append(eachdomain)
-				
+
 			else:
 				if eachdomain not in hosts[tmpip]:
 					hosts[tmpip].append(eachdomain)
@@ -271,7 +240,7 @@ class Scanner(object):
 		# get services
 
 		print '>>>starting scan each host'
-		
+
 		pls = []
 		# ip type scan
 		for eachip in urls.keys():
@@ -290,7 +259,7 @@ class Scanner(object):
 				# not subdomain
 				if self.domain not in eachurl:
 					services['isneighborhost'] = True
-				
+
 				services['url'] = eachurl
 
 				pl = PluginLoader(None,services)
@@ -333,16 +302,16 @@ class Scanner(object):
 		 	print '>>>scan result:'
 		 	print eachpl.retinfo
 
-	def saveResult(self, sqlcur):
+	def saveResultToFile(self, sqlcur):
 		''' '''
 		print '>>>saving scan result'
 		sqlcmd = 'INSERT INTO '
 
 # ----------------------------------------------------------------------------------------------------
-# 
+#
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	sn =Scanner('http://www.leesec.com/')
+	sn =Scanner('http://www.hengtiansoft.com/')
 	sn.startScan()
 	print ">>>scan result:"
 	#print sn.result

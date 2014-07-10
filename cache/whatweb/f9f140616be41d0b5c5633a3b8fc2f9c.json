@@ -1,0 +1,1 @@
+{"target":"http://124.160.91.84:80","http_status":200,"plugins":{"Apache":{"version":["2.2.15"]},"HTTPServer":{"os":["CentOS"],"string":["Apache/2.2.15 (CentOS)"]},"IP":{"string":["124.160.91.84"]}}}
