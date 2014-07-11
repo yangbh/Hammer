@@ -27,7 +27,7 @@ class PluginLoader(object):
 
 	def loadPlugins(self, path=None):
 		#print '>>>loading plugins'
-		self.output += '>>>loading plugins'  + os.linesep
+		self.output = '>>>loading plugins'  + os.linesep
 		if path == None:
 			path = self.path
 		ret = {}

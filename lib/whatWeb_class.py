@@ -18,13 +18,17 @@ class WhatWeb(object):
 		if outfile:
 			self.outfile = outfile
 		else:
-			self.outfile = CURRENT_PATH + '/' + '../cache/whatweb/' + hashlib.md5(url).hexdigest() + '.json'
+			tmp = self.url.replace('://','_')
+			tmp = tmp.replace(':','_')
+			tmp = tmp.replace('/','')
+			self.outfile = CURRENT_PATH + '/' + '../cache/whatweb/' + tmp + '.json'
+			#self.outfile = CURRENT_PATH + '/' + '../cache/whatweb/' + hashlib.md5(url).hexdigest() + '.json'
 
 	def scan(self):
 		'''start whatweb scan'''
 		url = self.url
 		outfile = self.outfile
-		shellcmd = CURRENT_PATH + '/' + './WhatWeb/whatweb -q --log-json=' +outfile +' '+url
+		shellcmd = CURRENT_PATH + '/' + './WhatWeb/whatweb -q --follow-redirect=never --log-json=' +outfile +' '+url
 		print 'shellcmd=',shellcmd
 		if os.path.isfile(outfile):
 			os.remove(outfile)

@@ -1,0 +1,17 @@
+*************************     scan info     *************************
+# this is an ip type scan
+ip:	220.250.64.20
+issubdomain:	True
+*************************    scan output    *************************
+>>>loading plugins
+{'/root/workspace/Hammer/plugins/Info_Collect': ['neighborhost.py', 'subdomain.py', 'robots.py', 'portscan.py', 'whatweb.py'], '/root/workspace/Hammer/plugins': [], '/root/workspace/Hammer/plugins/Web_Applications': []}
+>>>running plugin:/root/workspace/Hammer/plugins/Info_Collect/neighborhost.py
+>>>running plugin:/root/workspace/Hammer/plugins/Info_Collect/subdomain.py
+>>>running plugin:/root/workspace/Hammer/plugins/Info_Collect/robots.py
+>>>running plugin:/root/workspace/Hammer/plugins/Info_Collect/portscan.py
+>>>running plugin:/root/workspace/Hammer/plugins/Info_Collect/whatweb.py
+
+************************* scan services *************************
+{'issubdomain': True, 'neighborhosts': ['tclda.com', 'www.zjnetcom.com', 'club.zj.chinaunicom.com', 'service.zj.chinaunicom.com', 'sxhdbp.com', 'soft-xj.com', 'nbicc.com', 'szzsht.cn', 'myazx.com', '525jia.cn', 'nfdnserror3.wo.com.cn'], 'ip': '220.250.64.20'}
+*************************    scan result    *************************
+[]

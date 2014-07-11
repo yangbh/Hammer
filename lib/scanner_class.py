@@ -288,30 +288,74 @@ class Scanner(object):
 		for eachmthpl in mthpls:
 			eachmthpl.join()
 
-		for eachpl in pls:
-			if eachpl.services.has_key('ip'):
-				threadName = eachpl.services['ip']
-			elif eachpl.services.has_key('url'):
-				threadName = eachpl.services['url']
-		 	self.result[threadName] = eachpl.retinfo
-		 	print '>>>>>>scan:\t',threadName,'\t<<<<<<'
-		 	print '>>>scan output:'
-		 	print eachpl.output
-		 	print '>>>scan services:'
-		 	print eachpl.services
-		 	print '>>>scan result:'
-		 	print eachpl.retinfo
+		self.saveResultToFile(pls)
+		# for eachpl in pls:
+		# 	if eachpl.services.has_key('ip'):
+		# 		threadName = eachpl.services['ip']
+		# 	elif eachpl.services.has_key('url'):
+		# 		threadName = eachpl.services['url']
+		#  	self.result[threadName] = eachpl.retinfo
+		#  	print '>>>>>>scan:\t',threadName,'\t<<<<<<'
+		#  	print '>>>scan output:'
+		#  	print eachpl.output
+		#  	print '>>>scan services:'
+		#  	print eachpl.services
+		#  	print '>>>scan result:'
+		#  	print eachpl.retinfo
 
-	def saveResultToFile(self, sqlcur):
+
+	def saveResultToFile(self,pls,outputpath=None):
 		''' '''
 		print '>>>saving scan result'
-		sqlcmd = 'INSERT INTO '
+		if outputpath == None:
+			outputpath = BASEDIR + '/output/' + self.host
+		if os.path.isdir(outputpath) == False:
+			# maybe should use os.makedirs
+			os.makedirs(outputpath)
+
+		for eachpl in pls:
+			tmp =''
+			if eachpl.services.has_key('ip'):
+				threadName = eachpl.services['ip']
+				eachfile = outputpath + '/' + threadName
+				tmp += '*'*25 + '     scan info     '+ '*'*25 + os.linesep
+				tmp += '# this is an ip type scan'  + os.linesep
+				tmp += 'ip:\t' + threadName + os.linesep
+				if eachpl.services.has_key('issubdomain'):
+					tmp +='issubdomain:\t' + 'True' + os.linesep
+				else:
+					tmp +='issubdomain:\t' + 'False' + os.linesep
+
+			elif eachpl.services.has_key('url'):
+				threadName = eachpl.services['url']
+				tmpurl = threadName.replace('://','_')
+				tmpurl = tmpurl.replace(':','_')
+				tmpurl = tmpurl.replace('/','')
+				eachfile = outputpath + '/' + tmpurl
+				tmp += '*'*25 + '     scan info     '+ '*'*25 + os.linesep
+				tmp += '# this is a http type scan' + os.linesep
+				tmp += 'url:\t' + threadName + os.linesep
+				if eachpl.services.has_key('isneighborhost'):
+					tmp +='isneighborhost:\t' + 'True' + os.linesep
+				else:
+					tmp +='isneighborhost:\t' + 'False' + os.linesep
+
+			tmp += '*'*25 + '    scan output    '+ '*'*25 + os.linesep
+			tmp += eachpl.output + os.linesep
+			tmp += '*'*25 + ' scan services '+ '*'*25 + os.linesep
+			tmp += str(eachpl.services) + os.linesep
+			tmp += '*'*25 + '    scan result    '+ '*'*25 + os.linesep
+			tmp += str(eachpl.retinfo) + os.linesep
+
+			fp = open(eachfile,'w')
+			fp.write(tmp)
+			fp.close()
 
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	sn =Scanner('http://www.hengtiansoft.com/')
+	sn =Scanner('http://www.leesec.com/')
 	sn.startScan()
 	print ">>>scan result:"
 	#print sn.result
