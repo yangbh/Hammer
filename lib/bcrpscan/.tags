@@ -1,0 +1,52 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+COOKIE	bcrpscan.py	/^                COOKIE = f.read().strip()$/;"	v
+COOKIE	bcrpscan.py	/^COOKIE = ''$/;"	v
+DIR_PROBE_EXTS	bcrpscan.py	/^DIR_PROBE_EXTS = ['.tar.gz', '.zip', '.rar', '.tar.bz2']$/;"	v
+Db_path	bcrpscan.py	/^class Db_path:$/;"	c
+FILE_PROBE_EXTS	bcrpscan.py	/^FILE_PROBE_EXTS = ['.bak', '.swp', '.1']$/;"	v
+NOT_EXIST	bcrpscan.py	/^NOT_EXIST = hashlib.md5("not_exist").hexdigest()[8:16]$/;"	v
+StringIO	bcrpscan.py	/^import StringIO$/;"	i
+__init__	bcrpscan.py	/^    def __init__(self):$/;"	m	class:Db_path
+add_path	bcrpscan.py	/^def add_path(db, pr):$/;"	f
+close	bcrpscan.py	/^    def close(self):$/;"	m	class:Db_path
+commit	bcrpscan.py	/^    def commit(self):$/;"	m	class:Db_path
+connect	bcrpscan.py	/^    def connect(self, db_file):$/;"	m	class:Db_path
+create	bcrpscan.py	/^    def create(self):$/;"	m	class:Db_path
+db	bcrpscan.py	/^        db = Db_path()$/;"	v
+db_path	bcrpscan.py	/^            db_path = a$/;"	v
+db_path	bcrpscan.py	/^    db_path = '.\/db'$/;"	v
+fetch	bcrpscan.py	/^    def fetch(self, table, num = None, keys=(), **conditions):$/;"	m	class:Db_path
+get_parent_paths	bcrpscan.py	/^def get_parent_paths(path):$/;"	f
+get_url	bcrpscan.py	/^def get_url(url):$/;"	f
+getopt	bcrpscan.py	/^import getopt$/;"	i
+hashlib	bcrpscan.py	/^import hashlib$/;"	i
+import_file	bcrpscan.py	/^def import_file(path, db):$/;"	f
+insert	bcrpscan.py	/^    def insert(self, table, st):$/;"	m	class:Db_path
+logging	bcrpscan.py	/^import logging$/;"	i
+probe	bcrpscan.py	/^def probe(db):$/;"	f
+probe_url	bcrpscan.py	/^def probe_url(url):$/;"	f
+pycurl	bcrpscan.py	/^import pycurl$/;"	i
+query	bcrpscan.py	/^    def query(self, sql):$/;"	m	class:Db_path
+set_log	bcrpscan.py	/^def set_log():$/;"	f
+show_vuln	bcrpscan.py	/^def show_vuln(db):$/;"	f
+socket	bcrpscan.py	/^import socket$/;"	i
+sqlite3	bcrpscan.py	/^import sqlite3$/;"	i
+sys	bcrpscan.py	/^import sys$/;"	i
+test_get_parent_paths	py_unittest.py	/^def test_get_parent_paths():$/;"	f
+test_get_parent_paths	py_unittest.py	/^from bcrpscan import test_get_parent_paths$/;"	i
+th_get_real_url	bcrpscan.py	/^def th_get_real_url(url, $/;"	f
+th_probe_url	bcrpscan.py	/^def th_probe_url($/;"	f
+threading	bcrpscan.py	/^import threading$/;"	i
+time	bcrpscan.py	/^import time$/;"	i
+update	bcrpscan.py	/^    def update(self, table, conditions=None, **kwargs):$/;"	m	class:Db_path
+url	bcrpscan.py	/^            url = ''$/;"	v
+url	bcrpscan.py	/^    url = ''$/;"	v
+url_file	bcrpscan.py	/^            url_file = a$/;"	v
+url_file	bcrpscan.py	/^    url_file = ''$/;"	v
+urlparse	bcrpscan.py	/^import urlparse$/;"	i
+usage	bcrpscan.py	/^def usage():$/;"	f
