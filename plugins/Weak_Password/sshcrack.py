@@ -8,6 +8,13 @@ import sys
 import time
 from dummy import LIBDIR
 
+info = {
+	'NAME':'SSH Weak Password',
+	'AUTHOR':'yangbh',
+	'TIME':'20140716',
+	'WEB':''
+}
+
 def ssh2(ip,port,username,passwd,lock):  
 	printinfo = 'ssh://%s:%s@%s:%d' % (username,passwd,ip,port)
 	printinfo += os.linesep
@@ -47,11 +54,11 @@ def ssh2(ip,port,username,passwd,lock):
 
 	return (ret, printinfo)
 
-def getPortByService(services,sc):
+def getPortByService(services,scname):
 	try:
 		ret = []
 		for eachport in services['port_detail'].keys():
-			if services['port_detail'][eachport]['name'] == sc:
+			if services['port_detail'][eachport]['name'] == scname:
 				ret.append(eachport)
 				#break
 		print ret

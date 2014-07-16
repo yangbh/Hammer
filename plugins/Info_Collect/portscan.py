@@ -8,7 +8,7 @@ info = {
 	'NAME':'Port and Service Discover',
 	'AUTHOR':'yangbh',
 	'TIME':'20140707',
-	'WEB':'',
+	'WEB':''
 }
 
 def Audit(services,output=''):

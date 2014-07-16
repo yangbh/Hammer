@@ -69,13 +69,15 @@ class PluginLoader(object):
 		if locals().has_key('Audit'):
 			#print '\tPlugin function Audit loaded'
 			ret = Audit(services,output)
-			
+			# outputinfo
 			if output != '':
 				self.output += output
+			# services info
 			if self.services != services:
 				self.services = services
 				#print 'services changed:\t', services
 				self.output += 'services changed:\t' + str(services)
+			# return info
 			if ret:
 				ret['type'] = info['NAME']
 				self.retinfo.append(ret)

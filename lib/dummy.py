@@ -13,6 +13,21 @@ def getbasedir():
 	tmp = cwd + tmp
 	return os.path.dirname(tmp)
 
+
+def getPortByService(services,scname):
+	'''find ports by service name'''
+	try:
+		ret = []
+		for eachport in services['port_detail'].keys():
+			if services['port_detail'][eachport]['name'] == sc:
+				ret.append(eachport)
+				#break
+		print ret
+		return ret
+	except KeyError,e:
+		print 'KeyError:\t', e
+
+
 BASEDIR = __file__.replace('/lib/dummy.pyc','')
 BASEDIR = BASEDIR.replace('/lib/dummy.py','')
 

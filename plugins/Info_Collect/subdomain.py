@@ -9,7 +9,7 @@ info = {
 	'NAME':'Sub-Domain Scanning',
 	'AUTHOR':'yangbh',
 	'TIME':'20140709',
-	'WEB':'',
+	'WEB':''
 }
 
 def Audit(services,output=''):
