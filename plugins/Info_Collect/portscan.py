@@ -12,7 +12,7 @@ info = {
 }
 
 def Audit(services,output=''):
-	if services.has_key('ip') and 'isneighborhost' not in services.keys():
+	if services.has_key('ip'):
 		ip = services['ip']
 		np = NmapScanner(ip)
 		sc = np.scanPorts()
@@ -20,13 +20,13 @@ def Audit(services,output=''):
 		try:
 			services['ip'] = sc.keys()[0]
 			services['ports'] = []
-			services['detail'] = {}
+			services['port_detail'] = {}
 			if sc[sc.keys()[0]].has_key('tcp'):
-				services['detail'].update(sc[sc.keys()[0]]['tcp'])
+				services['port_detail'].update(sc[sc.keys()[0]]['tcp'])
 				for eachport in sc[sc.keys()[0]]['tcp']:
 					services['ports'].append(eachport)
 			if sc[sc.keys()[0]].has_key('udp'):
-				services['detail'].update(sc[sc.keys()[0]]['udp'])
+				services['port_detail'].update(sc[sc.keys()[0]]['udp'])
 				for eachport in sc[sc.keys()[0]]['udp']:
 					services['ports'].append(eachport)
 
