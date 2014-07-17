@@ -47,11 +47,6 @@ class PluginLoader(object):
 		
 		if services == None:
 			services = self.services
-		output = ''
-
-		# 1. do not execute __init__.py
-		if os.path.basename(pluginfilepath) == '__init__.py':
-			return
 
 		modulepath = pluginfilepath.replace(self.path+'/','')
 		modulepath = modulepath.replace('.py','')
@@ -59,18 +54,21 @@ class PluginLoader(object):
 		modulepath = modulepath.replace('/','.')
 		#print modulepath
 
-		importcmd = 'global services, output' + os.linesep
-		importcmd += 'from ' + modulepath + ' import *'
-
+		importcmd = 'global services' + os.linesep
+		importcmd += 'from ' + modulepath + ' import Audit,info'
 
 		exec(importcmd)
 
 		
 		if locals().has_key('Audit'):
 			#print '\tPlugin function Audit loaded'
-			ret = Audit(services,output)
+			ret, output = ({},'')
+			try:
+				ret,output = Audit(services)
+			except:
+				pass
 			# outputinfo
-			if output != '':
+			if output != '' and output != None:
 				self.output += output
 			# services info
 			if self.services != services:
@@ -78,7 +76,9 @@ class PluginLoader(object):
 				#print 'services changed:\t', services
 				self.output += 'services changed:\t' + str(services)
 			# return info
-			if ret:
+			if ret and ret != {}:
+				print 'ret=\t',ret
+				print 'pluginfilepath=\t',pluginfilepath
 				ret['type'] = info['NAME']
 				self.retinfo.append(ret)
 
@@ -123,8 +123,12 @@ class PluginLoader(object):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	services={}
+	sys.path.append('/Users/mody/study/Python/Hammer')
+	sys.path.append('/Users/mody/study/Python/Hammer/lib')
+	services={'url':'http://www.hengtiansoft.com'}
 	pl = PluginLoader(None,services)
-	print pl.loadPlugins()
-	pl.runPlugins()
-	print pl.retinfo
+	pl.path = '/Users/mody/study/Python/Hammer/plugins'
+	pl.runEachPlugin('/Users/mody/study/Python/Hammer/plugins/Info_Collect/spider.py',services)
+	# print pl.loadPlugins()
+	# pl.runPlugins()
+	# print pl.retinfo

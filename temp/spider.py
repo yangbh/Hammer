@@ -16,7 +16,7 @@ info = {
 	'DESCRIPTION':'crawl a website and save urls into cache dir'
 }
 
-def Audit(services):
+def Audit(services,output=''):
 	if services.has_key('url'):
 
 	 	root = services['url']

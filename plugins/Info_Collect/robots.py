@@ -11,8 +11,10 @@ info = {
 	'WEB':''
 }
 
-def Audit(services,output=''):
+def Audit(services):
+	output = ''
 	if services.has_key('url'):
+		output += 'plugin run' + os.linesep
 		try:
 			url = services['url']
 			if url[-1]!='/':
@@ -27,7 +29,7 @@ def Audit(services,output=''):
 				ret = respone.read()
 				if 'Disallow: ' in ret:
 					retinfo = {'level':'info','content':ret}
-					return retinfo
+					return (retinfo,output)
 
 		except urllib2.URLError,e:
 			#print 'urllib2.URLError: ',e
@@ -38,6 +40,11 @@ def Audit(services,output=''):
 		except TypeError, e:
 			#print 'TypeError: ',e
 			output += 'TypeError: ' + str(e) + os.linesep
+
+	else:
+		output += 'plugin does not run' + os.linesep
+
+	return (None,output)	
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------

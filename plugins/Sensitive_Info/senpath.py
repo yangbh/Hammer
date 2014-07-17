@@ -9,3 +9,5 @@ info = {
 	'DESCRIPTION':'Sensitive file or directory such as: /admin, /conf, /backup /db'
 }
 
+def Audit(service):
+	pass

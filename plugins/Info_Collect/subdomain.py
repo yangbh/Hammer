@@ -1,6 +1,7 @@
 #!/usr/bin/python2.7
 #coding:utf-8
 
+import os
 import socket
 from lib.knock_class import SubDomain
 from lib.theHarvester_class import TheHarvester
@@ -12,8 +13,10 @@ info = {
 	'WEB':''
 }
 
-def Audit(services,output=''):
+def Audit(services):
+	output = ''
 	if services.has_key('host') and 'issubdomain' not in services.keys():
+		output += 'plugin run' + os.linesep
 		subdomains = []
 		# step1: get host domain
 		pos = services['host'].find('.')+1
@@ -54,3 +57,7 @@ def Audit(services,output=''):
 		print subdomains
 		services['subdomains'] = subdomains
 
+	else:
+		output += 'plugin does not run' + os.linesep
+
+	return (None,output)

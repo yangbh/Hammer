@@ -6,7 +6,7 @@ import paramiko
 import threading
 import sys
 import time
-from dummy import LIBDIR
+from lib.dummy import LIBDIR
 
 info = {
 	'NAME':'SSH Weak Password',
@@ -66,7 +66,8 @@ def getPortByService(services,scname):
 	except KeyError,e:
 		print 'KeyError:\t', e
 
-def Audit(services,output=''):
+def Audit(services):
+	output = ''
 	if services.has_key('ip') and services.has_key('ports'):
 		# get ssh port
 		ssh_port  = 0
@@ -77,7 +78,7 @@ def Audit(services,output=''):
 			if ports and len(ports):
 				ssh_port = ports[0]
 		if ssh_port == 0:
-			return
+			return (None,output)
 
 		# get username
 		commonpwd = []
@@ -125,6 +126,11 @@ def Audit(services,output=''):
 				threads[i+j].join()
 
 			i += maxthreads
+
+	else:
+		output += 'plugin does not run' + os.linesep
+
+	return (None,output)
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------

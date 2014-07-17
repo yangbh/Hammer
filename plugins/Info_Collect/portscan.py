@@ -11,8 +11,10 @@ info = {
 	'WEB':''
 }
 
-def Audit(services,output=''):
+def Audit(services):
+	output = ''
 	if services.has_key('ip'):
+		output += 'plugin run' + os.linesep
 		ip = services['ip']
 		np = NmapScanner(ip)
 		sc = np.scanPorts()
@@ -40,6 +42,11 @@ def Audit(services,output=''):
 		except KeyError,e:
 			print 'KeyError:',e
 			output += 'KeyError: ' + str(e) + os.linesep
+	else:
+		output += 'plugin does not run' + os.linesep
+
+	return (None,output)
+
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------

@@ -1,1 +1,0 @@
-{"target":"http://nbicc.com","http_status":200,"plugins":{"HTTPServer":{"string":["nginx"]},"Meta-Refresh-Redirect":{"string":["http://nfdnserror3.wo.com.cn:8080"]},"Script":{"string":["text/javascript"]},"Country":{"string":["CHINA"],"module":["CN"]},"nginx":{},"IP":{"string":["220.250.64.20"]},"Title":{"string":["Redirect"]}}}

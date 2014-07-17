@@ -1,0 +1,25 @@
+*************************     scan info     *************************
+# this is an ip type scan
+ip:	122.225.227.162
+issubdomain:	False
+*************************    scan output    *************************
+>>>loading plugins
+{'/Users/mody/study/Python/Hammer/plugins/Info_Collect': ['neighborhost.py', 'portscan.py', 'robots.py', 'subdomain.py', 'whatweb.py'], '/Users/mody/study/Python/Hammer/plugins': [], '/Users/mody/study/Python/Hammer/plugins/Weak_Password': ['sshcrack.py'], '/Users/mody/study/Python/Hammer/plugins/Sensitive_Info': ['senpath.py']}
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/neighborhost.py
+plugin run
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/portscan.py
+plugin run
+services:	{'ip': u'122.225.227.162', 'neighborhosts': [], 'port_detail': {80: {'product': u'Microsoft IIS httpd', 'state': u'open', 'version': u'6.0', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/o:microsoft:windows'}, 25: {'product': u'Postfix smtpd', 'state': u'open', 'version': '', 'name': u'smtp', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/a:postfix:postfix'}, 443: {'product': u'Microsoft IIS httpd', 'state': u'open', 'version': u'7.5', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/o:microsoft:windows'}}, 'ports': [80, 25, 443]}
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/robots.py
+plugin does not run
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/subdomain.py
+plugin does not run
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/whatweb.py
+plugin does not run
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Weak_Password/sshcrack.py
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Sensitive_Info/senpath.py
+
+************************* scan services *************************
+{'ip': u'122.225.227.162', 'neighborhosts': [], 'port_detail': {80: {'product': u'Microsoft IIS httpd', 'state': u'open', 'version': u'6.0', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/o:microsoft:windows'}, 25: {'product': u'Postfix smtpd', 'state': u'open', 'version': '', 'name': u'smtp', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/a:postfix:postfix'}, 443: {'product': u'Microsoft IIS httpd', 'state': u'open', 'version': u'7.5', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/o:microsoft:windows'}}, 'ports': [80, 25, 443]}
+*************************    scan result    *************************
+[]

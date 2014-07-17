@@ -37,6 +37,7 @@ class MutiScanner(threading.Thread):
 
 		self.pl.loadPlugins()
 		self.pl.runPlugins()
+		
 
 # ----------------------------------------------------------------------------------------------------
 #
@@ -78,54 +79,6 @@ class Scanner(object):
 		# thread arguments
 		self.lock = threading.Lock()
 
-	def getServices(self) :
-		''' '''
-		# services type: dict
-		# services = {
-		# 	url:'http://www.leesec.com/',
-		# 	ip:'106.187.37.47',
-		# 	port:[22,80,3306],
-		# 	host: 'www.leesec.com',
-		# 	cms:'wordpress',
-		# 	cmsversion:'3.9.1'
-		# }
-		# if host is a neiboorhost
-		# services ={
-		# 	'host':'***.***.***'
-		# 	'mainhost':'www.leesec.com',
-		# 	...
-		# }
-		# if domain is a sondomain
-		# services ={
-		# 	'host':'mail.leesec.com',
-		# 	'fardomain':'www.leesec.com',
-		# 	...
-		# }		#
-		print '>>>getting services'
-		np = NmapScanner(self.host,self.ports)
-		sc = np.scanPorts()
-		try:
-			self.services['url'] = self.url
-			self.services['host'] = self.host
-			self.services['ip'] = sc.keys()[0]
-			self.services['ports'] = []
-			self.services['detail'] = {}
-			if sc[sc.keys()[0]].has_key('tcp'):
-				self.services['detail'].update(sc[sc.keys()[0]]['tcp'])
-				for eachport in sc[sc.keys()[0]]['tcp']:
-					self.services['ports'].append(eachport)
-			if sc[sc.keys()[0]].has_key('udp'):
-				self.services['detail'].update(sc[sc.keys()[0]]['udp'])
-				for eachport in sc[sc.keys()[0]]['udp']:
-					self.services['ports'].append(eachport)
-
-			# neiborhood weisites
-			self.services['http'] = []
-
-			print 'services:\t',self.services
-		except KeyError,e:
-			pass
-
 	def getSubDomains(self,host=None):
 		if host == None:
 			host = self.host
@@ -155,8 +108,8 @@ class Scanner(object):
 		pl = PluginLoader(None,services)
 		pl.runEachPlugin(PLUGINDIR+'/Info_Collect/portscan.py')
 		ports = {}
-		if pl.services.has_key('detail'):
-			ports = pl.services['detail']
+		if pl.services.has_key('port_detail'):
+			ports = pl.services['port_detail']
 
 		# get http ports
 		httpports = []
@@ -193,13 +146,17 @@ class Scanner(object):
 					urls.append(url)
 				continue
 			except urllib2.URLError,e:
-				print 'urllib2.URLError',e,url
+				#print 'urllib2.URLError',e,url
+				pass
 			except urllib2.HTTPError,e:
-				print 'urllib2.HTTPError',e,url
+				#print 'urllib2.HTTPError',e,url
+				pass
 			except urllib2.socket.timeout,e:
-				print 'urllib2.socket.timeout',e,url
+				#print 'urllib2.socket.timeout',e,url
+				pass
 			except urllib2.socket.error,e:
-				print 'urllib2.socket.error',e,url
+				#print 'urllib2.socket.error',e,url
+				pass
 
 		return urls
 
@@ -355,7 +312,7 @@ class Scanner(object):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	sn =Scanner('http://www.leesec.com/')
+	sn =Scanner('http://www.hengtiansoft.com/')
 	sn.startScan()
 	print ">>>scan result:"
 	#print sn.result
