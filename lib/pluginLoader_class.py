@@ -123,12 +123,12 @@ class PluginLoader(object):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	sys.path.append('/Users/mody/study/Python/Hammer')
-	sys.path.append('/Users/mody/study/Python/Hammer/lib')
+	sys.path.append('/root/workspace/Hammer')
+	sys.path.append('/root/workspace/Hammer/lib')
 	services={'url':'http://www.hengtiansoft.com'}
 	pl = PluginLoader(None,services)
-	pl.path = '/Users/mody/study/Python/Hammer/plugins'
-	pl.runEachPlugin('/Users/mody/study/Python/Hammer/plugins/Info_Collect/spider.py',services)
+	pl.path = '/root/workspace/Hammer/plugins'
+	pl.runEachPlugin('/root/workspace/Hammer/plugins/Info_Collect/spider.py',services)
 	# print pl.loadPlugins()
 	# pl.runPlugins()
 	# print pl.retinfo

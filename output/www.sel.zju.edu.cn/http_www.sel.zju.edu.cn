@@ -1,0 +1,11 @@
+*************************     scan info     *************************
+# this is a http type scan
+url:	http://www.sel.zju.edu.cn
+isneighborhost:	False
+*************************    scan output    *************************
+>>>loading plugins
+
+************************* scan services *************************
+{'url': 'http://www.sel.zju.edu.cn'}
+*************************    scan result    *************************
+[]

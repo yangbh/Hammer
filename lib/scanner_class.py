@@ -243,7 +243,8 @@ class Scanner(object):
 			eachmthpl.start()
 
 		for eachmthpl in mthpls:
-			eachmthpl.join()
+			#eachmthpl.join()
+			pass
 
 		self.saveResultToFile(pls)
 		# for eachpl in pls:
@@ -312,7 +313,7 @@ class Scanner(object):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	sn =Scanner('http://www.hengtiansoft.com/')
+	sn =Scanner('http://www.sel.zju.edu.cn')
 	sn.startScan()
 	print ">>>scan result:"
 	#print sn.result
