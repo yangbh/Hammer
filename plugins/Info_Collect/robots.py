@@ -49,4 +49,8 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	pass
+	from pprint import pprint
+	from dummy import *
+	services = {'url':'http://www.leesec.com'}
+	pprint(Audit(services))
+	pprint(services)

@@ -2,7 +2,7 @@
 #coding:utf-8
 
 import os
-from lib.nmap_class import NmapScanner
+#from lib.nmap_class import NmapScanner
 
 info = {
 	'NAME':'Port and Service Discover',
@@ -10,8 +10,11 @@ info = {
 	'TIME':'20140707',
 	'WEB':''
 }
-
+#print locals()
+#print globals()
 def Audit(services):
+	# print locals()
+	# print globals()
 	output = ''
 	if services.has_key('ip'):
 		output += 'plugin run' + os.linesep
@@ -51,5 +54,8 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
+	from pprint import pprint
+	from dummy import *
 	services={'ip':'124.160.91.86'}
-	Audit(services)
+	print Audit(services)
+	pprint(services)

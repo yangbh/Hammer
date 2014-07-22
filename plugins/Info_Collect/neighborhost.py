@@ -3,7 +3,6 @@
 
 import os
 import socket
-from lib.neighborHost_class import NeighborHost
 
 info = {
 	'NAME':'Neighborhood-Host Scanning',
@@ -26,3 +25,14 @@ def Audit(services):
 		output += 'plugin does not run' + os.linesep
 
 	return (None,output)
+
+# ----------------------------------------------------------------------------------------------------
+#
+# ----------------------------------------------------------------------------------------------------
+if __name__=='__main__':
+	from pprint import pprint
+	from dummy import *
+	# www.leesec.com
+	services = {'ip':'106.187.37.47'}
+	print Audit(services)
+	pprint(services)

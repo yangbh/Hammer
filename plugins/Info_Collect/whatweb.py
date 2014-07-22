@@ -4,8 +4,6 @@
 import os
 import re
 import urllib2
-from lib.whatWeb_class import WhatWeb
-
 
 info = {
 	'NAME':'Web Application Recognition',
@@ -53,3 +51,11 @@ def Audit(services):
 		output += 'plugin does not run' + os.linesep
 
 	return (None,output)
+# ----------------------------------------------------------------------------------------------------
+#
+# ----------------------------------------------------------------------------------------------------
+if __name__=='__main__':
+	from dummy import *
+	services = {'url':'http://www.leesec.com'}
+	pprint(Audit(services))
+	pprint(services)

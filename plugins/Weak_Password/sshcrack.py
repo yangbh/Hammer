@@ -6,7 +6,6 @@ import paramiko
 import threading
 import sys
 import time
-from lib.dummy import LIBDIR
 
 info = {
 	'NAME':'SSH Weak Password',
@@ -15,10 +14,12 @@ info = {
 	'WEB':''
 }
 
+ret = ''
 def ssh2(ip,port,username,passwd,lock):  
+	global ret
 	printinfo = 'ssh://%s:%s@%s:%d' % (username,passwd,ip,port)
 	printinfo += os.linesep
-	ret = False
+	flg = False
 	for i in range(5):
 		try:  
 			ssh = paramiko.SSHClient()  
@@ -27,7 +28,7 @@ def ssh2(ip,port,username,passwd,lock):
 			#print 'login success'
 			printinfo +=  'login success' + os.linesep
 			ssh.close()
-			ret = True
+			flg = True
 			break
 
 		except paramiko.AuthenticationException,e:  
@@ -50,9 +51,11 @@ def ssh2(ip,port,username,passwd,lock):
 
 	lock.acquire()
 	print printinfo
+	if flg:
+		ret += printinfo
 	lock.release()
 
-	return (ret, printinfo)
+	return (flg, printinfo)
 
 def getPortByService(services,scname):
 	try:
@@ -95,14 +98,14 @@ def Audit(services):
 		#sys.exit(0)
 
 		#usernames = ['root','test','rootroot','admin','administrator']
-		usernames=['root']
+		usernames=['root','test']
 		# get each username's password
 
 		#  threads
 		lock = threading.Lock()
 		threads = []
 		ip = services['ip']
-		maxthreads = 50
+		maxthreads = 20
 
 		for eachname in usernames:
 			for eachpwd in commonpwd:
@@ -129,13 +132,14 @@ def Audit(services):
 
 	else:
 		output += 'plugin does not run' + os.linesep
-
-	return (None,output)
+	if ret != '':
+		retinfo = {'level':'high','content':ret}
+	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__': 
-	sys.path.append('/root/workspace/Hammer/lib')
-	from dummy import LIBDIR
-	services={'ip':'127.0.0.1','ports':[80,8080],'port_detail':{22:{'name':'ssh'}}}
-	Audit(services)
+	from dummy import *
+	services={'ip':'192.168.1.4','ports':[80,8080],'port_detail':{8022:{'name':'ssh'}}}
+	pprint(Audit(services))
+	pprint(services)

@@ -3,8 +3,6 @@
 
 import os
 import socket
-from lib.knock_class import SubDomain
-from lib.theHarvester_class import TheHarvester
 
 info = {
 	'NAME':'Sub-Domain Scanning',
@@ -61,3 +59,12 @@ def Audit(services):
 		output += 'plugin does not run' + os.linesep
 
 	return (None,output)
+# ----------------------------------------------------------------------------------------------------
+#
+# ----------------------------------------------------------------------------------------------------
+if __name__=='__main__':
+	from pprint import pprint
+	from dummy import *
+	services = {'host':'www.leesec.com'}
+	pprint(Audit(services))
+	pprint(services)
