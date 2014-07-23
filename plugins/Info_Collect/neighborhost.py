@@ -30,7 +30,6 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	from pprint import pprint
 	from dummy import *
 	# www.leesec.com
 	services = {'ip':'106.187.37.47'}

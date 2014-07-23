@@ -3,10 +3,6 @@
 
 import os
 import sys
-#sys.path.append('/Users/mody/study/Python/Hammer')
-#sys.path.append('/Users/mody/study/Python/Hammer/lib')
-from lib.spider.spider import Spider,Strategy,UrlObj
-from lib.dummy import BASEDIR
 
 info = {
 	'NAME':'Web Spider',
@@ -17,10 +13,10 @@ info = {
 }
 
 def Audit(services):
-	if services.has_key('url'):
+	if services.has_key('url') and False:
 
 	 	root = services['url']
-		strategy = Strategy(max_depth=3, max_count=5000,
+		strategy = Strategy(max_depth=10, max_count=5000,
 							same_host=True, same_domain=True)
 		spider = Spider(strategy)
 		spider.setRootUrl(root)
@@ -43,6 +39,8 @@ def Audit(services):
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
-if __name__=='__main__': 
+if __name__=='__main__':
+	from dummy import *
 	services={'url':'http://www.hengtiansoft.com'}
-	Audit(services)
+	pprint(Audit(services))
+	pprint(services)

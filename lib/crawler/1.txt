@@ -1,0 +1,12 @@
+2014-07-22 11:01:11,073 Thread-2 DEBUG  URL: None 
+
+2014-07-22 11:01:19,079 MainThread INFO Depth 1 Finish. Total visited Links: 1
+
+2014-07-22 11:01:19,079 MainThread INFO Depth 2 Finish. Total visited Links: 1
+
+2014-07-22 11:01:19,079 MainThread INFO Depth 3 Finish. Total visited Links: 1
+
+2014-07-22 11:01:19,079 MainThread INFO Depth 4 Finish. Total visited Links: 1
+
+2014-07-22 11:01:19,080 MainThread INFO Depth 5 Finish. Total visited Links: 1
+
