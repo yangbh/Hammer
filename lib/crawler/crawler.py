@@ -26,7 +26,7 @@ from database import Database
 from webPage import WebPage
 from threadPool import ThreadPool
 
-log = logging.getLogger('Main.crawler')
+log = logging.getLogger('crawler')
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
@@ -39,8 +39,10 @@ class Strategy(object):
 		'Accept-Charset': 'GBK,utf-8;q=0.7,*;q=0.3',
 	}
 
-	def __init__(self,max_depth=5,max_count=5000,concurrency=5,timeout=10,time=6*3600,headers=None,
-				 cookies=None,ssl_verify=False,same_host=False,same_domain=True,keyword=None):
+	def __init__(self,url=None,max_depth=5,max_count=5000,concurrency=5,timeout=10,time=6*3600,headers=None,
+				 cookies=None,ssl_verify=False,same_host=False,same_domain=True,keyword=None,
+				 dbFile='tmp.sql'):
+		self.url = url
 		self.max_depth = max_depth
 		self.max_count = max_count
 		self.concurrency = concurrency
@@ -53,23 +55,31 @@ class Strategy(object):
 		self.ssl_verify = ssl_verify
 		self.same_host = same_host
 		self.same_domain = same_domain
-		self.keyword =  keyword
+		self.keyword = keyword
+		self.dbFile = dbFile
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
 class Crawler(object):
-	def __init__(self, args):
-		self.depth = args.depth  		#指定网页深度
-		self.currentDepth = 1  			#标注初始爬虫深度，从1开始
-		self.keyword = args.keyword.decode(getdefaultlocale()[1]) 		#指定关键词,使用console的默认编码来解码
-		
-		self.database =  Database(args.dbFile)				#数据库
-		self.threadPool = ThreadPool(args.threadNum)  		#线程池,指定线程数
+	def __init__(self, args=Strategy()):
+		self.max_depth = args.max_depth  			#指定网页深度
+		self.max_count = args.max_count		#爬行最大数量
+		self.concurrency = args.concurrency	#线程数
+		self.timeout = args.timeout			#超时
+		self.cookies = args.cookies 		#cookies
+		self.ssl_verify = args.ssl_verify 	#ssl
+		self.same_host = args.same_host		#是否只抓取相同host的链接
+		self.same_domain = args.same_domain	#是否只抓取相同domain的链接
+
+		self.currentDepth = 1  				#标注初始爬虫深度，从1开始
+		self.keyword = args.keyword		 	#指定关键词,使用console的默认编码来解码
+		self.database =  Database(args.dbFile)						#数据库
+		self.threadPool = ThreadPool(args.concurrency)  			#线程池,指定线程数
 		
 		self.visitedHrefs = set()   		#已访问的链接
-		self.unvisitedHrefs = deque()	#待访问的链接 
-		self.unvisitedHrefs.append(args.url) 		#添加首个待访问的链接
-		self.isCrawling = False		#标记爬虫是否开始执行任务
+		self.unvisitedHrefs = deque()		#待访问的链接 
+		self.unvisitedHrefs.append(args.url)#添加首个待访问的链接
+		self.isCrawling = False				#标记爬虫是否开始执行任务
 		#print 'args.url=\t',args.url
 
 	def start(self):
@@ -79,7 +89,7 @@ class Crawler(object):
 		else:
 			self.isCrawling = True
 			self.threadPool.startThreads() 
-			while self.currentDepth < self.depth+1:
+			while self.currentDepth <= self.max_depth:
 				#分配任务,线程池并发下载当前深度的所有页面（该操作不阻塞）
 				self._assignCurrentDepthTasks ()
 				#等待当前线程池完成所有任务,当池内的所有任务完成时，即代表爬完了一个网页深度
@@ -106,7 +116,7 @@ class Crawler(object):
 	def _assignCurrentDepthTasks(self):
 		while self.unvisitedHrefs:
 			url = self.unvisitedHrefs.popleft()
-			print url
+			#print url
 			#向任务队列分配任务
 			self.threadPool.putTask(self._taskHandler, url) 
 			#标注该链接已被访问,或即将被访问,防止重复访问相同链接
@@ -116,9 +126,11 @@ class Crawler(object):
 		#先拿网页源码，再保存,两个都是高阻塞的操作，交给线程处理
 		print url
 		webPage = WebPage(url)
+		
 		if webPage.fetch():
 			self._saveTaskResults(webPage)
 			self._addUnvisitedHrefs(webPage)
+		#print webPage.getDatas()
 
 	def _saveTaskResults(self, webPage):
 		url, pageSource = webPage.getDatas()
@@ -192,6 +204,8 @@ class Crawler(object):
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-	args
+	args = Strategy(url='http://www.hengtiansoft.com/zh',max_depth=5,max_count=5000,concurrency=5,
+		timeout=10,time=6*3600,headers=None,cookies=None,ssl_verify=False,same_host=False,
+		same_domain=True,keyword=None,dbFile='temp.sql')
 	crawler = Crawler(args)
 	crawler.start()

@@ -14,34 +14,38 @@ import traceback
 import logging
 import requests
 
-log = logging.getLogger('Main.WebPage')
+#log = logging.getLogger('WebPage')
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
 class WebPage(object):
-
 	def __init__(self, url):
 		self.url = url
 		self.pageSource = None
 		self.customeHeaders()
+		print self.fetch()
 
 	def fetch(self, retry=2, proxies=None):
 		'''获取html源代码'''
 		try:
 			#设置了prefetch=False，当访问response.text时才下载网页内容,避免下载非html文件
 			response = requests.get(self.url, headers=self.headers, timeout=10, prefetch=False, proxies=proxies)
+			print url,response
 			if self._isResponseAvaliable(response):
 				self._handleEncoding(response)
 				self.pageSource = response.text
 				return True
 			else:
-				log.warning('Page not avaliable. Status code:%d URL: %s \n' % (
-					response.status_code, self.url) )
+				#log.warning('Page not avaliable. Status code:%d URL: %s \n' % (
+				#	response.status_code, self.url) )
+				pass
 		except Exception,e:
 			if retry>0: #超时重试
 				return self.fetch(retry-1)
 			else:
-				log.debug(str(e) + ' URL: %s \n' % self.url)
+				print 'error',e
+				#log.debug(str(e) + ' URL: %s \n' % self.url)
+				pass
 		return None
 
 	def customeHeaders(self, **kargs):

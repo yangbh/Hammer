@@ -14,7 +14,7 @@ import traceback
 from threading import Thread, Lock
 from Queue import Queue,Empty
 
-log = logging.getLogger('Main.threadPool')
+#log = logging.getLogger('Main.threadPool')
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
@@ -46,8 +46,8 @@ class Worker(Thread):
 					self.threadPool.putTaskResult(*result)
 				self.threadPool.taskDone()
 			except Exception, e:
-				log.critical(traceback.format_exc())
-
+				#log.critical(traceback.format_exc())
+				pass
 
 class ThreadPool(object):
 
