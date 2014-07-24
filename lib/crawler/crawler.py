@@ -17,10 +17,8 @@ import time
 from urlparse import urljoin,urlparse
 from collections import deque
 from locale import getdefaultlocale
-try:
-	from bs4 import BeautifulSoup 
-except:
-	from  BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup 
+from pprint import pprint
 
 from database import Database
 from webPage import WebPage
@@ -124,13 +122,12 @@ class Crawler(object):
  
 	def _taskHandler(self, url):
 		#先拿网页源码，再保存,两个都是高阻塞的操作，交给线程处理
-		print url
+		print 'url=\t',url
 		webPage = WebPage(url)
 		
 		if webPage.fetch():
 			self._saveTaskResults(webPage)
 			self._addUnvisitedHrefs(webPage)
-		#print webPage.getDatas()
 
 	def _saveTaskResults(self, webPage):
 		url, pageSource = webPage.getDatas()
@@ -143,29 +140,51 @@ class Crawler(object):
 				self.database.saveData(url, pageSource)
 		except Exception, e:
 			log.error(' URL: %s ' % url + traceback.format_exc())
+		#print 'ok'
 
 	def _addUnvisitedHrefs(self, webPage):
 		'''添加未访问的链接。将有效的url放进UnvisitedHrefs列表'''
 		#对链接进行过滤:1.只获取http或https网页;2.保证每个链接只访问一次
+		#print 'ok2'
 		url, pageSource = webPage.getDatas()
+		#print 'url'
 		hrefs = self._getAllHrefsFromPage(url, pageSource)
+		print hrefs
+
 		for href in hrefs:
 			if self._isHttpOrHttpsProtocol(href):
+				#print 'href=\t',href
 				if not self._isHrefRepeated(href):
 					self.unvisitedHrefs.append(href)
 
 	def _getAllHrefsFromPage(self, url, pageSource):
 		'''解析html源码，获取页面所有链接。返回链接列表'''
+		#print 'ok3'
 		hrefs = []
 		soup = BeautifulSoup(pageSource)
-		results = soup.find_all('a',href=True)
+		#print 'soup=',soup
+		
+		#print results
+		# 1. as <a href=http://www.example.com></a>
+		results = soup.findAll('a',href=True)
 		for a in results:
 			#必须将链接encode为utf8, 因为中文文件链接如 http://aa.com/文件.pdf 
 			#在bs4中不会被自动url编码，从而导致encodeException
 			href = a.get('href').encode('utf8')
 			if not href.startswith('http'):
 				href = urljoin(url, href)#处理相对链接的问题
-			hrefs.append(href)
+			if href not in hrefs:
+				hrefs.append(href)
+		
+		# 2. as <from action=http://www.example.com></form>
+		results = soup.findAll('form',action=True)
+		for form in results:
+			href = form.get('action').encode('utf8')
+			if not href.startswith('http'):
+				href = urljoin(url, href)#处理相对链接的问题
+			if href not in hrefs:
+				hrefs.append(href)
+
 		return hrefs
 
 	def _isHttpOrHttpsProtocol(self, href):
@@ -175,9 +194,31 @@ class Crawler(object):
 		return False
 
 	def _isHrefRepeated(self, href):
-		if href in self.visitedHrefs or href in self.unvisitedHrefs:
-			return True
-		return False
+		# if href in self.visitedHrefs or href in self.unvisitedHrefs:
+		# 	return True
+		# return False
+		print 'href=\t',href
+		hful = urlparse(href)
+		hfargs = []
+		for eachequal in hful.query.split('&'):
+			hfargs.append(eachequal.split('=')[0])
+		#print 'hfargs=\t',hfargs
+		hrefs = [i for i in self.visitedHrefs] + [j for j in self.unvisitedHrefs]
+		#print 'hrefs=\t',hrefs
+		flag = False
+		for eachhref in hrefs:
+			eachhful = urlparse(eachhref)
+			eachhfargs = []
+			if eachhful.scheme == hful.scheme and eachhful.netloc == hful.netloc and eachhful.path == hful.path:
+				for eachequal in eachhful.query.split('&'):
+					eachhfargs.append(eachequal.split('=')[0])
+				for eacharg in eachhfargs:
+					if eacharg not in hfargs:
+						return False
+						print 'flag=\t','True'
+				flag = True
+		print 'flag=\t',flag
+		return flag
 
 	def _isDatabaseAvaliable(self):
 		if self.database.isConn():
@@ -204,8 +245,9 @@ class Crawler(object):
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-	args = Strategy(url='http://www.hengtiansoft.com/zh',max_depth=5,max_count=5000,concurrency=5,
+	args = Strategy(url='http://gs.hust.edu.cn',max_depth=1,max_count=500,concurrency=5,
 		timeout=10,time=6*3600,headers=None,cookies=None,ssl_verify=False,same_host=False,
 		same_domain=True,keyword=None,dbFile='temp.sql')
 	crawler = Crawler(args)
 	crawler.start()
+	pprint([i for i in crawler.unvisitedHrefs])

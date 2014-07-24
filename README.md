@@ -10,3 +10,4 @@ requests
 gevent
 MySQLdb
 pyquery
+beautifulsoup4

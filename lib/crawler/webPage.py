@@ -23,14 +23,14 @@ class WebPage(object):
 		self.url = url
 		self.pageSource = None
 		self.customeHeaders()
-		print self.fetch()
+		#print self.fetch()
 
 	def fetch(self, retry=2, proxies=None):
 		'''获取html源代码'''
 		try:
 			#设置了prefetch=False，当访问response.text时才下载网页内容,避免下载非html文件
-			response = requests.get(self.url, headers=self.headers, timeout=10, prefetch=False, proxies=proxies)
-			print url,response
+			response = requests.get(self.url, headers=self.headers, timeout=10, stream=True, proxies=proxies)
+			#print self.url,response.text
 			if self._isResponseAvaliable(response):
 				self._handleEncoding(response)
 				self.pageSource = response.text
@@ -89,4 +89,4 @@ class WebPage(object):
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-	main()
+	wp = WebPage('http://www.hengtiansoft.com')
