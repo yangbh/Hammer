@@ -31,7 +31,7 @@ class Worker(Thread):
 		self.state = 'STOP'
 
 	def run(self):
-		while 1:
+		while True:
 			if self.state == 'STOP':
 				break
 			try:
@@ -108,4 +108,4 @@ class ThreadPool(object):
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-	main()
+	pass

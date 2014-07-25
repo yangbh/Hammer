@@ -10,6 +10,7 @@
 # ----------------------------------------------------------------------------------------------------
 
 import re
+import sys
 import traceback
 import logging
 import time
@@ -38,8 +39,7 @@ class Strategy(object):
 	}
 
 	def __init__(self,url=None,max_depth=5,max_count=5000,concurrency=5,timeout=10,time=6*3600,headers=None,
-				 cookies=None,ssl_verify=False,same_host=False,same_domain=True,keyword=None,
-				 dbFile='tmp.sql'):
+				 cookies=None,ssl_verify=False,same_host=False,same_domain=True,keyword=None,dbFile=':memory:'):
 		self.url = url
 		self.max_depth = max_depth
 		self.max_count = max_count
@@ -60,6 +60,7 @@ class Strategy(object):
 # ----------------------------------------------------------------------------------------------------
 class Crawler(object):
 	def __init__(self, args=Strategy()):
+		self.url = args.url
 		self.max_depth = args.max_depth  			#指定网页深度
 		self.max_count = args.max_count		#爬行最大数量
 		self.concurrency = args.concurrency	#线程数
@@ -87,13 +88,19 @@ class Crawler(object):
 		else:
 			self.isCrawling = True
 			self.threadPool.startThreads() 
-			while self.currentDepth <= self.max_depth:
+			while self.currentDepth <= self.max_depth and len(self.visitedHrefs) <= self.max_count:
 				#分配任务,线程池并发下载当前深度的所有页面（该操作不阻塞）
 				self._assignCurrentDepthTasks ()
 				#等待当前线程池完成所有任务,当池内的所有任务完成时，即代表爬完了一个网页深度
 				#self.threadPool.taskJoin()可代替以下操作，可无法Ctrl-C Interupt
-				while self.threadPool.getTaskLeft():
-					time.sleep(8)
+				# while self.threadPool.getTaskLeft():
+				# 	print '>>taskleft:\t',self.threadPool.getTaskLeft()
+				# 	print self.threadPool.taskQueue.qsize()
+				# 	print self.threadPool.resultQueue.qsize()
+				# 	print self.threadPool.running
+				# 	time.sleep(1)
+				self.threadPool.taskJoin()
+
 				print 'Depth %d Finish. Totally visited %d links. \n' % (
 					self.currentDepth, len(self.visitedHrefs))
 				log.info('Depth %d Finish. Total visited Links: %d\n' % (
@@ -105,6 +112,17 @@ class Crawler(object):
 		self.isCrawling = False
 		self.threadPool.stopThreads()
 		self.database.close()
+
+	def getAllHrefs(self,nonehtml=False):
+		hrefs = [i for i in self.visitedHrefs] + [j for j in self.unvisitedHrefs]
+		rethrefs = []
+		print 'Totally ',len(hrefs), ' hrefs'
+		for href in hrefs:
+			if href.endswith('.html'):
+				continue
+			rethrefs.append(href)
+			print href
+		print 'Totally ',len(rethrefs), ' aviable hrefs'
 
 	def getAlreadyVisitedNum(self):
 		#visitedHrefs保存已经分配给taskQueue的链接，有可能链接还在处理中。
@@ -129,6 +147,8 @@ class Crawler(object):
 			self._saveTaskResults(webPage)
 			self._addUnvisitedHrefs(webPage)
 
+		return True
+
 	def _saveTaskResults(self, webPage):
 		url, pageSource = webPage.getDatas()
 		try:
@@ -149,11 +169,24 @@ class Crawler(object):
 		url, pageSource = webPage.getDatas()
 		#print 'url'
 		hrefs = self._getAllHrefsFromPage(url, pageSource)
-		print hrefs
+		#print hrefs
 
 		for href in hrefs:
+			#print href
+			print '-',
+			# href must be http or https protocol, not mail or ftp and so on
 			if self._isHttpOrHttpsProtocol(href):
 				#print 'href=\t',href
+				# if have set same_host then check it
+				if self.same_host and self._isHrefSameHost(href) == False:
+					continue
+				# if have set same_domain, then check it
+				if self.same_domain and self._isHrefSameDomain(href) == False:
+					continue
+				# if href direct to a static file, then drop it
+				if self._isHrefSourceFile(href):
+					continue
+				# if already has the same type href, then drop it
 				if not self._isHrefRepeated(href):
 					self.unvisitedHrefs.append(href)
 
@@ -193,11 +226,40 @@ class Crawler(object):
 			return True
 		return False
 
+	def _isHrefSameHost(self,href):
+		hful = urlparse(href)
+		ulul = urlparse(self.url)
+		if hful.netloc == ulul.netloc:
+			#print 'issamehost =\t','True'
+			return True
+		#print 'issamehost =\t','False'
+		return False
+
+	def _isHrefSameDomain(self,href):
+		hful = urlparse(href)
+		ulul = urlparse(self.url)
+		try:
+			if hful.netloc[hful.netloc.find('.')+1:] == ulul.netloc[ulul.netloc.find('.')+1:]:
+				#print 'issamedomain=\t','True'
+				return True
+		except:
+			pass
+		#print 'issamedomain=\t','False'
+		return False
+
+	def _isHrefSourceFile(self,href):
+		'''check wethere href points to a source file, including jpg,ico,pdf, and so on'''
+		try:
+			filetype = href[href.rfind('.'):]
+			if len(filetype) > 8:
+				return False
+			srcfiletps = ('.jpg','.pdf','.doc','.docx','.exe','.jpg','.jpeg','.ico','.swf','.xls','.xlsx')
+			if filetype in srcfiletps:
+				return True
+		except:
+			return False
+
 	def _isHrefRepeated(self, href):
-		# if href in self.visitedHrefs or href in self.unvisitedHrefs:
-		# 	return True
-		# return False
-		print 'href=\t',href
 		hful = urlparse(href)
 		hfargs = []
 		for eachequal in hful.query.split('&'):
@@ -215,9 +277,9 @@ class Crawler(object):
 				for eacharg in eachhfargs:
 					if eacharg not in hfargs:
 						return False
-						print 'flag=\t','True'
+						#print 'isrepeat=\t','True'
 				flag = True
-		print 'flag=\t',flag
+		#print 'isrepeat=\t',flag
 		return flag
 
 	def _isDatabaseAvaliable(self):
@@ -245,9 +307,15 @@ class Crawler(object):
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-	args = Strategy(url='http://gs.hust.edu.cn',max_depth=1,max_count=500,concurrency=5,
-		timeout=10,time=6*3600,headers=None,cookies=None,ssl_verify=False,same_host=False,
-		same_domain=True,keyword=None,dbFile='temp.sql')
+	url='http://www.hengtiansoft.com'
+	if len(sys.argv) ==  2:
+		url = sys.argv[1]
+
+	dbFile = '/root/workspace/Hammer/cache/crawler/crawler.db'
+	args = Strategy(url=url,max_depth=6,max_count=500,concurrency=10,
+		timeout=10,time=6*3600,headers=None,cookies=None,ssl_verify=False,
+		same_host=False,same_domain=True,keyword=None)
 	crawler = Crawler(args)
 	crawler.start()
-	pprint([i for i in crawler.unvisitedHrefs])
+	#pprint([i for i in crawler.visitedHrefs]+[i for i in crawler.unvisitedHrefs])
+	crawler.getAllHrefs()

@@ -10,7 +10,7 @@ database.py
 import sqlite3
 
 class Database(object):
-	def __init__(self, dbFile):
+	def __init__(self, dbFile=':memory:'):
 		try:
 			self.conn = sqlite3.connect(dbFile, isolation_level=None, check_same_thread = False) #让它自动commit，效率也有所提升. 多线程共用
 			self.conn.execute('''CREATE TABLE IF NOT EXISTS
