@@ -3,6 +3,7 @@
 
 import os
 import urllib2
+from dummy import *
 
 info = {
 	'NAME':'Robots.txt Sensitive Information',
@@ -49,7 +50,6 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	from dummy import *
 	services = {'url':'http://www.leesec.com'}
 	pprint(Audit(services))
 	pprint(services)

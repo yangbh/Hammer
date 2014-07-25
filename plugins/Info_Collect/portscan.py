@@ -2,7 +2,7 @@
 #coding:utf-8
 
 import os
-#from lib.nmap_class import NmapScanner
+from dummy import *
 
 info = {
 	'NAME':'Port and Service Discover',
@@ -38,6 +38,7 @@ def Audit(services):
 			#print 'services:\t',services
 			output += 'services:\t' + str(services) + os.linesep
 			retinfo = {'level':'info','content':str(services['ports'])}
+			#print services
 
 		except IndexError,e:
 			print 'IndexError:',e
@@ -54,7 +55,6 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	from dummy import *
-	services={'ip':'124.160.91.86'}
+	services={'ip':'10.202.18.81'}
 	print Audit(services)
 	pprint(services)

@@ -33,10 +33,11 @@ class MutiScanner(threading.Thread):
 		''''''
 		self.lock.acquire()
 		#print self.threadName, 'staring'
-		self.lock.release()
+		
 
 		self.pl.loadPlugins()
 		self.pl.runPlugins()
+		self.lock.release()
 		
 
 # ----------------------------------------------------------------------------------------------------
@@ -86,6 +87,7 @@ class Scanner(object):
 		services['host'] = host
 		pl = PluginLoader(None,services)
 		pl.runEachPlugin(PLUGINDIR+'/Info_Collect/subdomain.py')
+		print pl.services
 		subdomains = pl.services['subdomains']
 		return subdomains
 

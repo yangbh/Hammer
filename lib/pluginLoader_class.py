@@ -42,7 +42,7 @@ class PluginLoader(object):
 		self.output += str(self.plugindict) + os.linesep
 
 	def runEachPlugin(self, pluginfilepath, services=None):
-		#print '>>>running plugin:',pluginfilepath
+		print '>>>running plugin:',pluginfilepath
 		self.output += '>>>running plugin:' + pluginfilepath  + os.linesep
 		
 		if services == None:
@@ -54,7 +54,9 @@ class PluginLoader(object):
 		modulepath = modulepath.replace('/','.')
 		#print modulepath
 
+		#from dummy import *
 		importcmd = 'global services' + os.linesep
+		#importcmd += 'from dummy import *' + os.linesep
 		importcmd += 'from ' + modulepath + ' import Audit,info'
 
 		exec(importcmd)

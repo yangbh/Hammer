@@ -4,6 +4,7 @@
 import os
 import re
 import urllib2
+from dummy import *
 
 info = {
 	'NAME':'Web Application Recognition',
@@ -55,7 +56,6 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	from dummy import *
 	services = {'url':'http://www.leesec.com'}
 	pprint(Audit(services))
 	pprint(services)

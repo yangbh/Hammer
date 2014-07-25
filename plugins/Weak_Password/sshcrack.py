@@ -6,6 +6,7 @@ import paramiko
 import threading
 import sys
 import time
+from dummy import *
 
 info = {
 	'NAME':'SSH Weak Password',
@@ -75,7 +76,10 @@ def Audit(services):
 		# get ssh port
 		ssh_port  = 0
 		if 22 in services['ports']:
-			ssh_port = 22
+			# name maybe tcpwrapped
+			if services['port_detail'][22]['name'] == 'ssh':
+				ssh_port = 22
+
 		else:
 			ports = getPortByService(services,'ssh')
 			if ports and len(ports):
@@ -139,7 +143,6 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__': 
-	from dummy import *
-	services={'ip':'192.168.1.4','ports':[80,8080],'port_detail':{8022:{'name':'ssh'}}}
+	services={'ip':'10.202.18.81','ports':[80,8080],'port_detail':{22:{'name':'ssh'}}}
 	pprint(Audit(services))
 	pprint(services)

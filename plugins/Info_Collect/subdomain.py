@@ -3,6 +3,7 @@
 
 import os
 import socket
+from dummy import *
 
 info = {
 	'NAME':'Sub-Domain Scanning',
@@ -13,12 +14,15 @@ info = {
 
 def Audit(services):
 	output = ''
+	# pprint(locals())
+	# pprint(globals())
 	if services.has_key('host') and 'issubdomain' not in services.keys():
 		output += 'plugin run' + os.linesep
 		subdomains = []
 		# step1: get host domain
 		pos = services['host'].find('.')+1
 		domain = services['host'][pos:]
+		print domain
 
 		# step2: get subdomains by knock
 		if False:
@@ -38,8 +42,9 @@ def Audit(services):
 		# 
 		if True:
 			th = TheHarvester(None)
+			print domain
 			tmp = th.getSubDomains(domain,'baidu',2)
-			#print domain,tmp
+			print domain,tmp
 			subdomains += tmp
 
 		# step5: get subdomains by google
@@ -63,8 +68,6 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	from pprint import pprint
-	from dummy import *
-	services = {'host':'www.leesec.com'}
+	services = {'host':'www.sel.zju.edu.cn'}
 	pprint(Audit(services))
 	pprint(services)

@@ -11,6 +11,7 @@
 
 import re
 import sys
+import os
 import traceback
 import logging
 import time
@@ -24,6 +25,7 @@ from pprint import pprint
 from database import Database
 from webPage import WebPage
 from threadPool import ThreadPool
+from dummy import BASEDIR
 
 log = logging.getLogger('crawler')
 # ----------------------------------------------------------------------------------------------------
@@ -79,6 +81,11 @@ class Crawler(object):
 		self.unvisitedHrefs = deque()		#待访问的链接 
 		self.unvisitedHrefs.append(args.url)#添加首个待访问的链接
 		self.isCrawling = False				#标记爬虫是否开始执行任务
+
+		tmp = self.url.replace('://','_')
+		tmp = tmp.replace(':','_')
+		tmp = tmp.replace('/','')
+		self.file = BASEDIR + '/cache/crawler/' + tmp + '.txt'
 		#print 'args.url=\t',args.url
 
 	def start(self):
@@ -93,13 +100,15 @@ class Crawler(object):
 				self._assignCurrentDepthTasks ()
 				#等待当前线程池完成所有任务,当池内的所有任务完成时，即代表爬完了一个网页深度
 				#self.threadPool.taskJoin()可代替以下操作，可无法Ctrl-C Interupt
-				# while self.threadPool.getTaskLeft():
-				# 	print '>>taskleft:\t',self.threadPool.getTaskLeft()
-				# 	print self.threadPool.taskQueue.qsize()
-				# 	print self.threadPool.resultQueue.qsize()
-				# 	print self.threadPool.running
-				# 	time.sleep(1)
-				self.threadPool.taskJoin()
+				counter = 0
+				while self.threadPool.getTaskLeft() and counter < 600:
+					# print '>>taskleft:\t',self.threadPool.getTaskLeft()
+					# print self.threadPool.taskQueue.qsize()
+					# print self.threadPool.resultQueue.qsize()
+					# print self.threadPool.running
+					time.sleep(1)
+					counter += 1
+				# self.threadPool.taskJoin()
 
 				print 'Depth %d Finish. Totally visited %d links. \n' % (
 					self.currentDepth, len(self.visitedHrefs))
@@ -113,16 +122,23 @@ class Crawler(object):
 		self.threadPool.stopThreads()
 		self.database.close()
 
-	def getAllHrefs(self,nonehtml=False):
-		hrefs = [i for i in self.visitedHrefs] + [j for j in self.unvisitedHrefs]
-		rethrefs = []
-		print 'Totally ',len(hrefs), ' hrefs'
-		for href in hrefs:
-			if href.endswith('.html'):
-				continue
-			rethrefs.append(href)
-			print href
-		print 'Totally ',len(rethrefs), ' aviable hrefs'
+	def saveAllHrefsToFile(self,nonehtml=False):
+		try:
+			fp = open(self.file,'w')
+			hrefs = [i for i in self.visitedHrefs] + [j for j in self.unvisitedHrefs]
+			rethrefs = []
+			print 'Totally ',len(hrefs), ' hrefs'
+			for href in hrefs:
+				if href.endswith('.html'):
+					continue
+				rethrefs.append(href)
+				fp.write(href + os.linesep)
+				print href
+			print 'Totally ',len(rethrefs), ' aviable hrefs'
+			fp.close()
+		except:
+			pass
+
 
 	def getAlreadyVisitedNum(self):
 		#visitedHrefs保存已经分配给taskQueue的链接，有可能链接还在处理中。
@@ -309,10 +325,10 @@ if __name__ == '__main__':
 		url = sys.argv[1]
 
 	dbFile = '/root/workspace/Hammer/cache/crawler/crawler.db'
-	args = Strategy(url=url,max_depth=6,max_count=500,concurrency=10,
+	args = Strategy(url=url,max_depth=5,max_count=500,concurrency=10,
 		timeout=10,time=6*3600,headers=None,cookies=None,ssl_verify=False,
 		same_host=False,same_domain=True,keyword=None)
 	crawler = Crawler(args)
 	crawler.start()
 	#pprint([i for i in crawler.visitedHrefs]+[i for i in crawler.unvisitedHrefs])
-	crawler.getAllHrefs()
+	crawler.saveAllHrefsToFile()

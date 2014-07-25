@@ -3,6 +3,7 @@
 
 import os
 import socket
+from dummy import *
 
 info = {
 	'NAME':'Neighborhood-Host Scanning',
@@ -30,7 +31,6 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	from dummy import *
 	# www.leesec.com
 	services = {'ip':'106.187.37.47'}
 	print Audit(services)
