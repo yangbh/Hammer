@@ -142,12 +142,9 @@ class Crawler(object):
 		#先拿网页源码，再保存,两个都是高阻塞的操作，交给线程处理
 		print 'url=\t',url
 		webPage = WebPage(url)
-		
 		if webPage.fetch():
 			self._saveTaskResults(webPage)
 			self._addUnvisitedHrefs(webPage)
-
-		return True
 
 	def _saveTaskResults(self, webPage):
 		url, pageSource = webPage.getDatas()
@@ -173,7 +170,7 @@ class Crawler(object):
 
 		for href in hrefs:
 			#print href
-			print '-',
+			#print '-',
 			# href must be http or https protocol, not mail or ftp and so on
 			if self._isHttpOrHttpsProtocol(href):
 				#print 'href=\t',href
