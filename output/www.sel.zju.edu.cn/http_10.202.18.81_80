@@ -1,0 +1,11 @@
+*************************     scan info     *************************
+# this is a http type scan
+url:	http://10.202.18.81:80
+isneighborhost:	True
+*************************    scan output    *************************
+>>>loading plugins
+
+************************* scan services *************************
+{'url': 'http://10.202.18.81:80', 'isneighborhost': True}
+*************************    scan result    *************************
+[]

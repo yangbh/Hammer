@@ -33,11 +33,11 @@ class MutiScanner(threading.Thread):
 		''''''
 		self.lock.acquire()
 		#print self.threadName, 'staring'
-		
+		self.lock.release()
 
 		self.pl.loadPlugins()
 		self.pl.runPlugins()
-		self.lock.release()
+		
 		
 
 # ----------------------------------------------------------------------------------------------------
