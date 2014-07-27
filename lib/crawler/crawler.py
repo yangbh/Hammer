@@ -62,8 +62,8 @@ class Strategy(object):
 # ----------------------------------------------------------------------------------------------------
 class Crawler(object):
 	def __init__(self, args=Strategy()):
-		self.url = args.url
-		self.max_depth = args.max_depth  			#指定网页深度
+		self.url = args.url 				
+		self.max_depth = args.max_depth  	#指定网页深度
 		self.max_count = args.max_count		#爬行最大数量
 		self.concurrency = args.concurrency	#线程数
 		self.timeout = args.timeout			#超时
@@ -156,7 +156,7 @@ class Crawler(object):
  
 	def _taskHandler(self, url):
 		#先拿网页源码，再保存,两个都是高阻塞的操作，交给线程处理
-		print 'url=\t',url
+		# print 'url=\t',url
 		webPage = WebPage(url)
 		if webPage.fetch():
 			self._saveTaskResults(webPage)
@@ -189,7 +189,7 @@ class Crawler(object):
 			#print '-',
 			# href must be http or https protocol, not mail or ftp and so on
 			if self._isHttpOrHttpsProtocol(href):
-				#print 'href=\t',href
+				# print 'href=\t',href
 				# if have set same_host then check it
 				if self.same_host and self._isHrefSameHost(href) == False:
 					continue
@@ -200,6 +200,7 @@ class Crawler(object):
 				if self._isHrefSourceFile(href):
 					continue
 				# if already has the same type href, then drop it
+				# print 'href=\t',href
 				if not self._isHrefRepeated(href):
 					self.unvisitedHrefs.append(href)
 
@@ -278,6 +279,7 @@ class Crawler(object):
 		for eachequal in hful.query.split('&'):
 			hfargs.append(eachequal.split('=')[0])
 		#print 'hfargs=\t',hfargs
+		
 		hrefs = [i for i in self.visitedHrefs] + [j for j in self.unvisitedHrefs]
 		#print 'hrefs=\t',hrefs
 		flag = False
@@ -286,11 +288,15 @@ class Crawler(object):
 			eachhfargs = []
 			if eachhful.scheme == hful.scheme and eachhful.netloc == hful.netloc and eachhful.path == hful.path:
 				for eachequal in eachhful.query.split('&'):
-					eachhfargs.append(eachequal.split('=')[0])
+					# pay attention here, must no be ''
+					if eachequal.split('=')[0] != '':
+						eachhfargs.append(eachequal.split('=')[0])
+						#print 'eachhfargs=\t',eachhfargs
 				for eacharg in eachhfargs:
 					if eacharg not in hfargs:
+						#print 'isrepeat=\t','False'
 						return False
-						#print 'isrepeat=\t','True'
+						
 				flag = True
 		#print 'isrepeat=\t',flag
 		return flag

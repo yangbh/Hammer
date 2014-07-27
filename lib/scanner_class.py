@@ -6,11 +6,14 @@ import re
 import socket
 import threading
 import urllib2
+import logging
 
 from nmap_class import NmapScanner
 from pluginLoader_class import PluginLoader
 from mysql_class import MySQLHelper
+from spider.domain import GetFirstLevelDomain
 from dummy import PLUGINDIR, BASEDIR
+
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
@@ -38,8 +41,6 @@ class MutiScanner(threading.Thread):
 		self.pl.loadPlugins()
 		self.pl.runPlugins()
 		
-		
-
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
@@ -57,7 +58,7 @@ class Scanner(object):
 			self.host = m.group(2)
 			self.ports = m.group(3)
 			self.ip = socket.gethostbyname(self.host)
-			self.domain = self.host[self.host.find('.')+1:]
+			self.domain = GetFirstLevelDomain(self.host)
 		else:
 			print 'not a valid url',url
 			sys.exit(0)
@@ -98,7 +99,9 @@ class Scanner(object):
 		services['ip'] = ip
 		pl = PluginLoader(None,services)
 		pl.runEachPlugin(PLUGINDIR+'/Info_Collect/neighborhost.py')
-		neighborhosts = pl.services['neighborhosts']
+		neighborhosts = []
+		if pl.services.has_key('neighborhosts'):
+			neighborhosts = pl.services['neighborhosts']
 		return neighborhosts
 
 	def getHttpPorts(self,ip=None):
@@ -168,7 +171,7 @@ class Scanner(object):
 		# get subdomains
 		print '>>>collecting subdomain info'
 		subdomains = self.getSubDomains(self.host)
-		print 'subdomains:\t',subdomains
+		#print 'subdomains:\t',subdomains
 
 		# get hosts
 		hosts={}
@@ -207,7 +210,7 @@ class Scanner(object):
 			if eachip !=  self.ip:
 				services['issubdomain'] = True
 			services['ip'] = eachip
-			pl = PluginLoader(None,services)
+			pl = PluginLoader(None,services,outputpath=self.host)
 			pls.append(pl)
 			print 'scan start:\t',pl.services
 
@@ -221,7 +224,7 @@ class Scanner(object):
 
 				services['url'] = eachurl
 
-				pl = PluginLoader(None,services)
+				pl = PluginLoader(None,services,outputpath=self.host)
 				pls.append(pl)
 				print 'scan start:\t',pl.services
 
@@ -245,10 +248,11 @@ class Scanner(object):
 			eachmthpl.start()
 
 		for eachmthpl in mthpls:
-			#eachmthpl.join()
-			pass
+			eachmthpl.join()
 
-		self.saveResultToFile(pls)
+
+		#self.saveResultToFile(pls)
+		
 		# for eachpl in pls:
 		# 	if eachpl.services.has_key('ip'):
 		# 		threadName = eachpl.services['ip']
@@ -315,7 +319,7 @@ class Scanner(object):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	sn =Scanner('http://www.sel.zju.edu.cn')
+	sn =Scanner('http://hengtiansoft.com')
 	sn.startScan()
 	print ">>>scan result:"
 	#print sn.result

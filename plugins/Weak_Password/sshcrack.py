@@ -71,6 +71,7 @@ def getPortByService(services,scname):
 		print 'KeyError:\t', e
 
 def Audit(services):
+	retinfo = {}
 	output = ''
 	if services.has_key('ip') and services.has_key('ports'):
 		# get ssh port
@@ -134,10 +135,12 @@ def Audit(services):
 
 			i += maxthreads
 
-	else:
-		output += 'plugin does not run' + os.linesep
+	# else:
+	# 	output += 'plugin does not run' + os.linesep
+
 	if ret != '':
 		retinfo = {'level':'high','content':ret}
+
 	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------
 #

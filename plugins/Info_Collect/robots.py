@@ -13,6 +13,7 @@ info = {
 }
 
 def Audit(services):
+	retinfo = {}
 	output = ''
 	if services.has_key('url'):
 		output += 'plugin run' + os.linesep
@@ -42,14 +43,14 @@ def Audit(services):
 			#print 'TypeError: ',e
 			output += 'TypeError: ' + str(e) + os.linesep
 
-	else:
-		output += 'plugin does not run' + os.linesep
+	# else:
+	# 	output += 'plugin does not run' + os.linesep
 
-	return (None,output)	
+	return (retinfo,output)	
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	services = {'url':'http://www.leesec.com'}
+	services = {'url':'http://www.hengtiansoft.com'}
 	pprint(Audit(services))
 	pprint(services)

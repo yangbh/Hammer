@@ -15,6 +15,7 @@ info = {
 def Audit(services):
 	# print locals()
 	# print globals()
+	retinfo = {}
 	output = ''
 	if services.has_key('ip'):
 		output += 'plugin run' + os.linesep
@@ -36,7 +37,7 @@ def Audit(services):
 					services['ports'].append(eachport)
 
 			#print 'services:\t',services
-			output += 'services:\t' + str(services) + os.linesep
+			#output += 'services:\t' + str(services) + os.linesep
 			retinfo = {'level':'info','content':str(services['ports'])}
 			#print services
 
@@ -46,10 +47,10 @@ def Audit(services):
 		except KeyError,e:
 			print 'KeyError:',e
 			output += 'KeyError: ' + str(e) + os.linesep
-	else:
-		output += 'plugin does not run' + os.linesep
+	# else:
+	# 	output += 'plugin does not run' + os.linesep
 
-	return (None,output)
+	return (retinfo,output)
 
 # ----------------------------------------------------------------------------------------------------
 #

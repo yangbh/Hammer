@@ -47,7 +47,8 @@ class Worker(Thread):
 				self.threadPool.taskDone()
 			except Exception, e:
 				#log.critical(traceback.format_exc())
-				pass
+				print 'Exception:\t',e
+				print traceback.format_exc()
 
 class ThreadPool(object):
 

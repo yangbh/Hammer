@@ -33,14 +33,17 @@ class NeighborHost(object):
 		return ret
 
 	def getFromChinaZ(self,ip=None):
-		if ip == None:
-			ip = self.ip
-		url = 'http://tool.chinaz.com/Same/'
-		post = {'s':ip}
-		post = urllib.urlencode(post)
-		content = urllib2.urlopen(url, post).read()
-		hosts = re.findall('target=_blank>([^<]*)</a></li>',content)
-		return hosts
+		try:
+			if ip == None:
+				ip = self.ip
+			url = 'http://tool.chinaz.com/Same/'
+			post = {'s':ip}
+			post = urllib.urlencode(post)
+			content = urllib2.urlopen(url, post).read()
+			hosts = re.findall('target=_blank>([^<]*)</a></li>',content)
+			return hosts
+		except:
+			return []
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------

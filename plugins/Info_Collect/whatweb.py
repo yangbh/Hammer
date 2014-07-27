@@ -14,6 +14,7 @@ info = {
 }
 
 def Audit(services):
+	retinfo = {}
 	output = ''
 	if services.has_key('url'):
 		output += 'plugin run' + os.linesep
@@ -30,10 +31,10 @@ def Audit(services):
 				if ret['plugins'].has_key('WordPress'):
 					#print services
 					services['cms'] = 'WordPress'
-					output += 'cms: WordPress'
+					output += 'cms: WordPress' + os.linesep
 					if ret['plugins']['WordPress'].has_key('version'):
-						services['cmsversion'] = ret['plugins']['WordPress']['version']
-						output += 'cmsversion: ' + services['cmsversion']
+						services['cmsversion'] = ret['plugins']['WordPress']['version'][0]
+						output += 'cmsversion: ' + services['cmsversion'] + os.linesep
 			elif False:
 				pass
 			
@@ -48,14 +49,14 @@ def Audit(services):
 		except TypeError, e:
 			#print 'TypeError: ',e
 			output += 'TypeError: ' + str(e) + os.linesep
-	else:
-		output += 'plugin does not run' + os.linesep
+	# else:
+	# 	output += 'plugin does not run' + os.linesep
 
-	return (None,output)
+	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	services = {'url':'http://www.leesec.com'}
+	services = {'url':'http://www.sel.zju.edu.cn'}
 	pprint(Audit(services))
 	pprint(services)

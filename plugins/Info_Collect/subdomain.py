@@ -13,6 +13,7 @@ info = {
 }
 
 def Audit(services):
+	retinfo = {}
 	output = ''
 	# pprint(locals())
 	# pprint(globals())
@@ -20,10 +21,10 @@ def Audit(services):
 		output += 'plugin run' + os.linesep
 		subdomains = []
 		# step1: get host domain
-		pos = services['host'].find('.')+1
-		domain = services['host'][pos:]
-		print domain
-
+		# pos = services['host'].find('.')+1
+		# domain = services['host'][pos:]
+		domain = GetFirstLevelDomain(services['host'])
+		
 		# step2: get subdomains by knock
 		if False:
 			sb=SubDomain(domain)
@@ -41,12 +42,15 @@ def Audit(services):
 		# step4: get subdomains by baidu
 		# 
 		if True:
-			th = TheHarvester(None)
-			print domain
-			tmp = th.getSubDomains(domain,'baidu',2)
-			print domain,tmp
-			subdomains += tmp
-
+			try:
+				th = TheHarvester(None)
+				print 'domain=\t',domain
+				tmp = th.getSubDomains(domain,'baidu',2)
+				print 'result=\t',tmp
+				subdomains += tmp
+				#print 'subdomains=\t',subdomains
+			except:
+				pass
 		# step5: get subdomains by google
 		# 
 		
@@ -57,17 +61,21 @@ def Audit(services):
 		tmp = list(set(subdomains))
 		subdomains = tmp
 
-		print subdomains
+		ret = subdomains
+		retinfo = {'level':'info','content':ret}
+
+		if services['host'] not in subdomains:
+			subdomains.append(services['host'])
 		services['subdomains'] = subdomains
 
-	else:
-		output += 'plugin does not run' + os.linesep
+	# else:
+	# 	output += 'plugin does not run' + os.linesep
 
-	return (None,output)
+	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	services = {'host':'www.sel.zju.edu.cn'}
+	services = {'host':'www.hengtiansoft.com'}
 	pprint(Audit(services))
 	pprint(services)

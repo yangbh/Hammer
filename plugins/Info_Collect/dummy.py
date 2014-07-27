@@ -25,3 +25,4 @@ from lib.theHarvester_class import TheHarvester
 from lib.whatWeb_class import WhatWeb
 #from lib.spider.spider import Spider,Strategy,UrlObj
 from lib.crawler.crawler import Crawler,Strategy
+from lib.spider.domain import GetFirstLevelDomain

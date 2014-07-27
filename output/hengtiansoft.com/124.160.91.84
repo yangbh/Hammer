@@ -1,0 +1,39 @@
+*************************     scan info     *************************
+# this is an ip type scan
+ip:	124.160.91.84
+issubdomain:	True
+
+*************************   scan services   *************************
+
+Step 1. Running Auxiliary Plugins
+
+>>>loading plugins
+{'/Users/mody/study/Python/Hammer/plugins/Info_Collect': ['crawler.py', 'neighborhost.py', 'portscan.py', 'robots.py', 'subdomain.py', 'whatweb.py'], '/Users/mody/study/Python/Hammer/plugins': [], '/Users/mody/study/Python/Hammer/plugins/Weak_Password': ['sshcrack.py'], '/Users/mody/study/Python/Hammer/plugins/Sensitive_Info': ['senpath.py']}
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/crawler.py
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/neighborhost.py
+plugin run
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/portscan.py
+plugin run
+services changed to:	{'issubdomain': True, 'port_detail': {8080: {'product': u'nginx', 'state': u'open', 'version': u'1.2.1', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/a:igor_sysoev:nginx:1.2.1'}, 80: {'product': u'Apache httpd', 'state': u'open', 'version': u'2.2.15', 'name': u'http', 'conf': u'10', 'extrainfo': u'(CentOS)', 'reason': u'syn-ack', 'cpe': u'cpe:/a:apache:http_server:2.2.15'}, 443: {'product': u'nginx', 'state': u'open', 'version': u'1.2.1', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/a:igor_sysoev:nginx:1.2.1'}}, 'ports': [8080, 80, 443], 'ip': u'124.160.91.84'}
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/robots.py
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/subdomain.py
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/whatweb.py
+
+
+Step 2. Running Other Plugins
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Weak_Password/sshcrack.py
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Sensitive_Info/senpath.py
+
+
+*************************    scan result    *************************
+retinfo:	[{'content': '[8080, 80, 443]', 'type': 'Port and Service Discover', 'level': 'info'}]
+
+services:	{'issubdomain': True, 'port_detail': {8080: {'product': u'nginx', 'state': u'open', 'version': u'1.2.1', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/a:igor_sysoev:nginx:1.2.1'}, 80: {'product': u'Apache httpd', 'state': u'open', 'version': u'2.2.15', 'name': u'http', 'conf': u'10', 'extrainfo': u'(CentOS)', 'reason': u'syn-ack', 'cpe': u'cpe:/a:apache:http_server:2.2.15'}, 443: {'product': u'nginx', 'state': u'open', 'version': u'1.2.1', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/a:igor_sysoev:nginx:1.2.1'}}, 'ports': [8080, 80, 443], 'ip': u'124.160.91.84'}

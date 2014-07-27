@@ -13,19 +13,23 @@ info = {
 }
 
 def Audit(services):
+	retinfo = {}
 	output = ''
 	if services.has_key('ip'):
 		output += 'plugin run' + os.linesep
 		neighborhosts = []
 		nbh = NeighborHost(services['ip'])
 		neighborhosts = nbh.getFromChinaZ()
+		#print 'neighborhosts=\t',neighborhosts
+		if neighborhosts and len(neighborhosts) != 0:
+			services['neighborhosts'] = neighborhosts
+			ret = neighborhosts
+			retinfo = {'level':'info','content':ret}
 
-		services['neighborhosts'] = neighborhosts
+	# else:
+	# 	output += 'plugin does not run' + os.linesep
 
-	else:
-		output += 'plugin does not run' + os.linesep
-
-	return (None,output)
+	return (retinfo,output)
 
 # ----------------------------------------------------------------------------------------------------
 #

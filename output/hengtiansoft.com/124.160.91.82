@@ -1,0 +1,40 @@
+*************************     scan info     *************************
+# this is an ip type scan
+ip:	124.160.91.82
+issubdomain:	False
+
+*************************   scan services   *************************
+
+Step 1. Running Auxiliary Plugins
+
+>>>loading plugins
+{'/Users/mody/study/Python/Hammer/plugins/Info_Collect': ['crawler.py', 'neighborhost.py', 'portscan.py', 'robots.py', 'subdomain.py', 'whatweb.py'], '/Users/mody/study/Python/Hammer/plugins': [], '/Users/mody/study/Python/Hammer/plugins/Weak_Password': ['sshcrack.py'], '/Users/mody/study/Python/Hammer/plugins/Sensitive_Info': ['senpath.py']}
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/crawler.py
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/neighborhost.py
+plugin run
+services changed to:	{'ip': '124.160.91.82', 'neighborhosts': ['hengtiansoft.com']}
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/portscan.py
+plugin run
+services changed to:	{'ip': u'124.160.91.82', 'neighborhosts': ['hengtiansoft.com'], 'port_detail': {80: {'product': u'Apache httpd', 'state': u'open', 'version': u'2.2.22', 'name': u'http', 'conf': u'10', 'extrainfo': u'(Ubuntu)', 'reason': u'syn-ack', 'cpe': u'cpe:/a:apache:http_server:2.2.22'}, 443: {'product': u'Juniper SA2000 or SA4000 VPN gateway http config', 'state': u'open', 'version': '', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': ''}}, 'ports': [80, 443]}
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/robots.py
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/subdomain.py
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/whatweb.py
+
+
+Step 2. Running Other Plugins
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Weak_Password/sshcrack.py
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Sensitive_Info/senpath.py
+
+
+*************************    scan result    *************************
+retinfo:	[{'content': ['hengtiansoft.com'], 'type': 'Neighborhood-Host Scanning', 'level': 'info'}, {'content': '[80, 443]', 'type': 'Port and Service Discover', 'level': 'info'}]
+
+services:	{'ip': u'124.160.91.82', 'neighborhosts': ['hengtiansoft.com'], 'port_detail': {80: {'product': u'Apache httpd', 'state': u'open', 'version': u'2.2.22', 'name': u'http', 'conf': u'10', 'extrainfo': u'(Ubuntu)', 'reason': u'syn-ack', 'cpe': u'cpe:/a:apache:http_server:2.2.22'}, 443: {'product': u'Juniper SA2000 or SA4000 VPN gateway http config', 'state': u'open', 'version': '', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': ''}}, 'ports': [80, 443]}
