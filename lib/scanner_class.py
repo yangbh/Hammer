@@ -319,7 +319,11 @@ class Scanner(object):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	sn =Scanner('http://hengtiansoft.com')
+	url = 'http://hengtiansoft.com'
+	if len(sys.argv) ==  2:
+		url = sys.argv[1]
+
+	sn =Scanner(url)
 	sn.startScan()
 	print ">>>scan result:"
 	#print sn.result

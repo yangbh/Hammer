@@ -22,12 +22,17 @@ def Audit(services):
 		crawler.start()
 		#pprint([i for i in crawler.visitedHrefs]+[i for i in crawler.unvisitedHrefs])
 		crawler.saveAllHrefsToFile()
+		crawler.saveAllPaths()
+		crawler.saveAllFileExtensions()
 
 	return (None,output)
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	services = {'url':'http://hengtiansoft.com'}
+	url='http://www.hengtiansoft.com'
+	if len(sys.argv) ==  2:
+		url = sys.argv[1]
+	services = {'url':url}
 	pprint(Audit(services))
 	pprint(services)

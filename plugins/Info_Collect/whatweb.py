@@ -35,6 +35,21 @@ def Audit(services):
 					if ret['plugins']['WordPress'].has_key('version'):
 						services['cmsversion'] = ret['plugins']['WordPress']['version'][0]
 						output += 'cmsversion: ' + services['cmsversion'] + os.linesep
+				
+				# HTTPServer
+				if ret['plugins'].has_key('HTTPServer'):
+					if ret['plugins']['HTTPServer'].has_key('string'):
+						# string key is a list, so use [0]
+						services['HTTPServer'] = ret['plugins']['HTTPServer']['string'][0]
+						output += 'HTTPServer: ' + services['HTTPServer'] + os.linesep
+
+				# X-Powered-By
+				if ret['plugins'].has_key('X-Powered-By'):
+					if ret['plugins']['X-Powered-By'].has_key('string'):
+						# string key is a list, so use [0]
+						services['X-Powered-By'] = ret['plugins']['X-Powered-By']['string'][0]
+						output += 'X-Powered-By: ' + services['X-Powered-By'] + os.linesep
+
 			elif False:
 				pass
 			

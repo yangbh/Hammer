@@ -4,11 +4,11 @@
 from dummy import *
 
 info = {
-	'NAME':'Sensitive File/Directory Discover',
+	'NAME':'Probe File Discover',
 	'AUTHOR':'yangbh',
 	'TIME':'20140716',
 	'WEB':'',
-	'DESCRIPTION':'Sensitive file or directory such as: /admin, /conf, /backup /db'
+	'DESCRIPTION':'Tries to find sensitive files. such as phpinfo.php、fckeditor、user.txt、password.txt'
 }
 
 def Audit(service):

@@ -25,7 +25,10 @@ from pprint import pprint
 from database import Database
 from webPage import WebPage
 from threadPool import ThreadPool
+from crawlerFile import CrawlerFile
 from dummy import BASEDIR
+
+from lib.common import genFilename
 
 log = logging.getLogger('crawler')
 # ----------------------------------------------------------------------------------------------------
@@ -82,10 +85,8 @@ class Crawler(object):
 		self.unvisitedHrefs.append(args.url)#添加首个待访问的链接
 		self.isCrawling = False				#标记爬虫是否开始执行任务
 
-		tmp = self.url.replace('://','_')
-		tmp = tmp.replace(':','_')
-		tmp = tmp.replace('/','')
-		self.file = BASEDIR + '/cache/crawler/' + tmp + '.txt'
+		self.file = BASEDIR + '/cache/crawler/' + genFilename(self.url) + '.txt'
+		print self.file
 		#print 'args.url=\t',args.url
 
 	def start(self):
@@ -122,22 +123,111 @@ class Crawler(object):
 		self.threadPool.stopThreads()
 		self.database.close()
 
-	def saveAllHrefsToFile(self,nonehtml=False):
+	def saveAllHrefsToFile(self,nonehtml=True):
 		try:
-			fp = open(self.file,'w')
+			cf = CrawlerFile(url=self.url)
+			contentlist = []
 			hrefs = [i for i in self.visitedHrefs] + [j for j in self.unvisitedHrefs]
-			rethrefs = []
-			print 'Totally ',len(hrefs), ' hrefs'
 			for href in hrefs:
-				if href.endswith('.html'):
+				if href.endswith('.html') and nonehtml:
 					continue
-				rethrefs.append(href)
-				fp.write(href + os.linesep)
-				print href
-			print 'Totally ',len(rethrefs), ' aviable hrefs'
-			fp.close()
+				contentlist.append(href)
+			cf.saveSection('Hrefs',contentlist,coverfile=True)
+			# fp = open(self.file,'w')
+			# fp.write('[Hrefs]'+os.linesep)
+			# hrefs = [i for i in self.visitedHrefs] + [j for j in self.unvisitedHrefs]
+			# rethrefs = []
+			# print 'Totally ',len(hrefs), ' hrefs'
+			# for href in hrefs:
+			# 	if href.endswith('.html'):
+			# 		continue
+			# 	rethrefs.append(href)
+			# 	fp.write(href + os.linesep)
+			# 	print href
+			# print 'Totally ',len(rethrefs), ' aviable hrefs'
+			# fp.close()
 		except:
 			pass
+
+	def _getCrawlerPaths(self,url):
+		''' '''
+		try:
+			paths = []
+			baseulp = urlparse(url)
+
+			cf = CrawlerFile(url=url)
+			urls = cf.getSection('Hrefs')
+			#print urls
+
+			for eachline in urls:
+				eachline = eachline.replace(os.linesep,'')
+				#print eachline
+				eachulp = urlparse(eachline)
+				if baseulp.scheme == eachulp.scheme and baseulp.netloc == eachulp.netloc:
+					fullpath = eachulp.path
+					if fullpath.find('.') == -1 and fullpath.endswith('/') == False:
+						fullpath += '/'
+					pos = 0
+					while True:
+						pos = fullpath.find('/',pos)
+						if pos == -1:
+							break
+						tmppth = eachulp.scheme + '://' + eachulp.netloc + eachulp.path[:pos]
+						if tmppth.endswith('/'):
+							#tmppth = tmppth[:-1]
+							continue
+						if tmppth not in paths:
+							paths.append(tmppth)
+						pos +=1
+
+			return paths
+		except Exception,e:
+			print 'Exception:\t',e
+			return [url]
+
+	def saveAllPaths(self):
+		try:
+			cf = CrawlerFile(url=self.url)
+			contentlist = self._getCrawlerPaths(self.url)
+			#print contentlist
+			cf.saveSection('Paths',contentlist)
+			# fp = open(self.file,'w')
+			# #filename = BASEDIR + '/cache/crawler/' + genFilename(self.url) + '.txt'
+			
+			# filename = self.file
+			# fp = open(filename,'a')
+			# fp.write(os.linesep+'[Paths]'+os.linesep)
+			# urls = self._getCrawlerPaths(self.url)
+			# for eachurl in urls:
+			# 	fp.write(eachurl + os.linesep)
+			# fp.close()
+		except Exception,e:
+			print 'Exception:\t',e
+
+	def _getCrawlerFileExts(self):
+		try:
+			exts = []
+			cf = CrawlerFile(url=self.url)
+			urls = cf.getSection('Hrefs')
+			for eachurl in urls:
+				eachulp = urlparse(eachurl)
+				pos = eachulp.path.rfind('.')
+				if pos != -1:
+					ext = eachulp.path[pos:]
+					if ext not in exts:
+						exts.append(ext)
+			return exts
+		except Exception,e:
+			print 'Exception:\t',e
+			return []
+
+	def saveAllFileExtensions(self):
+		try:
+			cf = CrawlerFile(url=self.url)
+			contentlist = self._getCrawlerFileExts()
+			cf.saveSection('FileExtensions',contentlist)
+		except Exception,e:
+			print 'Exception:\t',e
 
 
 	def getAlreadyVisitedNum(self):
