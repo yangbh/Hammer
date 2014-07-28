@@ -19,7 +19,9 @@ sys.path.append(PLUGINDIR)
 from pprint import pprint
 
 from lib.nmap_class import NmapScanner
+from lib.ruleFile_class import RuleFile
 from lib.neighborHost_class import NeighborHost
 from lib.knock_class import SubDomain
 from lib.theHarvester_class import TheHarvester
 from lib.whatWeb_class import WhatWeb
+from lib.spider.domain import GetFirstLevelDomain

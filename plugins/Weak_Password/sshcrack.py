@@ -16,6 +16,51 @@ info = {
 }
 
 ret = ''
+# ----------------------------------------------------------------------------------------------------
+#
+# ----------------------------------------------------------------------------------------------------
+def getPwds(neighborhosts):
+	''' '''
+	pwddicts={}
+	#usernames = ['root','test','rootroot','admin','administrator']
+	usernames=['root','test']
+
+	commonpwd = []
+	#pwdfile = '../../lib/db/temp.txt'
+	pwdfile = LIBDIR+'/db/temp.txt'
+
+	fp = open(pwdfile,'r')
+	for eachline in fp:
+		tp =  eachline.replace('\r','')
+		tp =  tp.replace('\n','')
+		if tp != '':
+			commonpwd.append(tp)
+	
+	#
+	for eachhost in neighborhosts:
+		eachdomain = GetFirstLevelDomain(eachhost)
+		tplist = eachdomain.split('.')
+		usernames.append(tplist[0])
+		usernames.append(eachhost)
+		usernames.append(eachdomain)
+		commonpwd.append(eachhost)
+		commonpwd.append(eachdomain)
+		commonpwd.append(tplist[0])
+
+	#
+	rulefile = BASEDIR +'/lib/db/passwd_gen.rule'
+	for eachuser in usernames:
+		pwddicts[eachuser] = list(commonpwd)
+		args = {'username':eachuser}
+		rf = RuleFile(rulefile,args)
+		rf._getRules()
+		for i in rf.ret:
+			pwddicts[eachuser].append(i)
+
+		pwddicts[eachuser] = sorted(list(set(pwddicts[eachuser])))
+
+	return pwddicts
+
 def ssh2(ip,port,username,passwd,lock):  
 	global ret
 	printinfo = 'ssh://%s:%s@%s:%d' % (username,passwd,ip,port)
@@ -88,23 +133,17 @@ def Audit(services):
 		if ssh_port == 0:
 			return (None,output)
 
-		# get username
-		commonpwd = []
-		#pwdfile = '../../lib/db/temp.txt'
-		pwdfile = LIBDIR+'/db/temp.txt'
+		output += 'plugin run' + os.linesep
 
-		fp = open(pwdfile,'r')
-		for eachline in fp:
-			tp =  eachline.replace('\r','')
-			tp =  tp.replace('\n','')
-			if tp != '':
-				commonpwd.append(tp)
-		print 'commonpwd:\t',commonpwd
+		pwddicts = {}
+		# 
+		neighborhosts = []
+		if services.has_key('neighborhosts'):
+			neighborhosts = services['neighborhosts']
+		pwddicts = getPwds(neighborhosts)
+
+		pprint(pwddicts)
 		#sys.exit(0)
-
-		#usernames = ['root','test','rootroot','admin','administrator']
-		usernames=['root','test']
-		# get each username's password
 
 		#  threads
 		lock = threading.Lock()
@@ -112,8 +151,8 @@ def Audit(services):
 		ip = services['ip']
 		maxthreads = 20
 
-		for eachname in usernames:
-			for eachpwd in commonpwd:
+		for eachname in pwddicts.keys():
+			for eachpwd in pwddicts[eachname]:
 				th = threading.Thread(target=ssh2,args=(ip,ssh_port,eachname,eachpwd,lock))
 				threads.append(th)
 
@@ -146,6 +185,6 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__': 
-	services={'ip':'10.202.18.81','ports':[80,8080],'port_detail':{22:{'name':'ssh'}}}
+	services={'ip':'127.0.0.1','ports':[80,8080],'port_detail':{22:{'name':'ssh'}}, 'neighborhosts': ['hengtiansoft.com']}
 	pprint(Audit(services))
 	pprint(services)

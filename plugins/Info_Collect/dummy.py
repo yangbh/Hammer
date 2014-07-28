@@ -18,6 +18,7 @@ sys.path.append(PLUGINDIR)
 
 from pprint import pprint
 
+from lib.common import genFilename
 from lib.nmap_class import NmapScanner
 from lib.neighborHost_class import NeighborHost
 from lib.knock_class import SubDomain
