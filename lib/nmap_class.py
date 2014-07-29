@@ -5,14 +5,20 @@
 '''
 import sys
 import nmap
+from pprint import pprint
 
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
 class NmapScanner(object):
 	"""docstring for nmapScanner_class"""
+	# https tcp-443
+	# imaps tcp-993
+	# pop3s tcp-995
+	# smtps tcp-465
 	commonports = '21,22,23,25,110,53,67,80,443,1521,1526,3306,3389,8080,8580'
-	def __init__(self, hosts,ports=commonports,arguments='-sV'):
+	commonports += ',465,993,995'
+	def __init__(self, hosts,ports=commonports,arguments='-sV '):
 		super(NmapScanner, self).__init__()
 		self.hosts = hosts
 		self.ports = ports
@@ -28,7 +34,7 @@ class NmapScanner(object):
 		hosts = self.hosts
 		ports = self.ports
 		arguments = self.arguments
-		self.nm.scan(hosts,ports,arguments)
+		self.nm.scan(hosts=hosts,ports=ports,arguments=arguments)
 		# clear state:down host
 		# clear state:closed port
 		ret = {}
@@ -46,6 +52,6 @@ class NmapScanner(object):
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-	np = NmapScanner('www.leesec.com')
-	print np.scanPorts()
+	np = NmapScanner('www.hengtiansoft.com')
+	pprint(np.scanPorts())
 

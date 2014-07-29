@@ -3,6 +3,7 @@
 import sys
 import os
 import urllib2
+import socket
 import threading
 
 from urlparse import urlparse
@@ -102,19 +103,25 @@ def httpcrack(url,lock):
 	global ret
 	printinfo = None
 	flg = False
-	try:
-		 httpcode = urllib2.urlopen(url).getcode()
-		 if httpcode == 200:
-		 	printinfo = url + '\tcode:' + httpcode + os.linesep
-		 	flg = True
-	except Exception,e:
-		if type(e) == urllib2.HTTPError:
-			if e.getcode() in [401,403]:
-				flg = True
-			printinfo = url + '\tcode:' + str(e.getcode()) + os.linesep
-		else:
-			printinfo = url + '\tException' + str(e) + os.linesep
-			pass
+
+	for i in range(3):
+		try:
+			 httpcode = urllib2.urlopen(url).getcode()
+			 if httpcode == 200:
+			 	printinfo = url + '\tcode:' + httpcode + os.linesep
+			 	flg = True
+			 break
+		except socket.timeout,e:
+			continue
+		except Exception,e:
+			if type(e) == urllib2.HTTPError:
+				if e.getcode() in [401,403]:
+					flg = True
+				printinfo = url + '\tcode:' + str(e.getcode()) + os.linesep
+			else:
+				printinfo = url + '\tException' + str(e) + os.linesep
+			break
+
 	lock.acquire()
 	if printinfo:
 		print printinfo,
@@ -124,7 +131,7 @@ def httpcrack(url,lock):
 
 	return(flg,printinfo)
 
-def Audit(service):
+def Audit(services):
 	retinfo = {}
 	output = ''
 	if services.has_key('url'):
@@ -159,7 +166,7 @@ def Audit(service):
 			i += maxthreads
 	
 	if ret != '':
-		retinfo = {'level':'middle','content':ret}
+		retinfo = {'level':'low','content':ret}
 
 	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------

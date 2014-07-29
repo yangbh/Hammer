@@ -8,7 +8,7 @@ issubdomain:	False
 Step 1. Running Auxiliary Plugins
 
 >>>loading plugins
-{'/Users/mody/study/Python/Hammer/plugins/Info_Collect': ['crawler.py', 'neighborhost.py', 'portscan.py', 'robots.py', 'subdomain.py', 'whatweb.py'], '/Users/mody/study/Python/Hammer/plugins': [], '/Users/mody/study/Python/Hammer/plugins/Weak_Password': ['sshcrack.py'], '/Users/mody/study/Python/Hammer/plugins/Sensitive_Info': ['senpath.py']}
+{'/Users/mody/study/Python/Hammer/plugins/Info_Collect': ['crawler.py', 'neighborhost.py', 'portscan.py', 'robots.py', 'subdomain.py', 'whatweb.py'], '/Users/mody/study/Python/Hammer/plugins': [], '/Users/mody/study/Python/Hammer/plugins/Weak_Password': ['sshcrack.py'], '/Users/mody/study/Python/Hammer/plugins/Sensitive_Info': ['backupfile.py', 'compressedfile.py', 'probefile.py', 'senpath.py']}
 
 >>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/crawler.py
 
@@ -29,6 +29,12 @@ services changed to:	{'ip': u'122.225.227.162', 'port_detail': {80: {'product': 
 Step 2. Running Other Plugins
 
 >>>running plugin:/Users/mody/study/Python/Hammer/plugins/Weak_Password/sshcrack.py
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Sensitive_Info/backupfile.py
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Sensitive_Info/compressedfile.py
+
+>>>running plugin:/Users/mody/study/Python/Hammer/plugins/Sensitive_Info/probefile.py
 
 >>>running plugin:/Users/mody/study/Python/Hammer/plugins/Sensitive_Info/senpath.py
 

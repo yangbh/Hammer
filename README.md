@@ -3,8 +3,19 @@ Hammer
 
 Hammer
 
-require:
+required software:
+dig
+whatweb
 
+required python plugins:
+
+nmap
+httplib
+urllib
+urllib2
+sqlite3
+argparse 
+json
 paramiko
 requests
 gevent

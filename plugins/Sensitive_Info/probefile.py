@@ -3,6 +3,7 @@
 
 import os
 import urllib2
+import socket
 import threading
 
 from urlparse import urlparse
@@ -64,13 +65,13 @@ def generateUrls(url):
 	urls = []
 	dictfile = BASEDIR + '/lib/db/probe_file.dict'
 	dicts = getDict(dictfile)
-	print 'dicts=\t',dicts
+	#print 'dicts=\t',dicts
 
 	exts = getCrawlerFileExts(url)
-	print 'exts=\t',exts
+	#print 'exts=\t',exts
 
 	paths = getCrawlerPaths(url)
-	print 'paths=\t',paths
+	#print 'paths=\t',paths
 
 	for eachpath in paths:
 		for eachdict in dicts:
@@ -86,35 +87,41 @@ def httpcrack(url,lock):
 	global ret
 	printinfo = None
 	flg = False
-	try:
-		ul = urllib2.urlopen(url)
-		httpcode = ul.getcode()
-		if httpcode == 200:
-		 	httpcont = ul.read()
-		 	# print url
-		 	# print httpcont
-		 	# print httpcont.find('Frederico Caldeira Knabben')
-		 	flg = True
-			if httpcont.find('<title>phpinfo()</title>') != -1:
-				printinfo =  '<phpinfo>' + url + os.linesep
-			elif url.endswith('readme.txt'):
-				printinfo =  '<readme.txt>' + url + os.linesep
-			elif url.find('fckeditor')  != -1 and httpcont.find('Frederico Caldeira Knabben') != -1:
-				printinfo =  '<fckeditor>' + url + os.linesep
-		 	else:
-		 		flg = False
-	except Exception,e:
-		if type(e) == urllib2.HTTPError:
-			if e.getcode() in [401,403]:
-				flg = True
-				if url.find('/.svn') != -1:
-					printinfo =  '<svn>' + url + '\t code:' + str(e.getcode()) + os.linesep
+
+	for i in range(3):
+		try:
+			ul = urllib2.urlopen(url)
+			httpcode = ul.getcode()
+			if httpcode == 200:
+			 	httpcont = ul.read()
+			 	# print url
+			 	# print httpcont
+			 	# print httpcont.find('Frederico Caldeira Knabben')
+			 	flg = True
+				if httpcont.find('<title>phpinfo()</title>') != -1:
+					printinfo =  '<phpinfo>' + url + os.linesep
+				elif url.endswith('readme.txt'):
+					printinfo =  '<readme.txt>' + url + os.linesep
+				elif url.find('fckeditor')  != -1 and httpcont.find('Frederico Caldeira Knabben') != -1:
+					printinfo =  '<fckeditor>' + url + os.linesep
+			 	else:
+			 		flg = False
+			break
+		except socket.timeout,e:
+			continue
+		except Exception,e:
+			if type(e) == urllib2.HTTPError:
+				if e.getcode() in [401,403]:
+					flg = True
+					if url.find('/.svn') != -1:
+						printinfo =  '<svn>' + url + '\t code:' + str(e.getcode()) + os.linesep
+					else:
+						printinfo = url + '\t code:' + str(e.getcode()) + os.linesep
 				else:
 					printinfo = url + '\t code:' + str(e.getcode()) + os.linesep
 			else:
-				printinfo = url + '\t code:' + str(e.getcode()) + os.linesep
-		else:
-			printinfo = url + '\tException' + str(e) + os.linesep
+				printinfo = url + '\tException' + str(e) + os.linesep
+			break
 
 	lock.acquire()
 	if printinfo:
@@ -125,14 +132,14 @@ def httpcrack(url,lock):
 
 	return(flg,printinfo)
 
-def Audit(service):
+def Audit(services):
 	retinfo = {}
 	output = ''
 	if services.has_key('url'):
 		output += 'plugin run' + os.linesep
 		urls = generateUrls(services['url'])
-		print 'urls=\t'
-		pprint(urls)
+		#print 'urls=\t'
+		#pprint(urls)
 
 		#  threads
 		lock = threading.Lock()
@@ -161,7 +168,7 @@ def Audit(service):
 			i += maxthreads
 	
 	if ret != '':
-		retinfo = {'level':'middle','content':ret}
+		retinfo = {'level':'low','content':ret}
 
 	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------

@@ -1,6 +1,0 @@
-http://canju.hengtiansoft.com/login.jsp
-http://canju.hengtiansoft.com/main.htm
-http://canju.hengtiansoft.com/pay.htm
-http://canju.hengtiansoft.com
-http://canju.hengtiansoft.com/about.htm
-http://canju.hengtiansoft.com/help.htm

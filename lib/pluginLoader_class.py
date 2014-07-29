@@ -206,12 +206,15 @@ class PluginLoader(object):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	sys.path.append('/root/workspace/Hammer')
-	sys.path.append('/root/workspace/Hammer/lib')
+	basedir = '/root/workspace/Hammer'
+	sys.path.append(basedir)
+	sys.path.append(basedir+'/lib')
 	services={'url':'http://www.hengtiansoft.com'}
 	pl = PluginLoader(None,services)
-	pl.path = '/root/workspace/Hammer/plugins'
-	pl.runEachPlugin('/root/workspace/Hammer/plugins/Info_Collect/spider.py',services)
+	pl.path = basedir+'/plugins'
+	#pl.runEachPlugin('/root/workspace/Hammer/plugins/Info_Collect/spider.py',services)
+	pl.runEachPlugin(basedir+'/plugins/Sensitive_Info/backupfile.py',services)
+	
 	# print pl.loadPlugins()
 	# pl.runPlugins()
 	# print pl.retinfo

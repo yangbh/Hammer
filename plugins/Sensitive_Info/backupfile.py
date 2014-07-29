@@ -3,6 +3,7 @@
 
 import os
 import urllib2
+import socket
 import threading
 
 from urlparse import urlparse
@@ -90,18 +91,24 @@ def httpcrack(url,lock):
 	global ret
 	printinfo = None
 	flg = False
-	try:
-		 httpcode = urllib2.urlopen(url).getcode()
-		 if httpcode == 200:
-		 	printinfo = url + '\t code:' + httpcode + os.linesep
-		 	flg = True
-	except Exception,e:
-		if type(e) == urllib2.HTTPError:
-			if e.getcode() in [401,403]:
-				flg = True
-			printinfo = url + '\t code:' + str(e.getcode()) + os.linesep
-		else:
-			printinfo = url + '\tException' + str(e) + os.linesep
+
+	for i in range(3):
+		try:
+			 httpcode = urllib2.urlopen(url).getcode()
+			 if httpcode == 200:
+			 	printinfo = url + '\t code:' + httpcode + os.linesep
+			 	flg = True
+			 break
+		except socket.timeout,e:
+				continue
+		except Exception,e:
+			if type(e) == urllib2.HTTPError:
+				if e.getcode() in [401,403]:
+					flg = True
+				printinfo = url + '\t code:' + str(e.getcode()) + os.linesep
+			else:
+				printinfo = url + '\tException' + str(e) + os.linesep
+			break
 
 	lock.acquire()
 	if printinfo:
@@ -112,13 +119,15 @@ def httpcrack(url,lock):
 
 	return(flg,printinfo)
 
-def Audit(service):
+def Audit(services):
 	retinfo = {}
 	output = ''
+	#print'ok'
 	if services.has_key('url'):
+		#print'ok'
 		output += 'plugin run' + os.linesep
 		urls = generateUrls(services['url'])
-		pprint(urls)
+		#pprint(urls)
 
 		#  threads
 		lock = threading.Lock()
@@ -147,7 +156,7 @@ def Audit(service):
 			i += maxthreads
 	
 	if ret != '':
-		retinfo = {'level':'middle','content':ret}
+		retinfo = {'level':'low','content':ret}
 
 	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------
