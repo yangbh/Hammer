@@ -26,3 +26,4 @@ from lib.ruleFile_class import RuleFile
 # from lib.theHarvester_class import TheHarvester
 # from lib.whatWeb_class import WhatWeb
 from lib.spider.domain import GetFirstLevelDomain
+from lib.crawler.crawlerFile import CrawlerFile

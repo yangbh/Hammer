@@ -160,7 +160,8 @@ class Crawler(object):
 			#print urls
 
 			for eachline in urls:
-				eachline = eachline.replace(os.linesep,'')
+				eachline = eachline.replace('\r','')
+  				eachline = eachline.replace('\n','')
 				#print eachline
 				eachulp = urlparse(eachline)
 				if baseulp.scheme == eachulp.scheme and baseulp.netloc == eachulp.netloc:
@@ -214,6 +215,7 @@ class Crawler(object):
 				pos = eachulp.path.rfind('.')
 				if pos != -1:
 					ext = eachulp.path[pos:]
+					ext = ext.lower()
 					if ext not in exts:
 						exts.append(ext)
 			return exts

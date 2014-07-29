@@ -51,10 +51,10 @@ class RuleFile(object):
 					continue
 				if eachline[0] == '#':
 					continue
-				# tmp = eachline.replace('\r','')
-				# tmp = tmp.replace('\n','')
-				tmp = eachline.replace(os.linesep,'')
-				#print 'eachline=\t',tmp
+				tmp = eachline.replace('\r','')
+				tmp = tmp.replace('\n','')
+				# tmp = eachline.replace(os.linesep,'')
+				# print 'eachline=\t',tmp
 
 				if tmp.find('%') == -1:
 					self.ret.append(tmp)

@@ -12,6 +12,7 @@ class CrawlerFile(object):
 	def __init__(self,filename='',url=None):
 		super(CrawlerFile, self).__init__()
 		self.file = filename
+		self.url = url
 		if url:
 			self.file = BASEDIR + '/cache/crawler/' + genFilename(url) + '.txt'
 
@@ -21,7 +22,8 @@ class CrawlerFile(object):
 			flag = False
 			ret = []
 			for eachline in fp:
-				eachline = eachline.replace(os.linesep,'')
+				eachline = eachline.replace('\r','')
+  				eachline = eachline.replace('\n','')
 				if eachline == '':
 					continue
 
@@ -38,9 +40,8 @@ class CrawlerFile(object):
 
 		except Exception,e:
 			print 'Exception:\t',e
-			print traceback.format_exc()
-
-		return []
+			# print traceback.format_exc()
+		return [self.url]
 
 	def saveSection(self,sectionname,contentlist,coverfile=False):
 		try:
@@ -57,8 +58,8 @@ class CrawlerFile(object):
 			return True
 		except Exception,e:
 			print 'Exception:\t',e
-			print traceback.format_exc()
-			return False
+			# print traceback.format_exc()
+		return False
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------

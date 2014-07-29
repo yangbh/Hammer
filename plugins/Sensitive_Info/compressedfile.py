@@ -23,35 +23,9 @@ ret = ''
 def getCrawlerPaths(url):
 	''' '''
 	try:
-		filename = BASEDIR + '/cache/crawler/' + genFilename(url) + '.txt'
-		#print 'filename=\t',filename
-		paths = []
-		baseulp = urlparse(url)
-
-		fp = open(filename,'r')
-		for eachline in fp:
-			eachline = eachline.replace(os.linesep,'')
-			#print eachline
-			eachulp = urlparse(eachline)
-			if baseulp.scheme == eachulp.scheme and baseulp.netloc == eachulp.netloc:
-				fullpath = eachulp.path
-				if fullpath.find('.') == -1 and fullpath.endswith('/') == False:
-					fullpath += '/'
-				pos = 0
-				while True:
-					pos = fullpath.find('/',pos)
-					if pos == -1:
-						break
-					tmppth = eachulp.scheme + '://' + eachulp.netloc + eachulp.path[:pos]
-					if tmppth.endswith('/'):
-						#tmppth = tmppth[:-1]
-						continue
-					if tmppth not in paths:
-						paths.append(tmppth)
-					pos +=1
-
-		fp.close()
-		return paths
+		cf = CrawlerFile(url=url)
+		urls = cf.getSection('Paths')
+		return urls
 	except Exception,e:
 		print 'Exception:\t',e
 		return [url]
@@ -88,20 +62,25 @@ def generateUrls(url):
 
 def httpcrack(url,lock):
 	global ret
-	printinfo = url + os.linesep
+	printinfo = None
 	flg = False
 	try:
 		 httpcode = urllib2.urlopen(url).getcode()
 		 if httpcode == 200:
-		 	printinfo += 'exists' + os.linesep
+		 	printinfo = url + '\tcode:' + httpcode + os.linesep
 		 	flg = True
 	except Exception,e:
-		printinfo += 'Exception' + str(e) + os.linesep
-
+		if type(e) == urllib2.HTTPError:
+			if e.getcode() in [401,403]:
+				flg = True
+			printinfo = url + '\tcode:' + str(e.getcode()) + os.linesep
+		else:
+			printinfo = url + '\tException' + str(e) + os.linesep
 	lock.acquire()
-	print printinfo
-	if flg:
-		ret += printinfo
+	if printinfo:
+		print printinfo,
+		if flg:
+			ret += printinfo
 	lock.release()
 
 	return(flg,printinfo)
@@ -148,6 +127,9 @@ def Audit(service):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	services = {'url':'http://localhost'}
+	url='http://www.hengtiansoft.com'
+	if len(sys.argv) ==  2:
+		url = sys.argv[1]
+	services = {'url':url}
 	pprint(Audit(services))
 	pprint(services)

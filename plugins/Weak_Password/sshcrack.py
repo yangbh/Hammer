@@ -27,7 +27,7 @@ def getPwds(neighborhosts):
 
 	commonpwd = []
 	#pwdfile = '../../lib/db/temp.txt'
-	pwdfile = LIBDIR+'/db/temp.txt'
+	pwdfile = LIBDIR+'/db/password_small.dict'
 
 	fp = open(pwdfile,'r')
 	for eachline in fp:

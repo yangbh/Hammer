@@ -66,6 +66,7 @@
 /config.asp
 /Login.Asp
 /MemberLogin.Asp
+
 /news_list.asp
 /Message.Asp
 /companyUserLogin.asp

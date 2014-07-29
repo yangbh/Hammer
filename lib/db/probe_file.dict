@@ -1,0 +1,18 @@
+#probe File Discover
+
+/.bash_history
+/.viminfo
+/.git
+/.gitignore
+/.tag
+/.tags_sorted_by_file
+/.svn
+/.metadata
+
+/phpinfo.php
+/test.php
+/1.php
+/info.php
+/php.php
+
+/fckeditor/editor/dialog/fck_about.html
