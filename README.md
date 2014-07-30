@@ -5,15 +5,18 @@ What's Hammer?
 ----------------------------------- 
 A web vulnnerability scanner
 
-
 Installing
-===================================  
-###required software:
+=================================== 
+
+ Require
+ ----------------------------------- 
+### required software:
+```
 dig
 whatweb
-
-###required python plugins:
-
+```
+### required python plugins:
+```
 nmap
 httplib
 urllib
@@ -27,6 +30,7 @@ gevent
 MySQLdb
 pyquery
 beautifulsoup4
+```
 
 Quick help
 ===================================  
