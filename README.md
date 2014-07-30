@@ -1,8 +1,5 @@
-Hammer
+What's Hammer?
 ===================================  
-
-What's Hammer?
------------------------------------ 
 A web vulnnerability scanner
 
 Installing
@@ -10,12 +7,12 @@ Installing
 
  Require
  ----------------------------------- 
-### required software:
+Required software:
 ```
 dig
 whatweb
 ```
-### required python plugins:
+Required python plugins:
 ```
 nmap
 httplib
