@@ -13,6 +13,7 @@ import re
 import traceback
 import logging
 import requests
+from urlparse import urlparse
 
 #log = logging.getLogger('WebPage')
 # ----------------------------------------------------------------------------------------------------
@@ -28,17 +29,22 @@ class WebPage(object):
 	def fetch(self, retry=2, proxies=None):
 		'''获取html源代码'''
 		try:
-			#设置了prefetch=False，当访问response.text时才下载网页内容,避免下载非html文件
-			response = requests.get(self.url, headers=self.headers, timeout=10, stream=True, proxies=proxies)
-			#print self.url,response.text
-			if self._isResponseAvaliable(response):
-				self._handleEncoding(response)
-				self.pageSource = response.text
-				return True
-			else:
-				#log.warning('Page not avaliable. Status code:%d URL: %s \n' % (
-				#	response.status_code, self.url) )
-				pass
+			for i in range(5):
+				#设置了prefetch=False，当访问response.text时才下载网页内容,避免下载非html文件
+				response = requests.get(self.url, headers=self.headers, timeout=10, stream=True, proxies=proxies)
+				#print self.url,response.text
+				if self._isResponseAvaliable(response):
+					self._handleEncoding(response)
+					self.pageSource = response.text
+					rdurl = self._isResponeRedirect(response)
+					if rdurl != False:
+						self.url = rdurl
+						continue
+					return True
+				else:
+					#log.warning('Page not avaliable. Status code:%d URL: %s \n' % (
+					#	response.status_code, self.url) )
+					pass
 		except Exception,e:
 			if retry>0: #超时重试
 				return self.fetch(retry-1)
@@ -81,12 +87,40 @@ class WebPage(object):
 		#因此需要用网页源码meta标签中的charset去判断编码
 		if response.encoding == 'ISO-8859-1':
 			charset_re = re.compile("((^|;)\s*charset\s*=)([^\"']*)", re.M)
-			charset=charset_re.search(response.text) 
+			charset=charset_re.search(response.text[:1000]) 
 			charset=charset and charset.group(3) or None 
 			response.encoding = charset
+
+	def _isResponeRedirect(self,response):
+		if len(response.text) < 1000:
+			rdurl = False
+			a = re.search('window.location\s*=\s*["\']?([^"\']*)["\']?;',response.text,re.I)
+			if a:
+				rdurl = a.group(1)
+				#print rdurl
+			else:
+				a = re.search('<meta\s+(http-equiv=\S*)\s+content=["\']?[^;]*;\s*url=\s*([^"\']*)["\']?',response.text,re.I)
+				if a:
+					rdurl = a.group(2)
+					#print rdurl
+			if rdurl:
+				if rdurl.startswith('http') == False:
+					if rdurl.startswith('/'):
+						ulp = urlparse(self.url)
+						rdurl = ulp.scheme + '://' + ulp.netloc + rdurl
+					else:
+						rdurl = self.url + rdurl
+				print rdurl
+				return rdurl
+		return False
 
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-	wp = WebPage('http://www.hengtiansoft.com')
+	import sys
+	url='http://192.168.1.2/code.html'
+	if len(sys.argv) ==  2:
+		url = sys.argv[1]
+	wp = WebPage(url)
+	wp.fetch()

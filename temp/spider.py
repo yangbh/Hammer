@@ -13,7 +13,7 @@ info = {
 }
 
 def Audit(services):
-	if services.has_key('url') and False:
+	if services.has_key('url'):
 
 	 	root = services['url']
 		strategy = Strategy(max_depth=10, max_count=5000,
@@ -41,6 +41,9 @@ def Audit(services):
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	from dummy import *
-	services={'url':'http://www.hengtiansoft.com'}
+	url='http://www.htu.edu.cn'
+	if len(sys.argv) ==  2:
+		url = sys.argv[1]
+	services={'url':url}
 	pprint(Audit(services))
 	pprint(services)

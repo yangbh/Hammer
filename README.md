@@ -2,19 +2,22 @@ What's Hammer?
 ===================================  
 A web vulnnerability scanner
 
-Installing
+Install
 =================================== 
 
  Require
 ----------------------------------- 
 Required software:
 ```
+python2.7
+ruby
 dig
 whatweb
-```
+```
+
 Required python plugins:
-```
-nmap
+```
+python-nmap
 httplib
 urllib
 urllib2
@@ -29,13 +32,30 @@ pyquery
 beautifulsoup4
 ```
 
-Quick help
+Quick help
 ===================================  
 Basic usage
 ----------------------------------- 
+```
+	####################################################
+	##
+	##
+	##
+	##	
+	##	author	:  yangbh
+	##	email  	:  
+	####################################################
+	
+Usage: hammer.py [options] -u url
 
+	-u --url: url address, like http://www.leesec.com/
+	-h: help
 
-Available plugins
+Examples:
+	hammer.py -u http://www.leesec.com/
+```
+
+Available plugins
 ----------------------------------- 
 ```
 plugins/
