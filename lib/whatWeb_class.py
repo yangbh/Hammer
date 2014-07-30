@@ -28,7 +28,8 @@ class WhatWeb(object):
 		'''start whatweb scan'''
 		url = self.url
 		outfile = self.outfile
-		shellcmd = CURRENT_PATH + '/' + './WhatWeb/whatweb -q --follow-redirect=never --log-json=' +outfile +' '+url
+		shellcmd = CURRENT_PATH + '/' + './whatweb/whatweb -q --follow-redirect=never --log-json=' +outfile +' '+url
+		#shellcmd = 'whatweb -q --follow-redirect=never --log-json=' +outfile +' '+url
 		#print 'shellcmd=',shellcmd
 		if os.path.isfile(outfile):
 			os.remove(outfile)
@@ -58,6 +59,7 @@ class WhatWeb(object):
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-	leesec = WhatWeb('canju.hengtiansoft.com')
-	leesec.scan()
-	print leesec.getResult()
+	from pprint import pprint
+	wb = WhatWeb('http://www.sel.zju.edu.cn')
+	wb.scan()
+	pprint(wb.getResult())

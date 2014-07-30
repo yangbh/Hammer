@@ -35,7 +35,15 @@ def Audit(services):
 					if ret['plugins']['WordPress'].has_key('version'):
 						services['cmsversion'] = ret['plugins']['WordPress']['version'][0]
 						output += 'cmsversion: ' + services['cmsversion'] + os.linesep
-				
+				# Discuz
+				elif ret['plugins'].has_key('Discuz'):
+					#print services
+					services['cms'] = 'Discuz'
+					output += 'cms: Discuz' + os.linesep
+					if ret['plugins']['Discuz'].has_key('version'):
+						services['cmsversion'] = ret['plugins']['Discuz']['version'][0]
+						output += 'cmsversion: ' + services['cmsversion'] + os.linesep
+
 				# HTTPServer
 				if ret['plugins'].has_key('HTTPServer'):
 					if ret['plugins']['HTTPServer'].has_key('string'):
@@ -72,6 +80,10 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	services = {'url':'http://www.sel.zju.edu.cn'}
+	import sys
+	url='http://www.htu.edu.cn'
+	if len(sys.argv) ==  2:
+		url = sys.argv[1]
+	services = {'url':url}
 	pprint(Audit(services))
 	pprint(services)

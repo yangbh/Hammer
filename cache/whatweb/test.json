@@ -1,0 +1,21 @@
+<?xml version="1.0"?><?xml-stylesheet type="text/xml" href="whatweb.xsl"?>
+<log>
+<target>
+	<uri>http://www.sel.zju.edu.cn</uri>
+	<http-status>200</http-status>
+	<plugin>
+		<name>x-pingback</name>
+</log>
+<?xml version="1.0"?><?xml-stylesheet type="text/xml" href="whatweb.xsl"?>
+<log>
+<log>
+<target>
+	<uri>http://www.sel.zju.edu.cn</uri>
+	<http-status>200</http-status>
+	<plugin>
+		<name>WordPress</name>
+		<version>3.8.1</version>
+	</plugin>
+</target>
+</log>
+{"target":"http://www.sel.zju.edu.cn","http_status":200,"plugins":{"WordPress":{"version":["3.8.1"]}}}
