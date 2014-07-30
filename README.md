@@ -1,13 +1,18 @@
 Hammer
-======
+===================================  
 
-Hammer
+What's Hammer?
+----------------------------------- 
+A web vulnnerability scanner
 
-required software:
+
+Installing
+===================================  
+###required software:
 dig
 whatweb
 
-required python plugins:
+###required python plugins:
 
 nmap
 httplib
@@ -23,7 +28,15 @@ MySQLdb
 pyquery
 beautifulsoup4
 
+Quick help
+===================================  
+Basic usage
+----------------------------------- 
 
+
+Available plugins
+----------------------------------- 
+```
 plugins/
 ├── Info_Collect
 │   ├── crawler.py
@@ -53,3 +66,4 @@ plugins/
 └── Web_Applications
     ├── discuz7_2fap_php_sqlinject.py
     └── dummy.py
+```
