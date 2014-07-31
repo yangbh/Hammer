@@ -231,7 +231,6 @@ class Crawler(object):
 		except Exception,e:
 			print 'Exception:\t',e
 
-
 	def getAlreadyVisitedNum(self):
 		#visitedHrefs保存已经分配给taskQueue的链接，有可能链接还在处理中。
 		#因此真实的已访问链接数为visitedHrefs数减去待访问的链接数
