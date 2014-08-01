@@ -30,6 +30,7 @@ gevent
 MySQLdb
 pyquery
 beautifulsoup4
+easywebdav
 ```
 
 Quick help

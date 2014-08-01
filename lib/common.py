@@ -7,4 +7,3 @@ def genFilename(url):
 	ulp = urlparse(url)
 	name = ulp.scheme + '_' + ulp.netloc.replace(':','_')
 	return name
-

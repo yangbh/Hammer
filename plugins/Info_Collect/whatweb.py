@@ -248,6 +248,8 @@ def Audit(services):
 		except TypeError, e:
 			#print 'TypeError: ',e
 			output += 'TypeError: ' + str(e) + os.linesep
+		except Exception,e:
+			output += 'Exception: ' + str(e) + os.linesep
 	# else:
 	# 	output += 'plugin does not run' + os.linesep
 
@@ -257,7 +259,7 @@ def Audit(services):
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	import sys
-	url='http://www.htu.edu.cn'
+	url='http://www.hengtiansoft.com'
 	if len(sys.argv) ==  2:
 		url = sys.argv[1]
 	services = {'url':url}
