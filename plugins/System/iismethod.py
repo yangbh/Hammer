@@ -37,7 +37,7 @@ def Audit(services):
 			level = 'low'
 			if method.find('PUT') != -1 or method.find('MOVE') != -1:
 				level = 'medium'
-			retinfo = {'level':'low','content':method}
+			retinfo = {'level':'info','content':method}
 			output += 'HTTP Methods found:\t' + method
 			return (retinfo,output)
 

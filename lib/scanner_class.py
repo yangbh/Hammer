@@ -8,11 +8,13 @@ import threading
 import urllib2
 import logging
 
+from pprint import pprint
+
 from nmap_class import NmapScanner
 from pluginLoader_class import PluginLoader
 from mysql_class import MySQLHelper
 from spider.domain import GetFirstLevelDomain
-from dummy import PLUGINDIR, BASEDIR
+from dummy import *
 
 # ----------------------------------------------------------------------------------------------------
 #
@@ -46,12 +48,16 @@ class MutiScanner(threading.Thread):
 # ----------------------------------------------------------------------------------------------------
 class Scanner(object):
 	"""docstring for Scanner"""
-	def __init__(self, url):
+	def __init__(self,url=None,server=None):
 		super(Scanner, self).__init__()
 		#url
 		if url[-1] != '/':
 			url += '/'
 		self.url = url
+
+		# web server address
+		self.server = server
+
 		m = re.match('(http[s]?)://([^:^/]+):?([^/]*)/',url)
 		if m:
 			self.http_type = m.group(1)
@@ -80,6 +86,11 @@ class Scanner(object):
 
 		# thread arguments
 		self.lock = threading.Lock()
+
+		# urls
+		self.urls = {}
+		# pluginloaders
+		self.pls = []
 
 	def getSubDomains(self,host=None):
 		if host == None:
@@ -198,6 +209,7 @@ class Scanner(object):
 			httpports = self.getHttpPorts(eachip)
 			urls[eachip] = self.generateUrl(eachip,ip_hosts,httpports)
 
+		self.urls = urls
 		print 'urls\t',urls
 		# get services
 
@@ -209,6 +221,7 @@ class Scanner(object):
 			services = {}
 			if eachip !=  self.ip:
 				services['issubdomain'] = True
+
 			services['ip'] = eachip
 			pl = PluginLoader(None,services,outputpath=self.host)
 			pls.append(pl)
@@ -227,6 +240,8 @@ class Scanner(object):
 				pl = PluginLoader(None,services,outputpath=self.host)
 				pls.append(pl)
 				print 'scan start:\t',pl.services
+
+		self.pls = pls
 
 		#print pls
 		mthpls=[]
@@ -250,7 +265,7 @@ class Scanner(object):
 		for eachmthpl in mthpls:
 			eachmthpl.join()
 
-
+		self.setResult(urls=self.urls,pls=pls)
 		#self.saveResultToFile(pls)
 		
 		# for eachpl in pls:
@@ -267,10 +282,42 @@ class Scanner(object):
 		#  	print '>>>scan result:'
 		#  	print eachpl.retinfo
 
+	def setResult(self,urls=None,pls=None):
+		''' '''
+		urls = self.urls if urls==None else urls
+		pls = self.pls if pls==None else pls
+
+		for eachpl in pls:
+			for urlip in urls.keys():
+				if eachpl.services.has_key('ip'):
+					plip = eachpl.services['ip']
+					if urlip == plip:
+						self.result[urlip] = {}
+						self.result[urlip]['retinfo'] = eachpl.retinfo
+						break
+
+		for eachpl in pls:
+			for urlip in urls.keys():
+				for urlurl in urls[urlip]:
+					if eachpl.services.has_key('url'):
+						plurl = eachpl.services['url']
+						if urlurl == plurl:
+							self.result[urlip][urlurl] = {}
+							self.result[urlip][urlurl]['retinfo'] = eachpl.retinfo
+
+		pprint(self.result)
+
+	def saveResultToWeb(self,server=None,urls=None,pls=None):
+		''' '''
+		print '>>>saving scan result to server'
+		if server == None:
+			print'server not exists'
+			return False
+
 
 	def saveResultToFile(self,pls,outputpath=None):
 		''' '''
-		print '>>>saving scan result'
+		print '>>>saving scan result to file'
 		if outputpath == None:
 			outputpath = BASEDIR + '/output/' + self.host
 		if os.path.isdir(outputpath) == False:
