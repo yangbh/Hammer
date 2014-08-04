@@ -71,17 +71,17 @@ EOF;
     </div>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="container-fluid">
+    <div class="container">
       <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
+        <!-- <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <li class="active"><a href="#">Overview</a></li>
             <li><a href="#">Reports</a></li>
             <li><a href="#">Analytics</a></li>
             <li><a href="#">Export</a></li>
           </ul>
-        </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        </div> -->
+        <!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"> -->
             <h1 class="page-header">Plugins</h1>
             <form class="form-inline" role="form">
                 <div class="btn-group">
@@ -106,24 +106,26 @@ EOF;
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
-                  <th>Header</th>
+                  <th>Name</th>
+                  <th></th>
+                  <th>Category</th>
+                  <th>Author</th>
+                  <th>Hits</th>
+                  <th>Date</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>1,001</td>
-                  <td>Lorem</td>
-                  <td>ipsum</td>
-                  <td>dolor</td>
-                  <td>sit</td>
+                    <td>1,001</td>
+                    <td>Lorem</td>
+                    <td>ipsum</td>
+                    <td>dolor</td>
+                    <td>sit</td>
+                    <td>sit</td>
                 </tr>
               </tbody>
             </table>
-          </div>
+          <!-- </div> -->
         </div>
       </div>
     </div>
