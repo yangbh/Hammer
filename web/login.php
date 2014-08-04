@@ -5,8 +5,8 @@ function login_check($username,$password){
 	global $con,$DB_SALT;
 	$Pwd = strrev($username).'#'. $DB_SALT .'#'.strrev($password);	
 	$Pwd = md5($Pwd);
-	$query = "SELECT * FROM USER WHERE NAME='" . $username . "' AND Password='". $Pwd . "'";
-	#print '$query= '. $query . '<br>';
+	$query = "SELECT * FROM User WHERE NAME='" . $username . "' AND Password='". $Pwd . "'";
+	print '$query= '. $query . '<br>';
 	$result = mysql_query($query);
 	if ($row = mysql_fetch_array($result)) {
 			return $row;
