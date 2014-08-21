@@ -25,7 +25,7 @@ def Audit(services):
 					ul = urllib2.urlopen(url)
 					content = ul.read()
 					if content.find('c4ca4238a0b923820dcc509a6f75849b1') != -1:
-						retinfo = {'level':'info','content':url}
+						retinfo = {'level':'high','content':url}
 						output += 'Vula:\t' + url
 				except:
 					pass

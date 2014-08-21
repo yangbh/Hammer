@@ -3,13 +3,14 @@ require_once('common.php');
 
 function login_check($username,$password){
 	global $con,$DB_SALT;
-	$Pwd = strrev($username).'#'. $DB_SALT .'#'.strrev($password);	
-	$Pwd = md5($Pwd);
+	// $Pwd = strrev($username).'#'. $DB_SALT .'#'.strrev($password);	
+	// $Pwd = md5($Pwd);
+	$Pwd = pwd_encode($username,$password);
 	$query = "SELECT * FROM User WHERE NAME='" . $username . "' AND Password='". $Pwd . "'";
 	print '$query= '. $query . '<br>';
 	$result = mysql_query($query);
 	if ($row = mysql_fetch_array($result)) {
-			return $row;
+		return $row;
 	}
 	return False;
 }

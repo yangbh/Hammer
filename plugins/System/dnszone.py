@@ -41,7 +41,7 @@ def Audit(services):
 						cmd_res.find('XFR size') > 0 :
 
 					output +=  'Vulnerable dns server found:' + server + os.linesep
-					retinfo = {'level':'midenum','content':domain}
+					retinfo = {'level':'medium','content':domain}
 		except Exception,e:
 			pass
 		return(retinfo,output)
