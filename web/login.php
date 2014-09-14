@@ -23,8 +23,8 @@ if(already_login()){
 	exit;
 }
 
-$user = check_input(trim($_POST['username']));
-$pwd = check_input(trim($_POST['password']));
+$user = check_sql(trim($_POST['username']));
+$pwd = check_sql(trim($_POST['password']));
 // var_dump($_POST);
 // print('$user='.$user.'<br>');
 // print('$pwd='.$pwd.'<br>');

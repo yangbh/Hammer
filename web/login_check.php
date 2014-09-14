@@ -25,7 +25,7 @@ if(already_login()){
 	echo json_encode($arr);
 }
 
-$user = check_input(trim($_POST['username']));
-$pwd = check_input(trim($_POST['password']));
+$user = check_sql(trim($_POST['username']));
+$pwd = check_sql(trim($_POST['password']));
 echo login_check($user,$pwd);
 ?>

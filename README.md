@@ -60,32 +60,32 @@ Available plugins
 ----------------------------------- 
 ```
 plugins/
+├── Common
+│   └── fileinclusion.py
 ├── Info_Collect
 │   ├── crawler.py
-│   ├── dummy.py
-│   ├── __init__.py
 │   ├── neighborhost.py
 │   ├── portscan.py
 │   ├── robots.py
 │   ├── subdomain.py
 │   └── whatweb.py
-├── __init__.py
 ├── Sensitive_Info
 │   ├── backupfile.py
 │   ├── compressedfile.py
-│   ├── dummy.py
-│   ├── __init__.py
 │   ├── probefile.py
 │   └── senpath.py
 ├── System
-│   ├── dnszone.py
-│   ├── dummy.py
-│   └── openssl.py
+│   ├── iismethod.py
+│   ├── iisshort.py
+│   ├── openssl.py
+│   ├── phpmyadmin_null_password.py
+│   └── webdav.py
 ├── Weak_Password
-│   ├── dummy.py
-│   ├── __init__.py
 │   └── sshcrack.py
 └── Web_Applications
-    ├── discuz7_2fap_php_sqlinject.py
-    └── dummy.py
+    ├── bo_blog_tag_php_xss.py
+    ├── espcms_search_inject.py
+    ├── espcms_sql_inject.py
+    ├── shopex_phpinfo_disclosure.py
+    └── wordpress_reflect_xss.py
 ```

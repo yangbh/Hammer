@@ -13,19 +13,12 @@ require_once('common.php');
     <link rel="icon" href="images/favicon.ico">
 
     <title>Hammer</title>
-
     <!-- Bootstrap core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="css/jumbotron.css" rel="stylesheet">
-    
-    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
-    <script type="text/javascript">
-      $("#username").change(function(){
-        alert($("#username").value);
-      });
-    </script>
-
+    <!-- Custom styles for this template -->
+    <link href="css/dashboard.css" rel="stylesheet">
   </head>
 
   <body>
@@ -43,8 +36,8 @@ require_once('common.php');
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="index.php">Home</a></li>
-            <?php if (already_login()) {echo '<li><a href="scans.php">Scans</a></li>';}?>
+            <li><a href="index.php">Home</a></li>
+            <?php if (already_login()) {echo '<li class="active"><a href="scans.php">Scans</a></li>';}?>
             <li><a href="plugins.php">Plugins</a></li>
             <li><a href="documents.php">Documents</a></li>
             <li><a href="about.php">About</a></li>
@@ -77,40 +70,65 @@ EOF;
     </div>
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-      <div class="container">
-        <h1>What's Hammer?</h1>
-        <p>Hammer is a network scanner, but more of a vulnerability scan framework. It supports plug-in extensions, you can design your own hammer, that is your hacking tool. Hammer is open source, and i hope you can share yours! </p>
-        <p><a class="btn btn-primary btn-lg" role="button" href="https://www.github.com/yangbh/Hammer">Design Your Hammer &raquo;</a></p>
+    <div class="container">
+      <div class="row">
+        <!-- <div class="col-sm-3 col-md-2 sidebar">
+          <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">Reports</a></li>
+            <li><a href="#">Analytics</a></li>
+            <li><a href="#">Export</a></li>
+          </ul>
+        </div> -->
+        <!-- <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main"> -->
+            <h2 class="page-header">Scans</h2>
+            <form class="form-inline" role="form">
+                <div class="btn-group">
+                    <select class="form-control" name="type">
+                        <option value="0">All Category</option>
+                        <option value="1">Common</option>
+                        <option value="2">Sensitive Info</option>
+                        <option value="3">System</option>
+                        <option value="4">Info Collect</option>
+                        <option value="5">Web Applications</option>
+                        <option value="6">Weak Password</option>
+                        <option value="7">Others</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="exampleInputPassword2" placeholder="Keyword" name="keyword">
+                </div>
+                <button type="submit" class="btn btn-default">Search</button>
+            </form>
+
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th></th>
+                  <th>Category</th>
+                  <th>Author</th>
+                  <th>Hits</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                    <td>1,001</td>
+                    <td>Lorem</td>
+                    <td>ipsum</td>
+                    <td>dolor</td>
+                    <td>sit</td>
+                    <td>sit</td>
+                </tr>
+              </tbody>
+            </table>
+          <!-- </div> -->
+        </div>
       </div>
     </div>
 
-    <div class="container">
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="col-md-4">
-          <h2>Framework</h2>
-          <p>Hammer is coded in Python, so it can cross platform, you can use hammer in windows, linux and mac... </p>
-          <p><a class="btn btn-default" href="plugins.php" role="button">View details &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-          <h2>API Docs</h2>
-          <p>In hammer, almost everything is plugin. If you want design you own plugins, you must know how to. API documents just tells you that. </p>
-          <p><a class="btn btn-default" href="documents.php" role="button">View details &raquo;</a></p>
-       </div>
-        <div class="col-md-4">
-          <h2>About</h2>
-          <p>Hammer is coded by yangbh, that's me of course. I design Hammer because i want a hacking tool of my own, like yascanner, mst, blackspider, multiproxies... I share Hammer because i hope everyone in hacking group can share their own good ideas and tools... </p>
-          <p><a class="btn btn-default" href="about.php" role="button">View details &raquo;</a></p>
-        </div>
-      </div>
-
-      <hr>
-
-      <footer>
-        <p>&copy; Company 2014</p>
-      </footer>
-    </div> <!-- /container -->
 
 
     <!-- Bootstrap core JavaScript

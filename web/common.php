@@ -10,11 +10,12 @@ $con = mysql_connect($DB_HOST,$DB_USER,$DB_PWD,$DB_NAME);
 if (!$con) {
 	die('Could not connect: ' . mysql_error());
 }
-mysql_select_db($DB_NAME,$con)
+mysql_select_db($DB_NAME,$con);
+mysql_query('set names utf8');
 
 ?>
 <?php
-function check_input($value){
+function check_sql($value){
 	// 去除斜杠
 	if (get_magic_quotes_gpc()){
 		$value = stripslashes($value);
@@ -24,6 +25,10 @@ function check_input($value){
 		$value = mysql_real_escape_string($value);
 	}
 	return $value;
+}
+
+function check_xss($value){
+	return htmlspecialchars($value,ENT_QUOTES,'UTF-8');
 }
 
 function already_login(){
@@ -42,5 +47,9 @@ function pwd_encode($username,$password){
 	$Pwd = strrev($username).'#'. $DB_SALT .'#'.strrev($password);
 	$Pwd = md5($Pwd);
 	return $Pwd;
+}
+
+function error_jump(){
+	echo "<script>window.location='index.php';</script>";
 }
 ?>
