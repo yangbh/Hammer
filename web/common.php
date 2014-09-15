@@ -42,6 +42,21 @@ function already_login(){
 	return False;
 }
 
+function get_userid(){
+	global $con;
+	if (already_login()) {
+		$username = $_SESSION['user'];
+		$query = "SELECT ID FROM User WHERE Name='$username'";
+		$result = mysql_query($query);
+		if ($row = mysql_fetch_array($result)) {
+			return $row[0];
+		}
+	}
+	else{
+		return False;
+	}
+}
+
 function pwd_encode($username,$password){
 	global $DB_SALT;
 	$Pwd = strrev($username).'#'. $DB_SALT .'#'.strrev($password);

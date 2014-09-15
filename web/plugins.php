@@ -31,7 +31,7 @@ require_once('common.php');
       //  plugin table
       $('#plugins_table').DataTable({
         // "ajax": "./datatable.json",
-        "ajax": "./plugin_search.php",
+        "ajax": "./plugins_search.php",
         // "paging":   false,
         "lengthChange": false, //改变每页显示数据数量
         "pageLength": 15,
@@ -52,7 +52,7 @@ require_once('common.php');
       $('#plugins_table').DataTable().on('draw.dt', function () {
         $('.plugin').bind("click",function() {
           var name= $(this).text();
-          $.get("plugin_search.php",{name: name},function(data){
+          $.get("plugins_search.php",{name: name},function(data){
             $('#plugins').hide('slow');
             $('#code').show('slow');
             $('#plugin_name').text(name);
@@ -69,7 +69,7 @@ require_once('common.php');
       //  search button click
       $('#search').click(function() {
         /* Act on the event */
-        var ajax_url = "./plugin_search.php?type="+$('#type').val()+"&keyword="+$('#keyword').val();
+        var ajax_url = "./plugins_search.php?type="+$('#type').val()+"&keyword="+$('#keyword').val();
         $('#plugins_table').DataTable().ajax.url(ajax_url).load();
       });
 

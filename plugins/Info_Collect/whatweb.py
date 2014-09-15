@@ -24,9 +24,11 @@ def Audit(services):
 			wb.scan()
 			ret = wb.getResult()
 			#print ret
-			retinfo = {'level':'info','content':ret}
+			retinfo = {'level':'info','content':''}
 			
 			if ret.has_key('plugins'):
+				retinfo = {'level':'info','content':ret['plugins']}
+
 				# wordpress
 				if ret['plugins'].has_key('WordPress'):
 					#print services
