@@ -34,7 +34,7 @@ require_once('common.php');
         "ajax": "./plugin_search.php",
         // "paging":   false,
         "lengthChange": false, //改变每页显示数据数量
-        "pageLength": 10,
+        "pageLength": 15,
         // "info":     false,
         "filter":   false,
         // "ordering": false,
@@ -127,6 +127,7 @@ EOF;
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="container">
       <div class="row" id="plugins">
+        <div class="container" >
             <h2 class="page-header">Plugins</h2>
             <div class="form-inline">
               <div class="btn-group">
@@ -158,10 +159,13 @@ EOF;
                 </thead>
             </table>
           </div>
+        </div>
       </div>
       <div class="row" id="code" hidden="true">
+      <div class="container" >
         <h1><a class="glyphicon glyphicon-circle-arrow-left" id="plugin_goback"></a>&nbsp;<small id="plugin_name"></small></h1>
         <pre class="python" id="plugin_code"></pre>
+      </div>
       </div>
     </div>
 

@@ -5,9 +5,11 @@ import os
 import traceback
 
 from pprint import pprint
-
 from dummy import BASEDIR, LIBDIR
 
+# ----------------------------------------------------------------------------------------------------
+#
+# ----------------------------------------------------------------------------------------------------
 class RuleFile(object):
 	"""docstring for RuleFile"""
 	def __init__(self, rulefile, ruleargs):

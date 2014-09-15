@@ -75,7 +75,18 @@ EOF;
         </div><!--/.navbar-collapse -->
       </div>
     </div>
-
+    <div class="carousel-inner">
+          <div class="item active">
+            <img alt="" src="img/1.jpg" />
+            <div class="carousel-caption">
+              <h4>
+                棒球
+              </h4>
+              <p>
+                棒球运动是一种以棒打球为主要特点，集体性、对抗性很强的球类运动项目，在美国、日本尤为盛行。
+              </p>
+            </div>
+          </div>
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
       <div class="container">
