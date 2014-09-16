@@ -2,9 +2,11 @@
 require_once('common.php');
 
 function search_plugin($type=0,$keyword=''){
-	$pType = check_sql($type);
-	$pKeyword = check_sql($keyword);
+	// $pType = check_sql($type);
+	// $pKeyword = check_sql($keyword);
 	// print $pType.$pKeyword;
+	$pType = $type;
+	$pKeyword = $keyword;
 	$query = "SELECT Name,Author,Time,Description FROM Plugin WHERE Name LIKE '%$pKeyword%'";
 	// print $query;
 	switch ($pType) {
@@ -48,8 +50,8 @@ function search_plugin($type=0,$keyword=''){
 }
 
 function get_code($name){
-	$pName = check_sql($name);
-	$query = "SELECT Code FROM Plugin WHERE Name='$pName'";
+	// $pName = check_sql($name);
+	$query = "SELECT Code FROM Plugin WHERE Name='$name'";
 	// print($query.'<br>');
 	// $ret = array('data' => [], );
 	$result = mysql_query($query);
@@ -57,7 +59,7 @@ function get_code($name){
 		// $code = check_xss($row[0]);
 		$code = $row[0];
 		// print $code.'<br>';
-		return $code;
+		return check_xss($code);
 	}
 }
 

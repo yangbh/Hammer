@@ -5,6 +5,8 @@ require_once('config.php');
 session_set_cookie_params(2*3600);
 session_start();
 
+error_reporting(E_ERROR | E_WARNING | E_PARSE);
+
 $con = mysql_connect($DB_HOST,$DB_USER,$DB_PWD,$DB_NAME);
 
 if (!$con) {

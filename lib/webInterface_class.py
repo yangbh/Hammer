@@ -1,9 +1,9 @@
 #!/usr/bin/python2.7
 #coding:utf-8
-
+   
 import json
 import requests
-
+import time
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ class WebInterface(object):
 			postdata = {'type':'start','url':taskurl,'args':args}
 
 			r = requests.post(serverurl,cookies=cookies,data=postdata)
-			if r.status_code == 200:
+			if r.status_code == 200 and r.text != '':
 			# print r.request.headers
 			# print r.request.body
 			# print r.text
@@ -61,10 +61,11 @@ class WebInterface(object):
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	server = 'www.hammer.org'
-	phpsession = '28dt8g1m9deb4j8c0qaqpeg240'
-	taskurl = 'http_www.hammer.com'
+	phpsession = '9cq857k4ad0q7r1hocu7vil1l5'
+	taskurl = 'http_www.hengtiansoft.com'
 	wi = WebInterface(server,phpsession)
 	wi.task_start(taskurl)
 	print wi.startTime
+	time.sleep(2)
 	retinfo=[{'content': {u'HTTPServer': {u'string': [u'Microsoft-IIS/6.0']}, u'X-Powered-By': {u'string': [u'ASP.NET']}}, 'type': 'Web Application Recognition', 'level': 'info'}, {'content': 'http://www.hengtiansoft.com/aspnet_client/\tcode:403\nhttp://www.hengtiansoft.com/images/\tcode:403\nhttp://www.hengtiansoft.com/aspnet_client/system_web/2_0_50727/\tcode:403\nhttp://www.hengtiansoft.com/images\tcode:403\nhttp://www.hengtiansoft.com/aspnet_client/FreeTextBox/\tcode:403\nhttp://www.hengtiansoft.com/upload\tcode:403\nhttp://www.hengtiansoft.com/aspnet_client/system_web/2_0_50727\tcode:403\nhttp://www.hengtiansoft.com/aspnet_client/system_web/\tcode:403\n', 'type': 'Sensitive File/Directory Discover', 'level': 'low'}, {'content': 'OPTIONS, TRACE, GET, HEAD', 'type': 'IIS PUT Vulnerability', 'level': 'info'}]
 	wi.task_end(taskurl,retinfo)
