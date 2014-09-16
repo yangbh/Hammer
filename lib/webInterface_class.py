@@ -61,7 +61,7 @@ class WebInterface(object):
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	server = 'www.hammer.org'
-	phpsession = '9cq857k4ad0q7r1hocu7vil1l5'
+	phpsession = 'nu6er57bbrjg9digacphs7tl60'
 	taskurl = 'http_www.hengtiansoft.com'
 	wi = WebInterface(server,phpsession)
 	wi.task_start(taskurl)

@@ -19,8 +19,7 @@ $(document).ready(function(){
 </head>
 <body>
 <pre class="python">
-// adfasd
-import asdf
+SELECT ID FROM Scan WHERE Start_Time=1410873390 AND Url='http_www.hengtiansoft.com' limit 1<br>66<br>SELECT ID FROM Plugin WHERE Name='Web Application Recognition' limit 1<br>16<br>INSERT INTO Vuln(IP_URL,Scan_ID,Plugin_ID,Vuln_Info,Level) VALUES('http_www.hengtiansoft.com',66,16,'{\"HTTPServer\":{\"string\":[\"Microsoft-IIS\\/6.0\"]},\"X-Powered-By\":{\"string\":[\"ASP.NET\"]}}','1')<br>SELECT ID FROM Plugin WHERE Name='Sensitive File/Directory Discover' limit 1<br>20<br>INSERT INTO Vuln(IP_URL,Scan_ID,Plugin_ID,Vuln_Info,Level) VALUES('http_www.hengtiansoft.com',66,20,'http://www.hengtiansoft.com/aspnet_client/	code:403\nhttp://www.hengtiansoft.com/images/	code:403\nhttp://www.hengtiansoft.com/aspnet_client/system_web/2_0_50727/	code:403\nhttp://www.hengtiansoft.com/images	code:403\nhttp://www.hengtiansoft.com/aspnet_client/FreeTextBox/	code:403\nhttp://www.hengtiansoft.com/upload	code:403\nhttp://www.hengtiansoft.com/aspnet_client/system_web/2_0_50727	code:403\nhttp://www.hengtiansoft.com/aspnet_client/system_web/	code:403\n','2')<br>SELECT ID FROM Plugin WHERE Name='IIS PUT Vulnerability' limit 1<br>22<br>INSERT INTO Vuln(IP_URL,Scan_ID,Plugin_ID,Vuln_Info,Level) VALUES('http_www.hengtiansoft.com',66,22,'OPTIONS, TRACE, GET, HEAD','1')<br>UPDATE Scan SET End_Time=1410873392, Level='2' WHERE ID=66<br>
 
 </pre>
 </body>

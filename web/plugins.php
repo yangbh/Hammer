@@ -14,7 +14,7 @@ require_once('common.php');
 
 		<title>Hammer</title>
 		<!-- Custom styles for this template -->
-		<link href="css/jumbotron.css" rel="stylesheet">
+		<!-- <link href="css/jumbotron.css" rel="stylesheet"> -->
 		<!-- Custom styles for this template -->
 		<link href="css/dashboard.css" rel="stylesheet">
 		<!-- jquery -->
@@ -26,7 +26,7 @@ require_once('common.php');
 			//  hide plugin_code div
 			$('#code').hide('fast');
 			//  snippet
-			$("pre.python").snippet("python",{style:"vim",menu:false,showNum:true});
+			$("pre#python").snippet("python",{style:"vim",menu:false,showNum:true});
 
 			//  plugin table
 			$('#plugins_table').DataTable({
@@ -128,35 +128,35 @@ EOF;
 		<div class="container">
 			<div class="row" id="plugins">
 				<div class="container" >
-						<h2 class="page-header">Plugins</h2>
-						<div class="form-inline">
-							<div class="btn-group">
-								<select class="form-control" name="type" id="type">
-									<option value="0">All Category</option>
-									<option value="1">Common</option>
-									<option value="2">Sensitive Info</option>
-									<option value="3">System</option>
-									<option value="4">Info Collect</option>
-									<option value="5">Web Applications</option>
-									<option value="6">Weak Password</option>
-									<option value="7">Others</option>
-								</select>
-							</div>
-							<div class="form-group">
-								<input type="text" class="form-control" id="keyword" placeholder="Keyword" name="keyword">
-							</div>
-							<button id="search" class="btn btn-default">Search</button>
+					<h2 class="page-header">Plugins</h2>
+					<div class="form-inline">
+						<div class="btn-group">
+							<select class="form-control" name="type" id="type">
+								<option value="0">All Category</option>
+								<option value="1">Common</option>
+								<option value="2">Sensitive Info</option>
+								<option value="3">System</option>
+								<option value="4">Info Collect</option>
+								<option value="5">Web Applications</option>
+								<option value="6">Weak Password</option>
+								<option value="7">Others</option>
+							</select>
 						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" id="keyword" placeholder="Keyword" name="keyword">
+						</div>
+						<button id="search" class="btn btn-default">Search</button>
+					</div>
 					<div class="table-responsive">
 						<table id="plugins_table" class="table table-striped">
-								<thead>
-										<tr>
-												<th>Name</th>
-												<th>Author</th>
-												<th>Time</th>
-												<th>Description</th>
-										</tr>
-								</thead>
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>Author</th>
+									<th>Time</th>
+									<th>Description</th>
+								</tr>
+							</thead>
 						</table>
 					</div>
 				</div>

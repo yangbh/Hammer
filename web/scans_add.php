@@ -37,16 +37,19 @@ elseif ($type == 'end') {
 	// echo $scanurl . '<br>';
 	$startTime = (int)($_REQUEST['startTime']);
 	// echo $startTime . '<br>';
+	$userid = get_userid();
+	// echo $userid . '<br>';
 	$retinfo = json_decode(trim($_REQUEST['retinfo']),true);
 	// var_dump($retinfo);
 	//
-	$level=array('info' => 0,'low' => 1,'medium' => 2,'high' => '3');
-	$scanLevel = 'info';
-	$scanLevelInt=$level[$scanLevel];
+	$level=array('info' => 1,'low' => 2,'medium' => 3,'high' => '4');
+	// $scanLevel = 'info';
+	// $scanLevelInt=(int)$level[$scanLevel];
+	$scanLevelInt = 0;
 	$endTime = $_SERVER['REQUEST_TIME'];
 
 	//	get scan id
-	$query = "SELECT ID FROM Scan WHERE Start_Time=$startTime AND Url='$scanurl' limit 1";
+	$query = "SELECT ID FROM Scan WHERE Start_Time=$startTime AND Url='$scanurl' AND User_ID='$userid' limit 1";
 	echo $query . '<br>';
 	$result = mysql_query($query);
 	if ($row = mysql_fetch_array($result)) {
@@ -60,10 +63,11 @@ elseif ($type == 'end') {
 		$vulnType = check_sql($eachVuln['type']);
 		$vulnLevel = check_sql($eachVuln['level']);
 		if (array_key_exists($vulnLevel,$level)) {
-			$vulnLevelInt = $level[$vulnLevel];
+			$vulnLevelInt = (int)$level[$vulnLevel];
 		}
 		else $vulnLevelInt = 0;
-		$scanLevelInt = $scanLevelInt?$scanLevelInt>$vulnLevelInt:$vulnLevelInt;
+		$scanLevelInt = $scanLevelInt>$vulnLevelInt?$scanLevelInt:$vulnLevelInt;
+		// echo '$scanLevelInt='.$scanLevelInt.'<br>';
 		$vulnContent = $eachVuln['content'];
 		
 		if(is_array($vulnContent)){
@@ -81,7 +85,8 @@ elseif ($type == 'end') {
 		}
 
 		//
-		$query = "INSERT INTO Vuln(IP_URL,Scan_ID,Plugin_ID,Vuln_Info,Level) VALUES('$scanurl',$scanID,$pluginID,'$vulnContent','$vulnLevel')";
+		
+		$query = "INSERT INTO Vuln(Scan_ID,Plugin_ID,Vuln_Info,Level) VALUES('$scanID','$pluginID','$vulnContent','$vulnLevelInt')";
 		echo $query . '<br>';
 		$result = mysql_query($query);
 		if ($row = mysql_fetch_array($result)) {

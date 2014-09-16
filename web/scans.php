@@ -68,7 +68,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
 				// "info":     false,
 				"filter":   false,
 				// "ordering": false,
-				"order":    [[ 2, "asc" ],[4,"desc"]],
+				"order":    [2, "asc" ],
 				"columnDefs": [
 					{
 						"targets": [ 0 ],
@@ -122,13 +122,13 @@ Date.prototype.Format = function (fmt) { //author: meizz
 						"targets":[4],
 						 "render": function ( data, type, full, meta ) {
 								switch(data){
-									case '0':
-										return 'info';
 									case '1':
-										return 'low';
+										return 'info';
 									case '2':
-										return 'medium';
+										return 'low';
 									case '3':
+										return 'medium';
+									case '4':
 										return 'high';
 									default:
 										return data;
@@ -231,11 +231,11 @@ EOF;
 							</div> -->
 							<div class="btn-group">
 								<select class="form-control" name="level" id="level">
-									<option value="5">All Level</option>
-									<option value="0">Informational</option>
-									<option value="1">Low</option>
-									<option value="2">Medium</option>
-									<option value="3">High</option>
+									<option value="0">All Level</option>
+									<option value="1">Informational</option>
+									<option value="2">Low</option>
+									<option value="3">Medium</option>
+									<option value="4">High</option>
 								</select>
 							</div>
 							<div class="form-group">
@@ -270,10 +270,6 @@ EOF;
 
 		<!-- ================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
-		<!-- snippet -->
-		<link rel="stylesheet" type="text/css" href="js/jquery.snippet.min.css">
-		<script type="text/javascript" charset="utf8" src="js/jquery.snippet.min.js"></script>
-
 		<!-- Bootstrap core JavaScript -->
 		<link href="js/bootstrap.min.css" rel="stylesheet">
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
@@ -286,6 +282,10 @@ EOF;
 		<!-- datatimepicker -->
 		<link rel="stylesheet" type="text/css" href="css/bootstrap-datetimepicker.min.css">
 		<script type="text/javascript" charset="utf8" src="js/bootstrap-datetimepicker.min.js"></script>
+
+		<!-- snippet -->
+		<link rel="stylesheet" type="text/css" href="js/jquery.snippet.min.css">
+		<script type="text/javascript" charset="utf8" src="js/jquery.snippet.min.js"></script>
 
 	</body>
 </html>
