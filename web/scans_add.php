@@ -20,42 +20,51 @@ if ($type == 'start') {
 	// echo $args . '<br>';
 	$userid = get_userid();
 	// echo $userid . '<br>';
+
 	$query = "INSERT INTO Scan(Url,Start_Time,Arguments,User_ID) VALUES('$url',$startTime,'$args',$userid)";
 	// echo $query . '<br>';
-
 	$result = mysql_query($query);
 	if ($row = mysql_fetch_array($result)) {
 		// echo $row;
 	}
+	$query = "SELECT ID FROM Scan WHERE Start_Time='$startTime' AND Url='$url' AND User_ID='$userid' limit 1";
+	// echo $query . '<br>';
+	$result = mysql_query($query);
+	if ($row = mysql_fetch_array($result)) {
+		$scanID = (int)$row[0];
+		// echo $scanID . '<br>';
+	}
+
 	// return start time
-	$ret = array('startTime' => $startTime);
+	$ret = array('id'=>$scanID,'startTime' => $startTime);
 	echo json_encode($ret);
 }
 //	end a scan task
 elseif ($type == 'end') {
-	$scanurl = check_sql(trim($_REQUEST['url']));
-	// echo $scanurl . '<br>';
-	$startTime = (int)($_REQUEST['startTime']);
-	// echo $startTime . '<br>';
+	$ipurl = check_sql(trim($_REQUEST['ipurl']));
+	// echo $ipurl . '<br>';
+	$scanid = (int)($_REQUEST['id']);
+	// echo $ipurl . '<br>';
 	$userid = get_userid();
 	// echo $userid . '<br>';
 	$retinfo = json_decode(trim($_REQUEST['retinfo']),true);
 	// var_dump($retinfo);
-	//
+	
 	$level=array('info' => 1,'low' => 2,'medium' => 3,'high' => '4');
 	// $scanLevel = 'info';
 	// $scanLevelInt=(int)$level[$scanLevel];
-	$scanLevelInt = 0;
+	// $scanLevelInt = 0;
 	$endTime = $_SERVER['REQUEST_TIME'];
 
-	//	get scan id
-	$query = "SELECT ID FROM Scan WHERE Start_Time=$startTime AND Url='$scanurl' AND User_ID='$userid' limit 1";
+	//	check userid and scanid
+	$query = "SELECT Level FROM Scan WHERE  ID='$scanid' AND User_ID='$userid'";
 	echo $query . '<br>';
 	$result = mysql_query($query);
 	if ($row = mysql_fetch_array($result)) {
-		// var_dump($row);
-		$scanID = (int)$row[0];
-		echo $scanID . '<br>';
+		$scanLevelInt = (int)$row[0];
+	}
+	else{
+		die();
 	}
 
 	foreach ($retinfo as $key => $eachVuln) {
@@ -85,8 +94,7 @@ elseif ($type == 'end') {
 		}
 
 		//
-		
-		$query = "INSERT INTO Vuln(Scan_ID,Plugin_ID,Vuln_Info,Level) VALUES('$scanID','$pluginID','$vulnContent','$vulnLevelInt')";
+		$query = "INSERT INTO Vuln(Scan_ID,IP_URL,Plugin_ID,Vuln_Info,Level) VALUES('$scanid','$ipurl','$pluginID','$vulnContent','$vulnLevelInt')";
 		echo $query . '<br>';
 		$result = mysql_query($query);
 		if ($row = mysql_fetch_array($result)) {
@@ -95,7 +103,7 @@ elseif ($type == 'end') {
 	}
 
 	//	update Scan
-	$query = "UPDATE Scan SET End_Time=$endTime, Level='$scanLevelInt' WHERE ID=$scanID";
+	$query = "UPDATE Scan SET End_Time=$endTime, Level='$scanLevelInt' WHERE ID=$scanid";
 	echo $query . '<br>';
 	$result = mysql_query($query);
 	if ($row = mysql_fetch_array($result)) {

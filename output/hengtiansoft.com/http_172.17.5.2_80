@@ -1,7 +1,7 @@
 *************************     scan info     *************************
-# this is an ip type scan
-ip:	172.16.3.7
-issubdomain:	True
+# this is a http type scan
+url:	http://172.17.5.2:80
+isneighborhost:	True
 
 *************************   scan services   *************************
 
@@ -11,19 +11,24 @@ Step 1. Running Auxiliary Plugins
 {'/root/workspace/Hammer/plugins/Info_Collect': ['neighborhost.py', 'subdomain.py', 'crawler.py', 'robots.py', 'portscan.py', 'whatweb.py'], '/root/workspace/Hammer/plugins/Weak_Password': ['sshcrack.py'], '/root/workspace/Hammer/plugins/Sensitive_Info': ['backupfile.py', 'compressedfile.py', 'senpath.py', 'probefile.py'], '/root/workspace/Hammer/plugins/Common': ['fileinclusion.py'], '/root/workspace/Hammer/plugins': [], '/root/workspace/Hammer/plugins/Web_Applications': ['espcms_search_inject.py', 'discuz_x2_5_path_disclosure.py', 'shopex_phpinfo_disclosure.py', 'dedecms_downloadphp_url_redict.py', 'discuz7_2fap_php_sqlinject.py', 'bo_blog_tag_php_xss.py', 'wordpress_reflect_xss.py', 'espcms_sql_inject.py', 'wordpress_xmlrpc.py'], '/root/workspace/Hammer/plugins/System': ['iismethod.py', 'dnszone.py', 'openssl.py', 'iisshort.py', 'webdav.py', 'phpmyadmin_null_password.py']}
 
 >>>running plugin:/root/workspace/Hammer/plugins/Info_Collect/neighborhost.py
-plugin run
 
 >>>running plugin:/root/workspace/Hammer/plugins/Info_Collect/subdomain.py
 
 >>>running plugin:/root/workspace/Hammer/plugins/Info_Collect/crawler.py
+plugin run
 
 >>>running plugin:/root/workspace/Hammer/plugins/Info_Collect/robots.py
+plugin run
+http://172.17.5.2:80/robots.txt
+urllib2.URLError: HTTP Error 404: Not Found
 
 >>>running plugin:/root/workspace/Hammer/plugins/Info_Collect/portscan.py
-plugin run
-services changed to:	{'issubdomain': True, 'port_detail': {80: {'product': u'Microsoft IIS httpd', 'state': u'open', 'version': u'6.0', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/o:microsoft:windows'}, 3306: {'product': u'MySQL', 'state': u'open', 'version': '', 'name': u'mysql', 'conf': u'10', 'extrainfo': u'Host blocked because of too many connections', 'reason': u'syn-ack', 'cpe': u'cpe:/a:mysql:mysql'}, 3389: {'product': u'Microsoft Terminal Service', 'state': u'open', 'version': '', 'name': u'ms-wbt-server', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': ''}}, 'ports': [3306, 80, 3389], 'ip': u'172.16.3.7'}
 
 >>>running plugin:/root/workspace/Hammer/plugins/Info_Collect/whatweb.py
+plugin run
+HTTPServer: Microsoft-IIS/7.5
+X-Powered-By: ASP.NET
+services changed to:	{'url': 'http://172.17.5.2:80', 'isneighborhost': True, 'HTTPServer': u'Microsoft-IIS/7.5', 'X-Powered-By': u'ASP.NET'}
 
 
 Step 2. Running Other Plugins
@@ -31,14 +36,19 @@ Step 2. Running Other Plugins
 >>>running plugin:/root/workspace/Hammer/plugins/Weak_Password/sshcrack.py
 
 >>>running plugin:/root/workspace/Hammer/plugins/Sensitive_Info/backupfile.py
+plugin run
 
 >>>running plugin:/root/workspace/Hammer/plugins/Sensitive_Info/compressedfile.py
+plugin run
 
 >>>running plugin:/root/workspace/Hammer/plugins/Sensitive_Info/senpath.py
+plugin run
 
 >>>running plugin:/root/workspace/Hammer/plugins/Sensitive_Info/probefile.py
+plugin run
 
 >>>running plugin:/root/workspace/Hammer/plugins/Common/fileinclusion.py
+plugin run
 
 >>>running plugin:/root/workspace/Hammer/plugins/Web_Applications/espcms_search_inject.py
 
@@ -59,20 +69,22 @@ Step 2. Running Other Plugins
 >>>running plugin:/root/workspace/Hammer/plugins/Web_Applications/wordpress_xmlrpc.py
 
 >>>running plugin:/root/workspace/Hammer/plugins/System/iismethod.py
-
+plugin run
+HTTP Methods found:	OPTIONS, TRACE, GET, HEAD, POST
 >>>running plugin:/root/workspace/Hammer/plugins/System/dnszone.py
 
 >>>running plugin:/root/workspace/Hammer/plugins/System/openssl.py
-plugin run
 
 >>>running plugin:/root/workspace/Hammer/plugins/System/iisshort.py
+plugin run
 
 >>>running plugin:/root/workspace/Hammer/plugins/System/webdav.py
+plugin run
 
 >>>running plugin:/root/workspace/Hammer/plugins/System/phpmyadmin_null_password.py
 
 
 *************************    scan result    *************************
-retinfo:	[{'content': '[3306, 80, 3389]', 'type': 'Port and Service Discover', 'level': 'info'}]
+retinfo:	[{'content': {u'HTTPServer': {u'string': [u'Microsoft-IIS/7.5']}, u'X-Powered-By': {u'string': [u'ASP.NET']}}, 'type': 'Web Application Recognition', 'level': 'info'}, {'content': 'OPTIONS, TRACE, GET, HEAD, POST', 'type': 'IIS PUT Vulnerability', 'level': 'info'}]
 
-services:	{'issubdomain': True, 'port_detail': {80: {'product': u'Microsoft IIS httpd', 'state': u'open', 'version': u'6.0', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/o:microsoft:windows'}, 3306: {'product': u'MySQL', 'state': u'open', 'version': '', 'name': u'mysql', 'conf': u'10', 'extrainfo': u'Host blocked because of too many connections', 'reason': u'syn-ack', 'cpe': u'cpe:/a:mysql:mysql'}, 3389: {'product': u'Microsoft Terminal Service', 'state': u'open', 'version': '', 'name': u'ms-wbt-server', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': ''}}, 'ports': [3306, 80, 3389], 'ip': u'172.16.3.7'}
+services:	{'url': 'http://172.17.5.2:80', 'isneighborhost': True, 'HTTPServer': u'Microsoft-IIS/7.5', 'X-Powered-By': u'ASP.NET'}

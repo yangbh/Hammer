@@ -1,6 +1,6 @@
 *************************     scan info     *************************
 # this is an ip type scan
-ip:	172.16.3.7
+ip:	172.17.5.1
 issubdomain:	True
 
 *************************   scan services   *************************
@@ -21,7 +21,7 @@ plugin run
 
 >>>running plugin:/root/workspace/Hammer/plugins/Info_Collect/portscan.py
 plugin run
-services changed to:	{'issubdomain': True, 'port_detail': {80: {'product': u'Microsoft IIS httpd', 'state': u'open', 'version': u'6.0', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/o:microsoft:windows'}, 3306: {'product': u'MySQL', 'state': u'open', 'version': '', 'name': u'mysql', 'conf': u'10', 'extrainfo': u'Host blocked because of too many connections', 'reason': u'syn-ack', 'cpe': u'cpe:/a:mysql:mysql'}, 3389: {'product': u'Microsoft Terminal Service', 'state': u'open', 'version': '', 'name': u'ms-wbt-server', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': ''}}, 'ports': [3306, 80, 3389], 'ip': u'172.16.3.7'}
+services changed to:	{'issubdomain': True, 'port_detail': {53: {'product': u'Microsoft DNS', 'state': u'open', 'version': u'6.1.7600', 'name': u'domain', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/o:microsoft:windows'}, 3389: {'product': u'Microsoft Terminal Service', 'state': u'open', 'version': '', 'name': u'ms-wbt-server', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': ''}}, 'ports': [53, 3389], 'ip': u'172.17.5.1'}
 
 >>>running plugin:/root/workspace/Hammer/plugins/Info_Collect/whatweb.py
 
@@ -73,6 +73,6 @@ plugin run
 
 
 *************************    scan result    *************************
-retinfo:	[{'content': '[3306, 80, 3389]', 'type': 'Port and Service Discover', 'level': 'info'}]
+retinfo:	[{'content': '[53, 3389]', 'type': 'Port and Service Discover', 'level': 'info'}]
 
-services:	{'issubdomain': True, 'port_detail': {80: {'product': u'Microsoft IIS httpd', 'state': u'open', 'version': u'6.0', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/o:microsoft:windows'}, 3306: {'product': u'MySQL', 'state': u'open', 'version': '', 'name': u'mysql', 'conf': u'10', 'extrainfo': u'Host blocked because of too many connections', 'reason': u'syn-ack', 'cpe': u'cpe:/a:mysql:mysql'}, 3389: {'product': u'Microsoft Terminal Service', 'state': u'open', 'version': '', 'name': u'ms-wbt-server', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': ''}}, 'ports': [3306, 80, 3389], 'ip': u'172.16.3.7'}
+services:	{'issubdomain': True, 'port_detail': {53: {'product': u'Microsoft DNS', 'state': u'open', 'version': u'6.1.7600', 'name': u'domain', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/o:microsoft:windows'}, 3389: {'product': u'Microsoft Terminal Service', 'state': u'open', 'version': '', 'name': u'ms-wbt-server', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': ''}}, 'ports': [53, 3389], 'ip': u'172.17.5.1'}

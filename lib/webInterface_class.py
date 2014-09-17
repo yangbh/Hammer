@@ -18,9 +18,7 @@ class WebInterface(object):
 			raise SystemExit,  "invalid phpsession for class WebInterface"
 		self.startTime = 0
 		self.endTime = 0
-
-	def send(self,data):
-		pass
+		self.id = None
 
 	def task_start(self,taskurl,args=''):
 		try:
@@ -32,8 +30,11 @@ class WebInterface(object):
 			if r.status_code == 200 and r.text != '':
 			# print r.request.headers
 			# print r.request.body
-			# print r.text
-				self.startTime = json.loads(r.text)['startTime']
+				print r.text
+				# self.startTime = json.loads(r.text)['startTime']
+				self.id = json.loads(r.text)['id']
+			else:
+				print 'return error, please check session and server'
 
 		except requests.HTTPError,e:
 			print 'requests.HTTPError', e
@@ -44,7 +45,7 @@ class WebInterface(object):
 			cookies = {'PHPSESSID':self.phpsession}
 			retinfo = json.dumps(retinfo)
 			# print retinfo
-			postdata = {'type':'end','url':taskurl,'startTime':self.startTime,'retinfo':retinfo}
+			postdata = {'type':'end','ipurl':taskurl,'id':self.id,'retinfo':retinfo}
 
 			r = requests.post(serverurl,cookies=cookies,data=postdata)
 			# print r.request.headers
@@ -53,6 +54,8 @@ class WebInterface(object):
 			if r.status_code == 200:
 				# print r.text
 				pass
+			else:
+				print 'return error, please check session and server'
 		except requests.HTTPError,e:
 			print 'requests.HTTPError', e
 		
@@ -61,11 +64,14 @@ class WebInterface(object):
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	server = 'www.hammer.org'
-	phpsession = 'nu6er57bbrjg9digacphs7tl60'
-	taskurl = 'http_www.hengtiansoft.com'
+	phpsession = '3oqv9ktkplqsgrq3r106jc89a1'
+	taskurl = 'http://www.hengtiansoft.com'
 	wi = WebInterface(server,phpsession)
 	wi.task_start(taskurl)
-	print wi.startTime
+	print wi.id
 	time.sleep(2)
+	retinfo=[{'content': {u'HTTPServer': {u'string': [u'Microsoft-IIS/6.0']}, u'X-Powered-By': {u'string': [u'ASP.NET']}}, 'type': 'Web Application Recognition', 'level': 'info'}, {'content': 'http://www.hengtiansoft.com/aspnet_client/\tcode:403\nhttp://www.hengtiansoft.com/images/\tcode:403\nhttp://www.hengtiansoft.com/aspnet_client/system_web/2_0_50727/\tcode:403\nhttp://www.hengtiansoft.com/images\tcode:403\nhttp://www.hengtiansoft.com/aspnet_client/FreeTextBox/\tcode:403\nhttp://www.hengtiansoft.com/upload\tcode:403\nhttp://www.hengtiansoft.com/aspnet_client/system_web/2_0_50727\tcode:403\nhttp://www.hengtiansoft.com/aspnet_client/system_web/\tcode:403\n', 'type': 'Sensitive File/Directory Discover', 'level': 'low'}, {'content': 'OPTIONS, TRACE, GET, HEAD', 'type': 'IIS PUT Vulnerability', 'level': 'high'}]
+	wi.task_end(taskurl,retinfo)
+	taskurl = 'http://hengtiansoft.com'
 	retinfo=[{'content': {u'HTTPServer': {u'string': [u'Microsoft-IIS/6.0']}, u'X-Powered-By': {u'string': [u'ASP.NET']}}, 'type': 'Web Application Recognition', 'level': 'info'}, {'content': 'http://www.hengtiansoft.com/aspnet_client/\tcode:403\nhttp://www.hengtiansoft.com/images/\tcode:403\nhttp://www.hengtiansoft.com/aspnet_client/system_web/2_0_50727/\tcode:403\nhttp://www.hengtiansoft.com/images\tcode:403\nhttp://www.hengtiansoft.com/aspnet_client/FreeTextBox/\tcode:403\nhttp://www.hengtiansoft.com/upload\tcode:403\nhttp://www.hengtiansoft.com/aspnet_client/system_web/2_0_50727\tcode:403\nhttp://www.hengtiansoft.com/aspnet_client/system_web/\tcode:403\n', 'type': 'Sensitive File/Directory Discover', 'level': 'low'}, {'content': 'OPTIONS, TRACE, GET, HEAD', 'type': 'IIS PUT Vulnerability', 'level': 'info'}]
 	wi.task_end(taskurl,retinfo)

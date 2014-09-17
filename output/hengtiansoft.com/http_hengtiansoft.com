@@ -72,9 +72,9 @@ plugin run
 plugin run
 HTTP Methods found:	OPTIONS, TRACE, GET, HEAD, POST
 >>>running plugin:/root/workspace/Hammer/plugins/System/dnszone.py
-Vulnerable dns server found:pwsddc03.hengtiansoft.com.
 Vulnerable dns server found:pwbndc02.hengtiansoft.com.
 Vulnerable dns server found:pwsddc02.hengtiansoft.com.
+Vulnerable dns server found:pwsddc03.hengtiansoft.com.
 
 >>>running plugin:/root/workspace/Hammer/plugins/System/openssl.py
 
@@ -88,6 +88,6 @@ plugin run
 
 
 *************************    scan result    *************************
-retinfo:	[{'content': {u'target': u'http://hengtiansoft.com', u'http_status': 200, u'plugins': {u'HTTPServer': {u'string': [u'Microsoft-IIS/7.5']}, u'X-Powered-By': {u'string': [u'ASP.NET']}}}, 'type': 'Web Application Recognition', 'level': 'info'}, {'content': 'http://hengtiansoft.com/aspnet_client/system_web/2_0_50727\tcode:403\nhttp://hengtiansoft.com/aspnet_client/system_web/\tcode:403\nhttp://hengtiansoft.com/aspnet_client/system_web/2_0_50727/\tcode:403\nhttp://172.16.5.1:80/aspnet_client/system_web/2_0_50727\tcode:403\nhttp://172.16.5.1:80/aspnet_client/system_web/2_0_50727/\tcode:403\nhttp://hengtiansoft.com/aspnet_client/\tcode:403\n', 'type': 'Sensitive File/Directory Discover', 'level': 'low'}, {'content': 'OPTIONS, TRACE, GET, HEAD, POST', 'type': 'IIS PUT Vulnerability', 'level': 'info'}, {'content': 'hengtiansoft.com', 'type': 'DNS zone transfer Vulnerability', 'level': 'medium'}]
+retinfo:	[{'content': {u'HTTPServer': {u'string': [u'Microsoft-IIS/7.5']}, u'X-Powered-By': {u'string': [u'ASP.NET']}}, 'type': 'Web Application Recognition', 'level': 'info'}, {'content': 'OPTIONS, TRACE, GET, HEAD, POST', 'type': 'IIS PUT Vulnerability', 'level': 'info'}, {'content': 'hengtiansoft.com', 'type': 'DNS zone transfer Vulnerability', 'level': 'medium'}]
 
 services:	{'url': 'http://hengtiansoft.com', 'HTTPServer': u'Microsoft-IIS/7.5', 'X-Powered-By': u'ASP.NET'}

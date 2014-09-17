@@ -14,6 +14,7 @@ from nmap_class import NmapScanner
 from pluginLoader_class import PluginLoader
 from mysql_class import MySQLHelper
 from spider.domain import GetFirstLevelDomain
+from webInterface_class import WebInterface
 from dummy import *
 
 # ----------------------------------------------------------------------------------------------------
@@ -48,15 +49,17 @@ class MutiScanner(threading.Thread):
 # ----------------------------------------------------------------------------------------------------
 class Scanner(object):
 	"""docstring for Scanner"""
-	def __init__(self,url=None,server=None):
+	def __init__(self,url=None,server=None,session=None):
 		super(Scanner, self).__init__()
 		#url
 		if url[-1] != '/':
 			url += '/'
 		self.url = url
 
-		# web server address
-		self.server = server
+		# web server class
+		self.web_interface = None
+		if server and session:
+			self.web_interface = WebInterface(server,session)
 
 		m = re.match('(http[s]?)://([^:^/]+):?([^/]*)/',url)
 		if m:
@@ -179,10 +182,11 @@ class Scanner(object):
 	def startScan(self,services=None):
 		''' '''
 		print '>>>starting scan'
+		self._noticeStartToWeb()
 		# get subdomains
 		print '>>>collecting subdomain info'
 		subdomains = self.getSubDomains(self.host)
-		#print 'subdomains:\t',subdomains
+		print 'subdomains:\t',subdomains
 
 		# get hosts
 		hosts={}
@@ -267,7 +271,7 @@ class Scanner(object):
 
 		self.setResult(urls=self.urls,pls=pls)
 		#self.saveResultToFile(pls)
-		
+		self._saveResultToWeb()
 		# for eachpl in pls:
 		# 	if eachpl.services.has_key('ip'):
 		# 		threadName = eachpl.services['ip']
@@ -307,12 +311,35 @@ class Scanner(object):
 
 		pprint(self.result)
 
-	def saveResultToWeb(self,server=None,urls=None,pls=None):
+	def _noticeStartToWeb(self):
 		''' '''
-		print '>>>saving scan result to server'
-		if server == None:
+		print '>>>notice server start scan'
+		if self.web_interface == None:
 			print'server not exists'
 			return False
+		#	save Scan table at first
+		print 'self.url\t',self.host
+		self.web_interface.task_start(self.host,self.url)
+			
+
+	def _saveResultToWeb(self,pls=None):
+		''' '''
+		print '>>>saving scan result to server'
+		if self.web_interface == None:
+			print'server not exists'
+			return False
+		#	save each url's vuln
+		pls = self.pls if pls==None else pls
+		for eachpl in pls:
+			ipurl=None
+			if eachpl.services.has_key('ip'):
+				ipurl = eachpl.services['ip']
+			elif eachpl.services.has_key('url'):
+				ipurl = eachpl.services['url']
+			retinfo =eachpl.retinfo
+			print 'ipurl\t',ipurl
+			pprint(retinfo)
+			self.web_interface.task_end(ipurl,retinfo)
 
 
 	def saveResultToFile(self,pls,outputpath=None):
@@ -366,11 +393,14 @@ class Scanner(object):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	url = 'http://hengtiansoft.com'
+	server = 'www.hammer.org'
+	phpsession = '3oqv9ktkplqsgrq3r106jc89a1'
+
+	url = 'http://www.hengtiansoft.com'
 	if len(sys.argv) ==  2:
 		url = sys.argv[1]
 
-	sn =Scanner(url)
+	sn =Scanner(url,server,phpsession)
 	sn.startScan()
-	print ">>>scan result:"
+	# print ">>>scan result:"
 	#print sn.result

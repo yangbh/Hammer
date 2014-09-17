@@ -3,7 +3,7 @@ require_once('common.php');
 
 //  check login first
 if (!already_login()) {
-	die();
+	error_jump();
 }
 ?>
 
@@ -27,31 +27,32 @@ if (!already_login()) {
 		<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 
 		<script>
-// 对Date的扩展，将 Date 转化为指定格式的String
-// 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符， 
-// 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字) 
-// 例子： 
-// (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423 
-// (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18 
-Date.prototype.Format = function (fmt) { //author: meizz 
-		var o = {
-				"M+": this.getMonth() + 1, //月份 
-				"d+": this.getDate(), //日 
-				"h+": this.getHours(), //小时 
-				"m+": this.getMinutes(), //分 
-				"s+": this.getSeconds(), //秒 
-				"q+": Math.floor((this.getMonth() + 3) / 3), //季度 
-				"S": this.getMilliseconds() //毫秒 
-		};
-		if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-		for (var k in o)
-		if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-		return fmt;
-}
+		// 对Date的扩展，将 Date 转化为指定格式的String
+		// 月(M)、日(d)、小时(h)、分(m)、秒(s)、季度(q) 可以用 1-2 个占位符， 
+		// 年(y)可以用 1-4 个占位符，毫秒(S)只能用 1 个占位符(是 1-3 位的数字) 
+		// 例子： 
+		// (new Date()).Format("yyyy-MM-dd hh:mm:ss.S") ==> 2006-07-02 08:09:04.423 
+		// (new Date()).Format("yyyy-M-d h:m:s.S")      ==> 2006-7-2 8:9:4.18 
+		Date.prototype.Format = function (fmt) { //author: meizz 
+				var o = {
+						"M+": this.getMonth() + 1, //月份 
+						"d+": this.getDate(), //日 
+						"h+": this.getHours(), //小时 
+						"m+": this.getMinutes(), //分 
+						"s+": this.getSeconds(), //秒 
+						"q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+						"S": this.getMilliseconds() //毫秒 
+				};
+				if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+				for (var k in o)
+				if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+				return fmt;
+		}
 
 		$(document).ready(function () {
 			//  hide plugin_code div
 			$('#code').hide('fast');
+			$('#plugins').show('fast');
 			//  snippet
 			$("pre.python").snippet("python",{style:"vim",menu:false,showNum:true});
 
@@ -68,7 +69,7 @@ Date.prototype.Format = function (fmt) { //author: meizz
 				// "info":     false,
 				"filter":   false,
 				// "ordering": false,
-				"order":    [2, "asc" ],
+				"order":    [2, "desc" ],
 				"columnDefs": [
 					{
 						"targets": [ 0 ],
@@ -151,8 +152,23 @@ Date.prototype.Format = function (fmt) { //author: meizz
 					$.get("scans_search.php",{scanid: scanID},function(data){
 						$('#plugins').hide('slow');
 						$('#code').show('slow');
-						$('#plugin_name').html(name);
-						$('#plugin_code').html(data);
+						// $('#plugin_code').html(data);
+						$('#scan_results').empty();
+						$('#scan_title').empty();
+						//
+						var json = jQuery.parseJSON(data);
+						$.each(json,function(i,n){
+							var ipurl = i;
+							var html="<div><blockquote><p>"+ipurl+"</p></blockquote><ul>"
+							$.each(n,function(i2,n2){
+								var plugin = n2[0];
+								var content = n2[1];
+								var level = n2[2];
+								html +="<li>"+plugin+"<ul><li>"+content+"</li></ul></li>";
+							})
+							html +="</ul></div>"
+							$('#scan_results').append(html);
+						})
 					});
 				});
 			});
@@ -262,8 +278,15 @@ EOF;
 			</div>
 			<div class="row" id="code" hidden="true">
 			<div class="container" >
-				<h1><a class="glyphicon glyphicon-circle-arrow-left" id="plugin_goback"></a>&nbsp;<small id="plugin_name"></small></h1>
-				<pre class="python" id="plugin_code"></pre>
+				<h1>
+					<a class="glyphicon glyphicon-circle-arrow-left" id="plugin_goback"></a>&nbsp;
+					<small>Scan Results</small>
+				</h1>
+				<!-- <pre class="python" id="plugin_code"></pre> -->
+				<div class="panel" id="scan_title">
+				</div>
+				<div class="panel" id="scan_results">
+				</div>
 			</div>
 			</div>
 		</div>

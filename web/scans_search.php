@@ -37,10 +37,10 @@ function search_vuln($scanID){
 	$pScanID = $scanID;
 	$userid = get_userid();
 	// echo $userid . '<br>';
-	$query = "SELECT Scan.Url,Plugin.Name,Vuln.Vuln_Info,Vuln.Level FROM Plugin,Scan,Vuln WHERE Vuln.Scan_ID=Scan.ID AND Vuln.Plugin_ID=Plugin.ID AND Scan.ID=$scanID AND Scan.User_ID='$userid'";
+	$query = "SELECT Vuln.IP_URL,Plugin.Name,Vuln.Vuln_Info,Vuln.Level FROM Plugin,Scan,Vuln WHERE Vuln.Scan_ID=Scan.ID AND Vuln.Plugin_ID=Plugin.ID AND Scan.ID=$scanID AND Scan.User_ID='$userid' ORDER BY Vuln.IP_URL";
 	// echo $query.'<br>';
 
-	$ret = array('data' => [], );
+	$ret = array();
 	$result = mysql_query($query);
 	while ($row = mysql_fetch_row($result)){
 		// var_dump($row);
@@ -48,9 +48,10 @@ function search_vuln($scanID){
 			// echo $key.' => '.$value;
 			$row[$key] = check_xss($value);
 		}
-		$ret['data'][] = $row;
-		// var_dump($row);
+		$ipurl = $row[0];
+		$ret[$ipurl][]=array_slice($row,1);
 	}
+	// var_dump($ret);
 	return $ret;
 }
 ?>

@@ -47,8 +47,13 @@ def Audit(services):
 				print 'domain=\t',domain
 				tmp = th.getSubDomains(domain,'baidu',2)
 				print 'result=\t',tmp
-				subdomains += tmp
-				#print 'subdomains=\t',subdomains
+				try:
+					for eachdomain in tmp:
+						socket.gethostbyname(eachdomain)
+						subdomains.append(eachdomain)
+				except:
+					pass
+				print 'subdomains=\t',subdomains
 			except:
 				pass
 		# step5: get subdomains by google
