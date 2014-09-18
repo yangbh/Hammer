@@ -230,7 +230,7 @@ def Audit(services):
 # ----------------------------------------------------------------------------------------------------
 # 测试代码开始
 if __name__ == '__main__':
-	url='http://www.hengtiansoft.com'
+	url='http://www.eguan.cn'
 	if len(sys.argv) ==  2:
 		url = sys.argv[1]
 	services = {'url':url}

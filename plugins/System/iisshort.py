@@ -123,7 +123,7 @@ def Audit(services):
 #	untest yet
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-	url='http://fxs-test.hengtiansoft.com/'
+	url='http://fxs-test.eguan.cn/'
 	if len(sys.argv) ==  2:
 		url = sys.argv[1]
 	services = {'url':url}

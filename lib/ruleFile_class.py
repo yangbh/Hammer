@@ -90,7 +90,7 @@ class RuleFile(object):
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	rulefile = LIBDIR + '/db/compresed_file.rule'
-	ruleargs = {'host':'www.hengtiansoft.com','com':['com1','com2']}
+	ruleargs = {'host':'www.eguan.cn','com':['com1','com2']}
 	rf = RuleFile(rulefile,ruleargs)
 	rf._getRules()
 	pprint(rf.ret)

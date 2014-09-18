@@ -159,12 +159,34 @@ if (!already_login()) {
 						var json = jQuery.parseJSON(data);
 						$.each(json,function(i,n){
 							var ipurl = i;
-							var html="<div><blockquote><p>"+ipurl+"</p></blockquote><ul>"
+							var html="<div><blockquote><h3>"+ipurl+"</h3></blockquote><ul>"
 							$.each(n,function(i2,n2){
 								var plugin = n2[0];
 								var content = n2[1];
 								var level = n2[2];
-								html +="<li>"+plugin+"<ul><li>"+content+"</li></ul></li>";
+								html += "<li>";
+								var color = "text-muted";
+								switch(level){
+									case '1':
+										color = "text-success";
+										break
+									case '2':
+										color = "text-info";
+										break;
+									case '3':
+										color = "text-warning";
+										break;
+									case '4':
+										color = "text-danger";
+										break;
+									default:
+										color = "text-muted";
+								}
+								html += "<h4 class=\""+color+"\">"+plugin+"</h4>";
+								html += "<ul><li>";
+								html+= content;
+								html += "</li></ul>";
+								html += "</li>";
 							})
 							html +="</ul></div>"
 							$('#scan_results').append(html);
@@ -266,7 +288,7 @@ EOF;
 												<th>ID</th>
 												<th>URL/IP</th>
 												<th>StartTime</th>
-												<th>EndTime</th>
+												<th>CostTime</th>
 												<th>Level</th>
 												<th>Arguments</th>
 												<th>User_Name</th>

@@ -51,6 +51,6 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	services = {'url':'http://www.hengtiansoft.com'}
+	services = {'url':'http://www.eguan.cn'}
 	pprint(Audit(services))
 	pprint(services)

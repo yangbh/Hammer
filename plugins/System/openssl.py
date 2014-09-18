@@ -125,7 +125,7 @@ def Audit(services):
 #	untest yet
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-	host ='www.hengtiansoft.com'
+	host ='www.eguan.cn'
 	if len(sys.argv) ==  2:
 		host = sys.argv[1]
 	services = {'ip':host,'ports':[443,80]}

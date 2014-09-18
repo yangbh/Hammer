@@ -52,7 +52,7 @@ def Audit(services):
 #	
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-	url='http://WSWINCHZ0255.hengtiansoft.com'
+	url='http://WSWINCHZ0255.eguan.cn'
 	if len(sys.argv) ==  2:
 		url = sys.argv[1]
 	services = {'url':url} 

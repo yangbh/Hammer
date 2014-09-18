@@ -261,7 +261,7 @@ def Audit(services):
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	import sys
-	url='http://www.hengtiansoft.com'
+	url='http://www.eguan.cn'
 	if len(sys.argv) ==  2:
 		url = sys.argv[1]
 	services = {'url':url}

@@ -52,6 +52,6 @@ class NmapScanner(object):
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-	np = NmapScanner('www.hengtiansoft.com')
+	np = NmapScanner('www.eguan.cn')
 	pprint(np.scanPorts())
 

@@ -185,6 +185,6 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__': 
-	services={'ip':'127.0.0.1','ports':[80,8080],'port_detail':{22:{'name':'ssh'}}, 'neighborhosts': ['hengtiansoft.com']}
+	services={'ip':'127.0.0.1','ports':[80,8080],'port_detail':{22:{'name':'ssh'}}, 'neighborhosts': ['eguan.cn']}
 	pprint(Audit(services))
 	pprint(services)

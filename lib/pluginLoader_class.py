@@ -208,7 +208,7 @@ if __name__=='__main__':
 	basedir = '/root/workspace/Hammer'
 	sys.path.append(basedir)
 	sys.path.append(basedir+'/lib')
-	services={'url':'http://www.hengtiansoft.com'}
+	services={'url':'http://www.eguan.cn'}
 	pl = PluginLoader(None,services)
 	pl.path = basedir+'/plugins'
 	#pl.runEachPlugin('/root/workspace/Hammer/plugins/Info_Collect/spider.py',services)
