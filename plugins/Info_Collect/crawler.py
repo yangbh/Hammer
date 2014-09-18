@@ -15,7 +15,7 @@ def Audit(services):
 	if services.has_key('url'):
 		output += 'plugin run' + os.linesep
 		url = services['url']
-		args = Strategy(url=url,max_depth=5,max_count=500,concurrency=10,
+		args = Strategy(url=url,max_depth=5,max_count=500,concurrency=20,
 			timeout=10,time=6*3600,headers=None,cookies=None,ssl_verify=False,
 			same_host=False,same_domain=True,keyword=None)
 		crawler = Crawler(args)

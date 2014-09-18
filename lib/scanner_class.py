@@ -394,7 +394,7 @@ class Scanner(object):
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	server = 'www.hammer.org'
-	phpsession = 'dv2bqaqcvsqkpu48a18d5pa811'
+	phpsession = 'hfv57pmfg0htiafm5v4v9hc6j0'
 
 	url = 'http://www.eguan.cn'
 	if len(sys.argv) ==  2:

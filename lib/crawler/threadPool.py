@@ -40,7 +40,7 @@ class Worker(Thread):
 				continue
 			try:
 				self.threadPool.increaseRunsNum() 
-				result = func(*args, **kargs) 
+				result = func(*args, **kargs)
 				self.threadPool.decreaseRunsNum()
 				if result:
 					self.threadPool.putTaskResult(*result)

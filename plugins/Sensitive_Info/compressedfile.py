@@ -70,7 +70,7 @@ def httpcrack(url,lock):
 		try:
 			httpcode = urllib2.urlopen(url).getcode()
 			if httpcode == 200:
-			 	printinfo = url + '\tcode:' + httpcode + os.linesep
+			 	printinfo = url + '\tcode:' + str(httpcode) + os.linesep
 			 	flg = True
 			break
 		except socket.timeout,e:

@@ -6,7 +6,9 @@
 # func: 主要模块，爬虫的具体实现。
 # author: lvyaojia
 # web: https://github.com/lvyaojia/crawler
-# modifed by mody at 2014-07-23
+# modified by mody at 2014-07-23
+# modified by mody at 2014-09-18
+# 	并发有问题，要获取线程返回结果，然后主线程处理
 # ----------------------------------------------------------------------------------------------------
 
 import re
@@ -29,6 +31,8 @@ from crawlerFile import CrawlerFile
 from dummy import BASEDIR
 
 from lib.common import genFilename
+
+from threading import Lock
 
 log = logging.getLogger('crawler')
 # ----------------------------------------------------------------------------------------------------
@@ -77,8 +81,8 @@ class Crawler(object):
 
 		self.currentDepth = 1  				#标注初始爬虫深度，从1开始
 		self.keyword = args.keyword		 	#指定关键词,使用console的默认编码来解码
-		self.database =  Database(args.dbFile)						#数据库
-		self.threadPool = ThreadPool(args.concurrency)  			#线程池,指定线程数
+		self.database =  Database(args.dbFile)			#数据库
+		self.threadPool = ThreadPool(args.concurrency)  #线程池,指定线程数
 		
 		self.visitedHrefs = set()   		#已访问的链接
 		self.unvisitedHrefs = deque()		#待访问的链接 
@@ -88,6 +92,8 @@ class Crawler(object):
 		self.file = BASEDIR + '/cache/crawler/' + genFilename(self.url) + '.txt'
 		print self.file
 		#print 'args.url=\t',args.url
+
+		self.lock = Lock()
 
 	def start(self):
 		print '\nStart Crawling\n'
@@ -243,15 +249,17 @@ class Crawler(object):
 			#向任务队列分配任务
 			self.threadPool.putTask(self._taskHandler, url) 
 			#标注该链接已被访问,或即将被访问,防止重复访问相同链接
-			self.visitedHrefs.add(url)  
+			self.visitedHrefs.add(url)
  
 	def _taskHandler(self, url):
-		#先拿网页源码，再保存,两个都是高阻塞的操作，交给线程处理
+		# 先拿网页源码，再保存,两个都是高阻塞的操作，交给线程处理
 		# print 'url=\t',url
 		webPage = WebPage(url)
+		self.lock.acquire()
 		if webPage.fetch():
 			self._saveTaskResults(webPage)
 			self._addUnvisitedHrefs(webPage)
+		self.lock.release()
 
 	def _saveTaskResults(self, webPage):
 		url, pageSource = webPage.getDatas()
@@ -365,11 +373,12 @@ class Crawler(object):
 			return False
 
 	def _isHrefRepeated(self, href):
+		# print 'href=\t',href
 		hful = urlparse(href)
 		hfargs = []
 		for eachequal in hful.query.split('&'):
 			hfargs.append(eachequal.split('=')[0])
-		#print 'hfargs=\t',hfargs
+		# print 'hfargs=\t',hfargs
 		
 		hrefs = [i for i in self.visitedHrefs] + [j for j in self.unvisitedHrefs]
 		#print 'hrefs=\t',hrefs
@@ -378,18 +387,29 @@ class Crawler(object):
 			eachhful = urlparse(eachhref)
 			eachhfargs = []
 			if eachhful.scheme == hful.scheme and eachhful.netloc == hful.netloc and eachhful.path == hful.path:
+				
 				for eachequal in eachhful.query.split('&'):
 					# pay attention here, must no be ''
-					if eachequal.split('=')[0] != '':
-						eachhfargs.append(eachequal.split('=')[0])
-						#print 'eachhfargs=\t',eachhfargs
-				for eacharg in eachhfargs:
-					if eacharg not in hfargs:
-						#print 'isrepeat=\t','False'
-						return False
-						
+					para = eachequal.split('=')[0]
+					if para not in eachhfargs:
+						eachhfargs.append(para)
+						# print 'eachhfargs=\t',eachhfargs
+
+				# for eacharg in eachhfargs:
+				# 	if eacharg not in hfargs:
+				# 		print 'isrepeat=\t','False'
+				# 		return False
 				flag = True
-		#print 'isrepeat=\t',flag
+				for eacharg in hfargs:
+					if eacharg in eachhfargs:
+						continue
+					flag = False
+					break
+
+				if flag == True:
+					break
+
+		# print 'isrepeat=\t',flag
 		return flag
 
 	def _isDatabaseAvaliable(self):
@@ -422,7 +442,7 @@ if __name__ == '__main__':
 		url = sys.argv[1]
 
 	dbFile = '/root/workspace/Hammer/cache/crawler/crawler.db'
-	args = Strategy(url=url,max_depth=5,max_count=500,concurrency=10,
+	args = Strategy(url=url,max_depth=5,max_count=500,concurrency=20,
 		timeout=10,time=6*3600,headers=None,cookies=None,ssl_verify=False,
 		same_host=False,same_domain=True,keyword=None)
 	crawler = Crawler(args)

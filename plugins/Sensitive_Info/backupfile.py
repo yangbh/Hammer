@@ -96,7 +96,7 @@ def httpcrack(url,lock):
 		try:
 			 httpcode = urllib2.urlopen(url).getcode()
 			 if httpcode == 200:
-			 	printinfo = url + '\t code:' + httpcode + os.linesep
+			 	printinfo = url + '\t code:' + str(httpcode) + os.linesep
 			 	flg = True
 			 break
 		except socket.timeout,e:
@@ -127,7 +127,7 @@ def Audit(services):
 		#print'ok'
 		output += 'plugin run' + os.linesep
 		urls = generateUrls(services['url'])
-		#pprint(urls)
+		# pprint(urls)
 
 		#  threads
 		lock = threading.Lock()

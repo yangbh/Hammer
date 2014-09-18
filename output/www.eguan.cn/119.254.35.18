@@ -1,6 +1,6 @@
 *************************     scan info     *************************
 # this is an ip type scan
-ip:	106.185.36.44
+ip:	119.254.35.18
 issubdomain:	False
 
 *************************   scan services   *************************
@@ -17,7 +17,7 @@ plugin run
 
 >>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/portscan.py
 plugin run
-services changed to:	{'ip': u'106.185.36.44', 'port_detail': {80: {'product': u'nginx', 'state': u'open', 'version': '', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/a:igor_sysoev:nginx'}, 3306: {'product': u'MySQL', 'state': u'open', 'version': '', 'name': u'mysql', 'conf': u'10', 'extrainfo': u'unauthorized', 'reason': u'syn-ack', 'cpe': u'cpe:/a:mysql:mysql'}, 22: {'product': u'OpenSSH', 'state': u'open', 'version': u'4.3', 'name': u'ssh', 'conf': u'10', 'extrainfo': u'protocol 2.0', 'reason': u'syn-ack', 'cpe': u'cpe:/a:openbsd:openssh:4.3'}}, 'ports': [3306, 80, 22]}
+services changed to:	{'ip': u'119.254.35.18', 'port_detail': {80: {'product': u'Apache httpd', 'state': u'open', 'version': u'2.2.15', 'name': u'http', 'conf': u'10', 'extrainfo': u'(CentOS)', 'reason': u'syn-ack', 'cpe': u'cpe:/a:apache:http_server:2.2.15'}}, 'ports': [80]}
 
 >>>running plugin:/Users/mody/study/Python/Hammer/plugins/Info_Collect/robots.py
 
@@ -29,7 +29,6 @@ services changed to:	{'ip': u'106.185.36.44', 'port_detail': {80: {'product': u'
 Step 2. Running Other Plugins
 
 >>>running plugin:/Users/mody/study/Python/Hammer/plugins/Weak_Password/sshcrack.py
-plugin run
 
 >>>running plugin:/Users/mody/study/Python/Hammer/plugins/Common/fileinclusion.py
 
@@ -74,6 +73,6 @@ plugin run
 
 
 *************************    scan result    *************************
-retinfo:	[{'content': '[3306, 80, 22]', 'type': 'Port and Service Discover', 'level': 'info'}]
+retinfo:	[{'content': '[80]', 'type': 'Port and Service Discover', 'level': 'info'}]
 
-services:	{'ip': u'106.185.36.44', 'port_detail': {80: {'product': u'nginx', 'state': u'open', 'version': '', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/a:igor_sysoev:nginx'}, 3306: {'product': u'MySQL', 'state': u'open', 'version': '', 'name': u'mysql', 'conf': u'10', 'extrainfo': u'unauthorized', 'reason': u'syn-ack', 'cpe': u'cpe:/a:mysql:mysql'}, 22: {'product': u'OpenSSH', 'state': u'open', 'version': u'4.3', 'name': u'ssh', 'conf': u'10', 'extrainfo': u'protocol 2.0', 'reason': u'syn-ack', 'cpe': u'cpe:/a:openbsd:openssh:4.3'}}, 'ports': [3306, 80, 22]}
+services:	{'ip': u'119.254.35.18', 'port_detail': {80: {'product': u'Apache httpd', 'state': u'open', 'version': u'2.2.15', 'name': u'http', 'conf': u'10', 'extrainfo': u'(CentOS)', 'reason': u'syn-ack', 'cpe': u'cpe:/a:apache:http_server:2.2.15'}}, 'ports': [80]}

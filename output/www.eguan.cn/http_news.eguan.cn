@@ -1,0 +1,9 @@
+*************************     scan info     *************************
+# this is a http type scan
+url:	http://news.eguan.cn
+isneighborhost:	False
+
+*************************   scan services   *************************
+
+Step 1. Running Auxiliary Plugins
+
