@@ -17,10 +17,10 @@ def Audit(services):
 		url = services['url']
 		args = Strategy(url=url,max_depth=5,max_count=500,concurrency=20,
 			timeout=10,time=6*3600,headers=None,cookies=None,ssl_verify=False,
-			same_host=False,same_domain=True,keyword=None)
+			same_host=False,same_domain=True,keyword=None,dbFile='/Users/mody/study/Python/Hammer/cache/crawler/crawler.db')
 		crawler = Crawler(args)
 		crawler.start()
-		#pprint([i for i in crawler.visitedHrefs]+[i for i in crawler.unvisitedHrefs])
+		pprint([i for i in crawler.visitedHrefs]+[i for i in crawler.unvisitedHrefs])
 		crawler.saveAllHrefsToFile()
 		crawler.saveAllPaths()
 		crawler.saveAllFileExtensions()

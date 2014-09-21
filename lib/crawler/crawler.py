@@ -81,7 +81,8 @@ class Crawler(object):
 
 		self.currentDepth = 1  				#标注初始爬虫深度，从1开始
 		self.keyword = args.keyword		 	#指定关键词,使用console的默认编码来解码
-		self.database =  Database(args.dbFile)			#数据库
+		
+
 		self.threadPool = ThreadPool(args.concurrency)  #线程池,指定线程数
 		
 		self.visitedHrefs = set()   		#已访问的链接
@@ -91,7 +92,12 @@ class Crawler(object):
 
 		self.file = BASEDIR + '/cache/crawler/' + genFilename(self.url) + '.txt'
 		print self.file
-		#print 'args.url=\t',args.url
+		print 'args.url=\t',args.url
+
+		#################
+		#此句有问题
+		self.database =  Database(args.dbFile)			#数据库
+		print 'hehe'
 
 		self.lock = Lock()
 
@@ -100,6 +106,8 @@ class Crawler(object):
 		if not self._isDatabaseAvaliable():
 			print 'Error: Unable to open database file.\n'
 		else:
+			pass
+		if True:
 			self.isCrawling = True
 			self.threadPool.startThreads() 
 			while self.currentDepth <= self.max_depth and len(self.visitedHrefs) <= self.max_count:
@@ -127,7 +135,7 @@ class Crawler(object):
 	def stop(self):
 		self.isCrawling = False
 		self.threadPool.stopThreads()
-		self.database.close()
+		# self.database.close()
 
 	def saveAllHrefsToFile(self,nonehtml=True):
 		try:
@@ -253,7 +261,7 @@ class Crawler(object):
  
 	def _taskHandler(self, url):
 		# 先拿网页源码，再保存,两个都是高阻塞的操作，交给线程处理
-		# print 'url=\t',url
+		print 'url=\t',url
 		webPage = WebPage(url)
 		self.lock.acquire()
 		if webPage.fetch():
@@ -433,19 +441,26 @@ class Crawler(object):
 			print 'Create logfile and database Successfully.'
 			print 'Already save Baidu.com, Please check the database record.'
 			print 'Seems No Problem!\n'
-# ----------------------------------------------------------------------------------------------------
-# 
-# ----------------------------------------------------------------------------------------------------
-if __name__ == '__main__':
-	url='http://www.eguan.cn'
+
+def main():
+	url='http://www.leesec.com'
 	if len(sys.argv) ==  2:
 		url = sys.argv[1]
 
-	dbFile = '/root/workspace/Hammer/cache/crawler/crawler.db'
+	dbFile = '/Users/mody/study/Python/Hammer/cache/crawler/crawler.db'
 	args = Strategy(url=url,max_depth=5,max_count=500,concurrency=20,
 		timeout=10,time=6*3600,headers=None,cookies=None,ssl_verify=False,
-		same_host=False,same_domain=True,keyword=None)
+		same_host=False,same_domain=True,keyword=None,dbFile=dbFile)
 	crawler = Crawler(args)
 	crawler.start()
 	#pprint([i for i in crawler.visitedHrefs]+[i for i in crawler.unvisitedHrefs])
 	crawler.saveAllHrefsToFile()
+# ----------------------------------------------------------------------------------------------------
+# 
+# ----------------------------------------------------------------------------------------------------
+if __name__ == '__main__':
+	import multiprocessing
+	p = multiprocessing.Pool()
+	p.apply(main)
+	p.close()
+	p.join()

@@ -11,14 +11,19 @@ import sqlite3
 
 class Database(object):
 	def __init__(self, dbFile=':memory:'):
+		super(Database, self).__init__()
 		try:
-			self.conn = sqlite3.connect(dbFile, isolation_level=None, check_same_thread = False) #让它自动commit，效率也有所提升. 多线程共用
-			self.conn.execute('''CREATE TABLE IF NOT EXISTS
-							Webpage (id INTEGER PRIMARY KEY AUTOINCREMENT, 
-							url TEXT, 
-							pageSource TEXT,
-							keyword TEXT)''')
+			print 'dbFile:\t',dbFile
+			# self.conn = sqlite3.connect(dbFile,isolation_level=None, check_same_thread = False) #让它自动commit，效率也有所提升. 多线程共用
+			self.conn = None
+			# sqlite3.connect('dbFile.db') #让它自动commit，效率也有所提升. 多线程共用
+			# self.conn.execute('''CREATE TABLE IF NOT EXISTS
+			# 				Webpage (id INTEGER PRIMARY KEY AUTOINCREMENT, 
+			# 				url TEXT, 
+			# 				pageSource TEXT,
+			# 				keyword TEXT)''')
 		except Exception, e:
+			print 'Exception',e
 			self.conn = None
 
 	def isConn(self):
@@ -39,3 +44,16 @@ class Database(object):
 			self.conn.close()
 		else :
 			raise sqlite3.OperationalError, 'Database is not connected.'
+
+def main():
+	database = Database()
+	print database.isConn()
+# ----------------------------------------------------------------------------------------------------
+# 
+# ----------------------------------------------------------------------------------------------------
+if __name__ == '__main__':
+	import multiprocessing
+	p = multiprocessing.Pool()
+	p.apply(main)
+	p.close()
+	p.join()

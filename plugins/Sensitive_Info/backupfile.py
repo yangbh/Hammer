@@ -17,6 +17,7 @@ info = {
 	'DESCRIPTION':'Tries to find sensitive backup files.'
 }
 
+bigLock = threading.Lock()
 ret = ''
 # ----------------------------------------------------------------------------------------------------
 #
@@ -45,7 +46,8 @@ def getCrawlerFiles(url):
 			linkfile = linkfile[::-1]
 			if linkfile.find('.',0,10) == -1:
 				continue
-			files.append(linkfile[::-1])
+			if linkfile[::-1] not in files:
+				files.append(linkfile[::-1])
 		return files
 	except Exception,e:
 		print 'Exception:\t',e
@@ -78,13 +80,14 @@ def generateUrls(url):
 	dicts = getDict(dictfile)
 	#print 'dicts=\t',dicts
 	files = getCrawlerFiles(url)
-	#print 'files=\t',files
+	print 'files=\t',files
 	for eachfile in files:
 		for eachdict in dicts:
 			urls.append(eachfile+eachdict)
 
 	# ret = list(set(urls))
 	# ret.sort()
+	pprint(urls)
 	return urls
 
 def httpcrack(url,lock):
@@ -120,9 +123,11 @@ def httpcrack(url,lock):
 	return(flg,printinfo)
 
 def Audit(services):
+	global bigLock,ret
 	retinfo = {}
 	output = ''
 	#print'ok'
+	bigLock.acquire()
 	if services.has_key('url'):
 		#print'ok'
 		output += 'plugin run' + os.linesep
@@ -130,6 +135,7 @@ def Audit(services):
 		# pprint(urls)
 
 		#  threads
+		
 		lock = threading.Lock()
 		threads = []
 		maxthreads = 20
@@ -138,6 +144,7 @@ def Audit(services):
 			th = threading.Thread(target=httpcrack,args=(url,lock))
 			threads.append(th)
 		i = 0
+		
 		while i<len(threads):
 			if i+maxthreads >len(threads):
 				numthreads = len(threads) - i
@@ -154,9 +161,12 @@ def Audit(services):
 				threads[i+j].join()
 
 			i += maxthreads
-	
+		
 	if ret != '':
 		retinfo = {'level':'low','content':ret}
+		# 
+		ret = ''
+	bigLock.release()
 
 	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------

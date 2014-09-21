@@ -2,6 +2,7 @@
 #coding:utf-8
 import os
 import sys
+import copy
 from dummy import BASEDIR
 # ----------------------------------------------------------------------------------------------------
 # 
@@ -110,55 +111,59 @@ class PluginLoader(object):
 					ret[root].append(eachfile)
 
 		self.plugindict = ret
-		#print self.plugindict
+		# print self.plugindict
 		self.output += str(self.plugindict) + os.linesep*2
 
 	def runEachPlugin(self, pluginfilepath, services=None):
-		print '>>>running plugin:',pluginfilepath
-		self.output += '>>>running plugin:' + pluginfilepath  + os.linesep
-		
-		if services == None:
-			services = dict(self.services)
+		try:
+			print '>>>running plugin:',pluginfilepath
+			self.output += '>>>running plugin:' + pluginfilepath  + os.linesep
+			
+			if services == None:
+				services = dict(self.services)
 
-		modulepath = pluginfilepath.replace(self.path+'/','')
-		modulepath = modulepath.replace('.py','')
-		modulepath = modulepath.replace('.','')
-		modulepath = modulepath.replace('/','.')
-		#print modulepath
+			modulepath = pluginfilepath.replace(self.path+'/','')
+			modulepath = modulepath.replace('.py','')
+			modulepath = modulepath.replace('.','')
+			modulepath = modulepath.replace('/','.')
+			# print modulepath
 
-		#from dummy import *
-		importcmd = 'global services' + os.linesep
-		#importcmd += 'from dummy import *' + os.linesep
-		importcmd += 'from ' + modulepath + ' import Audit,info'
+			#from dummy import *
+			importcmd = 'global services' + os.linesep
+			#importcmd += 'from dummy import *' + os.linesep
+			importcmd += 'from ' + modulepath + ' import Audit,info'
 
-		exec(importcmd)
+			exec(importcmd)
 
-		if locals().has_key('Audit'):
-			#print '\tPlugin function Audit loaded'
-			ret, output = ({},'')
-			try:
-				ret,output = Audit(services)
-			except:
-				pass
-			# outputinfo
-			if output != '' and output != None:
-				self.output += output
-			# services info
-			if self.services != services:
-				self.services = services
-				#print 'services changed:\t', services
-				self.output += 'services changed to:\t' + str(services) + os.linesep
-			# return info
-			if ret and ret != {}:
-				#print 'pluginfilepath=\t',pluginfilepath
-				ret['type'] = info['NAME']
-				print 'ret=\t',ret
-				self.retinfo.append(ret)
+			if locals().has_key('Audit'):
+				# MAudit = copy.copy(Audit)
+				#print '\tPlugin function Audit loaded'
+				ret, output = ({},'')
+				try:
+					ret,output = Audit(services)
+				except:
+					pass
+				# outputinfo
+				if output != '' and output != None:
+					self.output += output
+				# services info
+				if self.services != services:
+					self.services = services
+					#print 'services changed:\t', services
+					self.output += 'services changed to:\t' + str(services) + os.linesep
+				# return info
+				if ret and ret != {}:
+					#print 'pluginfilepath=\t',pluginfilepath
+					ret['type'] = info['NAME']
+					print 'ret=\t',ret
+					self.retinfo.append(ret)
 
-		# at last, save output infomation
-		self._saveRunningInfo(self.output+os.linesep)
-		# clear output
-		self.output = ''
+			# at last, save output infomation
+			self._saveRunningInfo(self.output+os.linesep)
+			# clear output
+			self.output = ''
+		except Exception,e:
+			print 'Exception',e
 
 		# fp = open(pluginfilepath)
 		# code = fp.read()
@@ -205,14 +210,14 @@ class PluginLoader(object):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	basedir = '/root/workspace/Hammer'
+	basedir = '/Users/mody/study/Python/Hammer'
 	sys.path.append(basedir)
 	sys.path.append(basedir+'/lib')
-	services={'url':'http://www.eguan.cn'}
+	services={'url':'http://www.leesec.com'}
 	pl = PluginLoader(None,services)
 	pl.path = basedir+'/plugins'
-	#pl.runEachPlugin('/root/workspace/Hammer/plugins/Info_Collect/spider.py',services)
-	pl.runEachPlugin(basedir+'/plugins/Sensitive_Info/backupfile.py',services)
+	pl.runEachPlugin(basedir+'/plugins/Info_Collect/crawler.py',services)
+	# pl.runEachPlugin(basedir+'/plugins/Sensitive_Info/backupfile.py',services)
 	
 	# print pl.loadPlugins()
 	# pl.runPlugins()

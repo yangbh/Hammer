@@ -1,0 +1,55 @@
+2014-07-26 17:04:54,221 INFO      root     4303699968 *** thread 4303699968 started (0)
+2014-07-26 17:04:54,221 INFO      root     4307906560 *** thread 4307906560 started (1)
+2014-07-26 17:04:54,221 INFO      root     4312113152 *** thread 4312113152 started (2)
+2014-07-26 17:04:54,221 INFO      root     4316319744 *** thread 4316319744 started (3)
+2014-07-26 17:04:54,222 INFO      root     4320526336 *** thread 4320526336 started (4)
+2014-07-26 17:04:54,222 DEBUG     A        4303699968   0 This is a debug message
+2014-07-26 17:04:54,222 CRITICAL  A        4307906560   1 This is a critical message
+2014-07-26 17:04:54,222 CRITICAL  A        4312113152   2 This is a critical message
+2014-07-26 17:04:54,222 CRITICAL  A.B.C    4316319744   3 This is a critical message
+2014-07-26 17:04:54,222 ERROR     A.B.C.D  4320526336   4 This is an error message
+2014-07-26 17:04:54,223 INFO      A.B      4303699968   0 This is an informational message
+2014-07-26 17:04:54,223 INFO      A        4307906560   1 This is an informational message
+2014-07-26 17:04:54,223 CRITICAL  A.B.C    4312113152   2 This is a critical message
+2014-07-26 17:04:54,223 DEBUG     A        4316319744   3 This is a debug message
+2014-07-26 17:04:54,223 DEBUG     A        4320526336   4 This is a debug message
+2014-07-26 17:04:54,223 INFO      A        4303699968   0 This is an informational message
+2014-07-26 17:04:54,223 CRITICAL  A.B      4307906560   1 This is a critical message
+2014-07-26 17:04:54,223 INFO      A        4312113152   2 This is an informational message
+2014-07-26 17:04:54,223 WARNING   A.B.C    4316319744   3 This is a warning message
+2014-07-26 17:04:54,223 INFO      A.B.C    4320526336   4 This is an informational message
+2014-07-26 17:04:54,224 INFO      A        4303699968   0 This is an informational message
+2014-07-26 17:04:54,224 WARNING   A.B      4307906560   1 This is a warning message
+2014-07-26 17:04:54,224 WARNING   A.B      4312113152   2 This is a warning message
+2014-07-26 17:04:54,224 DEBUG     A.B.C.D  4316319744   3 This is a debug message
+2014-07-26 17:04:54,224 WARNING   A        4320526336   4 This is a warning message
+2014-07-26 17:04:54,224 DEBUG     A.B      4303699968   0 This is a debug message
+2014-07-26 17:04:54,224 INFO      A.B.C    4307906560   1 This is an informational message
+2014-07-26 17:04:54,224 WARNING   A.B      4312113152   2 This is a warning message
+2014-07-26 17:04:54,224 INFO      A.B      4316319744   3 This is an informational message
+2014-07-26 17:04:54,225 WARNING   A.B.C    4320526336   4 This is a warning message
+2014-07-26 17:04:54,225 WARNING   A.B      4303699968   0 This is a warning message
+2014-07-26 17:04:54,225 DEBUG     A        4307906560   1 This is a debug message
+2014-07-26 17:04:54,225 INFO      A        4312113152   2 This is an informational message
+2014-07-26 17:04:54,225 ERROR     A.B.C.D  4316319744   3 This is an error message
+2014-07-26 17:04:54,225 INFO      A.B      4320526336   4 This is an informational message
+2014-07-26 17:04:54,225 INFO      A        4303699968   0 This is an informational message
+2014-07-26 17:04:54,225 INFO      A        4307906560   1 This is an informational message
+2014-07-26 17:04:54,225 DEBUG     A.B.C    4312113152   2 This is a debug message
+2014-07-26 17:04:54,226 INFO      A.B.C.D  4316319744   3 This is an informational message
+2014-07-26 17:04:54,226 CRITICAL  A        4320526336   4 This is a critical message
+2014-07-26 17:04:54,226 DEBUG     A        4303699968   0 This is a debug message
+2014-07-26 17:04:54,226 WARNING   A.B.C.D  4307906560   1 This is a warning message
+2014-07-26 17:04:54,226 INFO      A        4312113152   2 This is an informational message
+2014-07-26 17:04:54,226 CRITICAL  A.B.C    4316319744   3 This is a critical message
+2014-07-26 17:04:54,226 INFO      A.B      4320526336   4 This is an informational message
+2014-07-26 17:04:54,226 WARNING   A        4303699968   0 This is a warning message
+2014-07-26 17:04:54,226 WARNING   A.B.C.D  4307906560   1 This is a warning message
+2014-07-26 17:04:54,227 WARNING   A.B.C    4312113152   2 This is a warning message
+2014-07-26 17:04:54,227 ERROR     A.B.C    4316319744   3 This is an error message
+2014-07-26 17:04:54,227 INFO      A.B.C    4320526336   4 This is an informational message
+2014-07-26 17:04:54,227 CRITICAL  A.B      4303699968   0 This is a critical message
+2014-07-26 17:04:54,227 WARNING   A.B.C.D  4307906560   1 This is a warning message
+2014-07-26 17:04:54,227 WARNING   A.B.C.D  4312113152   2 This is a warning message
+2014-07-26 17:04:54,227 WARNING   A.B.C.D  4316319744   3 This is a warning message
+2014-07-26 17:04:54,227 DEBUG     A        4320526336   4 This is a debug message
