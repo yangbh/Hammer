@@ -18,8 +18,13 @@ if ($type == 'start') {
 	// echo $startTime . '<br>';
 	$args = check_sql(trim($_REQUEST['args']));
 	// echo $args . '<br>';
-	$userid = get_userid();
-	// echo $userid . '<br>';
+	if ($userid = get_userid()) {
+		// echo $userid . '<br>';
+	}
+	else{
+		die();
+	}
+
 
 	$query = "INSERT INTO Scan(Url,Start_Time,Arguments,User_ID) VALUES('$url',$startTime,'$args',$userid)";
 	// echo $query . '<br>';
@@ -45,8 +50,12 @@ elseif ($type == 'end') {
 	// echo $ipurl . '<br>';
 	$scanid = (int)($_REQUEST['id']);
 	// echo $ipurl . '<br>';
-	$userid = get_userid();
-	// echo $userid . '<br>';
+	if ($userid = get_userid()) {
+		// echo $userid . '<br>';
+	}
+	else{
+		die();
+	}
 	$retinfo = json_decode(trim($_REQUEST['retinfo']),true);
 	// var_dump($retinfo);
 	

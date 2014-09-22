@@ -97,7 +97,7 @@ class Crawler(object):
 		#################
 		#此句有问题
 		self.database =  Database(args.dbFile)			#数据库
-		print 'hehe'
+		# print 'hehe'
 
 		self.lock = Lock()
 
@@ -261,7 +261,7 @@ class Crawler(object):
  
 	def _taskHandler(self, url):
 		# 先拿网页源码，再保存,两个都是高阻塞的操作，交给线程处理
-		print 'url=\t',url
+		# print 'url=\t',url
 		webPage = WebPage(url)
 		self.lock.acquire()
 		if webPage.fetch():

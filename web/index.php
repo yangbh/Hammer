@@ -17,7 +17,7 @@ require_once('common.php');
 		<!-- Bootstrap core CSS -->
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<!-- Custom styles for this template -->
-		<link href="css/jumbotron.css" rel="stylesheet">
+		<!-- <link href="css/jumbotron.css" rel="stylesheet"> -->
 		
 		<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 		<script type="text/javascript">
@@ -30,7 +30,7 @@ require_once('common.php');
 
 	<body>
 
-		<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="navbar navbar-inverse navbar-default" role="navigation" style="border-radius: 0px;">
 			<div class="container">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -39,7 +39,8 @@ require_once('common.php');
 						<span class="icon-bar">2</span>
 						<span class="icon-bar">3</span>
 					</button>
-					<a class="navbar-brand" href="#">Hammer</a>
+<!-- 					<img src="images/favicon.ico" class="img-circle"> -->
+					<a class="navbar-brand" href="#"><strong>Hammer</strong></a>
 				</div>
 				<div class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
@@ -52,10 +53,25 @@ require_once('common.php');
 <?php
 if (already_login()) {
 echo <<<EOF
-					<div class="navbar-form navbar-right" role="form">
-						<span class="label label-default">welcome</span>
-						<a href="logout.php" class="btn btn-warning">Sign out</a>
-					</div>
+					<ul class ="nav navbar-nav navbar-right">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<i class="glyphicon glyphicon-user"></i> Mody<b class="caret"></b>
+							</a>
+						 	<ul class="dropdown-menu">
+								<li>
+									<a href="/beeman/Mody"><i class="glyphicon glyphicon-home"></i> 个人主页</a>
+								</li><li>
+								</li><li>
+							 		<a href="/message-box/"><i class="glyphicon glyphicon-envelope"></i> 消息盒子</a>
+								</li>
+								<li>
+									<a href="/user_setting"><i class="glyphicon glyphicon-cog"></i> 设置</a>
+								</li><li>
+								</li><li><a href="/user_logout"><i class="glyphicon glyphicon-off"></i> 退出</a></li>
+						  	</ul>
+						</li>
+					</ul>
 EOF;
 }
 else{
@@ -72,6 +88,7 @@ echo <<<EOF
 EOF;
 }
 ?>
+
 				</div><!--/.navbar-collapse -->
 			</div>
 		</div>

@@ -1,7 +1,7 @@
 *************************     scan info     *************************
 # this is an ip type scan
 ip:	106.185.36.44
-issubdomain:	False
+issubdomain:	True
 
 *************************   scan services   *************************
 
@@ -21,7 +21,7 @@ plugin run
 
 >>>running plugin:/root/workspace/Hammer/plugins/Info_Collect/portscan.py
 plugin run
-services changed to:	{'ip': u'106.185.36.44', 'port_detail': {80: {'product': u'nginx', 'state': u'open', 'version': '', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/a:igor_sysoev:nginx'}}, 'ports': [80]}
+services changed to:	{'issubdomain': True, 'port_detail': {80: {'product': u'nginx', 'state': u'open', 'version': '', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/a:igor_sysoev:nginx'}}, 'ports': [80], 'ip': u'106.185.36.44'}
 
 >>>running plugin:/root/workspace/Hammer/plugins/Info_Collect/whatweb.py
 
@@ -75,4 +75,4 @@ plugin run
 *************************    scan result    *************************
 retinfo:	[{'content': '[80]', 'type': 'Port and Service Discover', 'level': 'info'}]
 
-services:	{'ip': u'106.185.36.44', 'port_detail': {80: {'product': u'nginx', 'state': u'open', 'version': '', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/a:igor_sysoev:nginx'}}, 'ports': [80]}
+services:	{'issubdomain': True, 'port_detail': {80: {'product': u'nginx', 'state': u'open', 'version': '', 'name': u'http', 'conf': u'10', 'extrainfo': '', 'reason': u'syn-ack', 'cpe': u'cpe:/a:igor_sysoev:nginx'}}, 'ports': [80], 'ip': u'106.185.36.44'}

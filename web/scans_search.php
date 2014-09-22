@@ -6,7 +6,12 @@ function search_scan($level,$keyword=''){
 	// $pKeyword = check_sql($keyword);
 	$pLevel = $level;
 	$pKeyword = $keyword;
-	$userid = get_userid();
+	if ($userid = get_userid()) {
+		// echo $userid . '<br>';
+	}
+	else{
+		die();
+	}
 	// echo $userid . '<br>';
 	// print $pLevel.$pKeyword;
 	$query = "SELECT Scan.ID,Scan.Url,Scan.Start_Time,Scan.End_Time,Scan.Level,Scan.Arguments,User.Name FROM Scan,User WHERE Scan.User_ID=User.ID AND Scan.User_ID='$userid'";
@@ -35,8 +40,12 @@ function search_scan($level,$keyword=''){
 //
 function search_vuln($scanID){
 	$pScanID = $scanID;
-	$userid = get_userid();
-	// echo $userid . '<br>';
+	if ($userid = get_userid()) {
+		// echo $userid . '<br>';
+	}
+	else{
+		die();
+	}
 	$query = "SELECT Vuln.IP_URL,Plugin.Name,Vuln.Vuln_Info,Vuln.Level FROM Plugin,Scan,Vuln WHERE Vuln.Scan_ID=Scan.ID AND Vuln.Plugin_ID=Plugin.ID AND Scan.ID=$scanID AND Scan.User_ID='$userid' ORDER BY Vuln.IP_URL,Vuln.Level";
 	// echo $query.'<br>';
 

@@ -134,7 +134,7 @@ def httpcrack(url,lock):
 def Audit(services):
 	retinfo = {}
 	output = ''
-	if services.has_key('url'):
+	if services.has_key('url') and not services.has_key('cms'):
 		output += 'plugin run' + os.linesep
 		urls = generateUrls(services['url'])
 		#pprint(urls)

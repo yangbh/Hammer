@@ -1,13 +1,19 @@
 
 [Hrefs]
+http://hengying.hengtiansoft.com/Home/Support
 http://www.hengtiansoft.com/en
 http://bluemorpho.hengtiansoft.com/bluemorpho/signin
+http://hengying.hengtiansoft.com/Home/Index#home
 http://hengying.hengtiansoft.com/
 http://www.hengtiansoft.com/
 http://www.hengtiansoft.com/Download.aspx?info=7%2bUctaRl0qE%3d
 http://www.hengtiansoft.com
 http://www.hengtiansoft.com/zh
 http://www.hengtiansoft.com/Default.aspx
+http://hengying.hengtiansoft.com/Home/ProductDownload
+http://bluemorpho.hengtiansoft.com/bluemorpho/forgotpassword;jsessionid=D75E9069A4E968C3CB84E9BB9406ED4F
+http://hengying.hengtiansoft.com/Account/Login
+http://hengying.hengtiansoft.com/Account/Register
 
 [Paths]
 http://www.hengtiansoft.com

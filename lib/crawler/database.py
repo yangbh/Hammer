@@ -14,14 +14,13 @@ class Database(object):
 		super(Database, self).__init__()
 		try:
 			print 'dbFile:\t',dbFile
-			# self.conn = sqlite3.connect(dbFile,isolation_level=None, check_same_thread = False) #让它自动commit，效率也有所提升. 多线程共用
-			self.conn = None
-			# sqlite3.connect('dbFile.db') #让它自动commit，效率也有所提升. 多线程共用
-			# self.conn.execute('''CREATE TABLE IF NOT EXISTS
-			# 				Webpage (id INTEGER PRIMARY KEY AUTOINCREMENT, 
-			# 				url TEXT, 
-			# 				pageSource TEXT,
-			# 				keyword TEXT)''')
+			self.conn = sqlite3.connect(dbFile,isolation_level=None, check_same_thread = False) #让它自动commit，效率也有所提升. 多线程共用
+			# self.conn = None
+			self.conn.execute('''CREATE TABLE IF NOT EXISTS
+							Webpage (id INTEGER PRIMARY KEY AUTOINCREMENT, 
+							url TEXT, 
+							pageSource TEXT,
+							keyword TEXT)''')
 		except Exception, e:
 			print 'Exception',e
 			self.conn = None

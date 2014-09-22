@@ -27,8 +27,10 @@ def procFunc(pluginheader):
 		pl = pluginheader
 		pl.loadPlugins()
 		pl.runPlugins()
+		return pl
 	else:
 		print 'pl is not a pluginLoader_class.PluginLoader class'
+		return None
 
 # ----------------------------------------------------------------------------------------------------
 #
@@ -198,7 +200,7 @@ class Scanner(object):
 			httpports = self.getHttpPorts(eachip)
 			urls[eachip] = self.generateUrl(eachip,ip_hosts,httpports)
 
-		urls = {'106?.185.36.44': ['http://www.leesec.com']}
+		# urls = {'106.185.36.44': []}
 		self.urls = urls
 		print 'urls\t',urls
 
@@ -231,17 +233,20 @@ class Scanner(object):
 				print 'scan start:\t',pl.services
 		self.pls = pls
 
-
+		results = []
 		proPool = multiprocessing.Pool(10)
 		for eachpl in pls:
-			proPool.apply_async(procFunc,(eachpl,))
-			
-		time.sleep(10)	
+			results.append(proPool.apply_async(procFunc,(eachpl,)))
 
 		proPool.close()
 		proPool.join()
 
-		self.setResult(urls=self.urls,pls=pls)
+		newpls = []
+		for res in results:
+			newpls.append(res.get())
+		self.pls = newpls
+
+		self.setResult(urls=self.urls,pls=newpls)
 		#self.saveResultToFile(pls)
 		self._saveResultToWeb()
 
@@ -354,9 +359,9 @@ class Scanner(object):
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	server = 'www.hammer.org'
-	phpsession = 'nu37qjr3ldvfh5flv2c8rjdir1'
+	phpsession = '2l2sl6tbnmj3q1ln0qqok3dpt4'
 
-	url = 'http://www.eguan.cn'
+	url = 'http://www.leesec.com'
 	if len(sys.argv) ==  2:
 		url = sys.argv[1]
 
