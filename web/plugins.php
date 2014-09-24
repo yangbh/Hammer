@@ -14,7 +14,7 @@ require_once('common.php');
 
 		<title>Hammer</title>
 		<!-- Custom styles for this template -->
-		<!-- <link href="css/jumbotron.css" rel="stylesheet"> -->
+		<link href="css/jumbotron.css" rel="stylesheet">
 		<!-- Custom styles for this template -->
 		<link href="css/dashboard.css" rel="stylesheet">
 		<!-- jquery -->

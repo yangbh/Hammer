@@ -52,23 +52,22 @@ require_once('common.php');
 					</ul>
 <?php
 if (already_login()) {
+	$username = $_SESSION['user'];
 echo <<<EOF
 					<ul class ="nav navbar-nav navbar-right">
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								<i class="glyphicon glyphicon-user"></i> Mody<b class="caret"></b>
+								<i class="glyphicon glyphicon-user"></i> $username<b class="caret"></b>
 							</a>
 						 	<ul class="dropdown-menu">
 								<li>
-									<a href="/beeman/Mody"><i class="glyphicon glyphicon-home"></i> 个人主页</a>
-								</li><li>
-								</li><li>
-							 		<a href="/message-box/"><i class="glyphicon glyphicon-envelope"></i> 消息盒子</a>
+									<a href="/user_setting"><i class="glyphicon glyphicon-cog"></i> 设置</a>
 								</li>
 								<li>
-									<a href="/user_setting"><i class="glyphicon glyphicon-cog"></i> 设置</a>
-								</li><li>
-								</li><li><a href="/user_logout"><i class="glyphicon glyphicon-off"></i> 退出</a></li>
+								</li>
+								<li>
+									<a href="/logout.php"><i class="glyphicon glyphicon-off"></i> 退出</a>
+								</li>
 						  	</ul>
 						</li>
 					</ul>
