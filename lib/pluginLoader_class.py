@@ -206,10 +206,8 @@ class PluginLoader(object):
 					self.runEachPlugin(path+'/'+eachfile)
 
 		self._saveRunningInfo(isret=True)
-# ----------------------------------------------------------------------------------------------------
-#
-# ----------------------------------------------------------------------------------------------------
-if __name__=='__main__':
+
+def main():
 	basedir = '/Users/mody/study/Python/Hammer'
 	sys.path.append(basedir)
 	sys.path.append(basedir+'/lib')
@@ -222,3 +220,12 @@ if __name__=='__main__':
 	# print pl.loadPlugins()
 	# pl.runPlugins()
 	# print pl.retinfo
+# ----------------------------------------------------------------------------------------------------
+#
+# ----------------------------------------------------------------------------------------------------
+if __name__=='__main__':
+	import multiprocessing
+	p = multiprocessing.Pool()
+	p.apply_async(main)
+	p.close()
+	p.join()

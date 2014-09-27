@@ -19,6 +19,7 @@ from spider.domain import GetFirstLevelDomain
 from webInterface_class import WebInterface
 from dummy import *
 
+# multiprocessing.set_start_method('forkserver')
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
@@ -169,86 +170,88 @@ class Scanner(object):
 
 	def startScan(self,services=None):
 		''' '''
-		print '>>>starting scan'
-		self._noticeStartToWeb()
-		# get subdomains
-		print '>>>collecting subdomain info'
-		subdomains = self.getSubDomains(self.host)
-		print 'subdomains:\t',subdomains
+		try:
+			print '>>>starting scan'
+			self._noticeStartToWeb()
+			# get subdomains
+			print '>>>collecting subdomain info'
+			subdomains = self.getSubDomains(self.host)
+			print 'subdomains:\t',subdomains
 
-		# get hosts
-		hosts={}
-		print '>>>for each subdomain, collecting neiborhood host info'
-		for eachdomain in subdomains:
-			tmpip = socket.gethostbyname(eachdomain)
-			if tmpip not in hosts.keys():
-				tmphosts = self.getNeiboorHosts(tmpip)
-				hosts[tmpip] = tmphosts
-				if eachdomain not in tmphosts:
-					hosts[tmpip].append(eachdomain)
+			# get hosts
+			hosts={}
+			print '>>>for each subdomain, collecting neiborhood host info'
+			for eachdomain in subdomains:
+				tmpip = socket.gethostbyname(eachdomain)
+				if tmpip not in hosts.keys():
+					tmphosts = self.getNeiboorHosts(tmpip)
+					hosts[tmpip] = tmphosts
+					if eachdomain not in tmphosts:
+						hosts[tmpip].append(eachdomain)
 
-			else:
-				if eachdomain not in hosts[tmpip]:
-					hosts[tmpip].append(eachdomain)
+				else:
+					if eachdomain not in hosts[tmpip]:
+						hosts[tmpip].append(eachdomain)
 
-		print 'hosts:\t',hosts
+			print 'hosts:\t',hosts
 
-		# get urls
-		urls = {}
-		for eachip in hosts.keys():
-			ip_hosts = hosts[eachip]
-			httpports = self.getHttpPorts(eachip)
-			urls[eachip] = self.generateUrl(eachip,ip_hosts,httpports)
+			# get urls
+			urls = {}
+			for eachip in hosts.keys():
+				ip_hosts = hosts[eachip]
+				httpports = self.getHttpPorts(eachip)
+				urls[eachip] = self.generateUrl(eachip,ip_hosts,httpports)
 
-		# urls = {'106.185.36.44': []}
-		self.urls = urls
-		print 'urls\t',urls
+			# urls = {'106.185.36.44': ['http://www.hengtiansoft.com','http://www.leesec.com']}
+			self.urls = urls
+			print 'urls\t',urls
 
-		# get services
-		print '>>>starting scan each host'		
-		pls = []
-		# ip type scan
-		for eachip in urls.keys():
-			services = {}
-			if eachip !=  self.ip:
-				services['issubdomain'] = True
-
-			services['ip'] = eachip
-			pl = PluginLoader(None,services,outputpath=self.host)
-			pls.append(pl)
-			print 'scan start:\t',pl.services
-
-		# http type scan
-		for eachip in urls.keys():
-			for eachurl in urls[eachip]:
+			# get services
+			print '>>>starting scan each host'		
+			pls = []
+			# ip type scan
+			for eachip in urls.keys():
 				services = {}
-				# not subdomain
-				if self.domain not in eachurl:
-					services['isneighborhost'] = True
+				if eachip !=  self.ip:
+					services['issubdomain'] = True
 
-				services['url'] = eachurl
-
+				services['ip'] = eachip
 				pl = PluginLoader(None,services,outputpath=self.host)
 				pls.append(pl)
 				print 'scan start:\t',pl.services
-		self.pls = pls
 
-		results = []
-		proPool = multiprocessing.Pool(10)
-		for eachpl in pls:
-			results.append(proPool.apply_async(procFunc,(eachpl,)))
+			# http type scan
+			for eachip in urls.keys():
+				for eachurl in urls[eachip]:
+					services = {}
+					# not subdomain
+					if self.domain not in eachurl:
+						services['isneighborhost'] = True
 
-		proPool.close()
-		proPool.join()
+					services['url'] = eachurl
 
-		newpls = []
-		for res in results:
-			newpls.append(res.get())
-		self.pls = newpls
+					pl = PluginLoader(None,services,outputpath=self.host)
+					pls.append(pl)
+					print 'scan start:\t',pl.services
 
-		self.setResult(urls=self.urls,pls=newpls)
-		#self.saveResultToFile(pls)
-		self._saveResultToWeb()
+			results = []
+			proPool = multiprocessing.Pool(8)
+			for eachpl in pls:
+				results.append(proPool.apply_async(procFunc,(eachpl,)))
+
+			proPool.close()
+			proPool.join()
+
+			newpls = []
+			for res in results:
+				newpls.append(res.get())
+			self.pls = newpls
+
+			self.setResult(urls=self.urls,pls=newpls)
+			#self.saveResultToFile(pls)
+			self._saveResultToWeb()
+		except Exception,e:
+			print 'Exception',e
 
 
 	def setResult(self,urls=None,pls=None):
@@ -359,7 +362,7 @@ class Scanner(object):
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	server = 'www.hammer.org'
-	phpsession = '2l2sl6tbnmj3q1ln0qqok3dpt4'
+	phpsession = 'rr7dd12fb01hhmq1suo2vet0j0'
 
 	url = 'http://www.leesec.com'
 	if len(sys.argv) ==  2:

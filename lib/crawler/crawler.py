@@ -461,6 +461,8 @@ def main():
 if __name__ == '__main__':
 	import multiprocessing
 	p = multiprocessing.Pool()
-	p.apply(main)
+	p.apply_async(main)
+	p.apply_async(main)
+	p.apply_async(main)
 	p.close()
 	p.join()

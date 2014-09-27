@@ -3,6 +3,7 @@
 http://hengying.hengtiansoft.com/Home/Support
 http://www.hengtiansoft.com/en
 http://bluemorpho.hengtiansoft.com/bluemorpho/signin
+http://bluemorpho.hengtiansoft.com/bluemorpho/forgotpassword;jsessionid=3B3B085C9360A0E509F591706F6ED876
 http://hengying.hengtiansoft.com/Home/Index#home
 http://hengying.hengtiansoft.com/
 http://www.hengtiansoft.com/
@@ -11,7 +12,6 @@ http://www.hengtiansoft.com
 http://www.hengtiansoft.com/zh
 http://www.hengtiansoft.com/Default.aspx
 http://hengying.hengtiansoft.com/Home/ProductDownload
-http://bluemorpho.hengtiansoft.com/bluemorpho/forgotpassword;jsessionid=D75E9069A4E968C3CB84E9BB9406ED4F
 http://hengying.hengtiansoft.com/Account/Login
 http://hengying.hengtiansoft.com/Account/Register
 

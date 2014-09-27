@@ -13,13 +13,12 @@ require_once('common.php');
 		<link rel="icon" href="images/favicon.ico">
 
 		<title>Hammer</title>
-		<!-- Custom styles for this template -->
-		<link href="css/jumbotron.css" rel="stylesheet">
-		<!-- Custom styles for this template -->
-		<link href="css/dashboard.css" rel="stylesheet">
+		<!-- Bootstrap core CSS -->
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		
 		<!-- jquery -->
 		<!-- <script type="text/javascript" charset="utf8" src="http://code.jquery.com/jquery-1.10.2.min.js"></script> -->
-		<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+		<script src="js/jquery.min.js"></script>
 
 		<script>
 		$(document).ready(function () {
@@ -78,7 +77,7 @@ require_once('common.php');
 	</head>
 
 	<body>
-		<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="navbar navbar-inverse navbar-default" role="navigation" style="border-radius: 0px;">
 			<div class="container">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -87,7 +86,8 @@ require_once('common.php');
 						<span class="icon-bar">2</span>
 						<span class="icon-bar">3</span>
 					</button>
-					<a class="navbar-brand" href="#">Hammer</a>
+<!-- 				<img src="images/favicon.ico" class="img-circle"> -->
+					<a class="navbar-brand" href="#"><strong>Hammer</strong></a>
 				</div>
 				<div class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
@@ -99,11 +99,25 @@ require_once('common.php');
 					</ul>
 <?php
 if (already_login()) {
+	$username = $_SESSION['user'];
 echo <<<EOF
-					<div class="navbar-form navbar-right" role="form">
-						<span class="label label-default">welcome</span>
-						<a href="logout.php" class="btn btn-warning">Sign out</a>
-					</div>
+					<ul class ="nav navbar-nav navbar-right">
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<i class="glyphicon glyphicon-user"></i> $username<b class="caret"></b>
+							</a>
+						 	<ul class="dropdown-menu" role="meun">
+								<li role="presentation">
+									<a href="/user_setting"><i class="glyphicon glyphicon-cog"></i> 设置</a>
+								</li>
+								<li role="presentation">
+								</li>
+								<li role="presentation">
+									<a href="/logout.php"><i class="glyphicon glyphicon-off"></i> 退出</a>
+								</li>
+						  	</ul>
+						</li>
+					</ul>
 EOF;
 }
 else{
@@ -172,18 +186,18 @@ EOF;
 		<!-- ================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
 		<!-- snippet -->
-		<link rel="stylesheet" type="text/css" href="js/jquery.snippet.min.css">
+		<link rel="stylesheet" type="text/css" href="css/jquery.snippet.min.css">
 		<script type="text/javascript" charset="utf8" src="js/jquery.snippet.min.js"></script>
 
 		<!-- Bootstrap core JavaScript -->
-		<link href="js/bootstrap.min.css" rel="stylesheet">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 
 
 		<!-- DataTables -->
 		<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.css">
-		<script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.js"></script>
+		<script type="text/javascript" charset="utf8" src="js/jquery.dataTables.js"></script>
 
 	</body>
 </html>

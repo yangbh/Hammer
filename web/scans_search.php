@@ -24,7 +24,7 @@ function search_scan($level,$keyword=''){
 	}
 	// echo $query.'<br>';
 
-	$ret = array('data' => [], );
+	$ret = array('data' => array(), );
 	$result = mysql_query($query);
 	while ($row = mysql_fetch_row($result)){
 		// var_dump($row);

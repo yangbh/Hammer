@@ -10,7 +10,7 @@ require_once('common.php');
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="description" content="">
 		<meta name="author" content="">
-		<link rel="icon" href="../../favicon.ico">
+		<link rel="icon" href="images/favicon.ico">
 
 		<title>Hammer</title>
 		<!-- Bootstrap core CSS -->
@@ -21,23 +21,23 @@ require_once('common.php');
 		<link href="css/responsive-nav.css" rel="stylesheet">
 		
 		<!-- JQuery -->
-		<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+		<script src="js/jquery.min.js"></script>
 
-		<script src="js/responsive-nav.js"></script>
-
-		<script>
-		$(document).ready(function () {
-			$("#sidebar").pin();
+		<!-- a<script src="js/responsive-nav.js"></script> -->
+		
+		<script type="text/javascript">
+		$(document).ready(function(){
+		    $("#myNav").affix({
+		        offset: { 
+		            top: 100
+		     	}
+		    });
 		});
-
-		// var navigation = responsiveNav("#nav");
-
 		</script>
 
 	</head>
 
 	<body>
-
 		<div class="navbar navbar-inverse navbar-default" role="navigation" style="border-radius: 0px;">
 			<div class="container">
 				<div class="navbar-header">
@@ -105,70 +105,46 @@ EOF;
 		<div class="container">
 
 			<div class="row row-offcanvas row-offcanvas-right">
-				
-				<div class="col-xs-6 col-sm-3 col-md-2 sidebar-offcanvas" role="navigation">
-					<div class="list-group" id="sidebar">
-						<div role="navigation" id="nav">
-							<ul>
-								<li class="active"><a href="#">Home</a></li>
-								<li><a href="#">About</a></li>
-								<li><a href="#">Projects</a></li>
-								<li><a href="#">Blog</a></li>
-							</ul>
-						</div>
-					</div>
-				</div><!--/span-->
+
+				<div class="col-sm-3 col-md-2" id="myScrollspy">
+					<ul class="nav nav-tabs nav-stacked" id="myNav">
+						<li><a href="#about">About</a></li>
+						<li><a href="#plugin">Plugin Interfaces</a></li>
+						<li><a href="#framework">Framework</a></li>
+						<li><a href="#questions">Questions</a></li>
+						<li><a href="#contact">ContactMe</a></li>
+					</ul>
+				</div>
 
 				<div class="col-xs-12 col-sm-9 col-md-10" role="main" class="main">
-					<a href="#nav" id="toggle">Menu</a>
 
-					<p class="pull-right visible-xs">
-						<button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
-					</p>
-					<div class="jumbotron">
-						<h1>Hello, world!</h1>
-						<p>This is an example to show the potential of an offcanvas layout pattern in Bootstrap. Try some responsive-range viewport sizes to see it in action.</p>
-					</div>
-					<div class="row">
-						<div class="col-xs-6 col-lg-4">
-							<h2>Heading</h2>
-							<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-							<p><a class="btn btn-default" href="#" role="button">View details »</a></p>
-						</div><!--/span-->
-						<div class="col-xs-6 col-lg-4">
-							<h2>Heading</h2>
-							<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-							<p><a class="btn btn-default" href="#" role="button">View details »</a></p>
-						</div><!--/span-->
-						<div class="col-xs-6 col-lg-4">
-							<h2>Heading</h2>
-							<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-							<p><a class="btn btn-default" href="#" role="button">View details »</a></p>
-						</div><!--/span-->
-						<div class="col-xs-6 col-lg-4">
-							<h2>Heading</h2>
-							<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-							<p><a class="btn btn-default" href="#" role="button">View details »</a></p>
-						</div><!--/span-->
-						<div class="col-xs-6 col-lg-4">
-							<h2>Heading</h2>
-							<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-							<p><a class="btn btn-default" href="#" role="button">View details »</a></p>
-						</div><!--/span-->
-						<div class="col-xs-6 col-lg-4">
-							<h2>Heading</h2>
-							<p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-							<p><a class="btn btn-default" href="#" role="button">View details »</a></p>
-						</div><!--/span-->
-					</div><!--/row-->
+					<h2 id="about">About</h2>
+						<p>Hammer is a web vulnnerability scanner, but more of a vulnerability scan framework. It supports plug-in extensions, you can design your own hammer, that is your hacking tool. Hammer is open source, and i hope you can share yours!</p>
+					<hr>					
+					<h2 id="plugin">Plugin Interfaces</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
+						<p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
+					<hr>	
+					<h2 id="framework">Framework</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
+						<p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
+					<hr>	
+					<h2 id="questions">Questions</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
+						<p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
+					<hr>	
+					<h2 id="contact">ContactMe</h2>
+						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
+						<p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
+					<hr>	
 				</div><!--/span-->
 
 			</div><!--/row-->
 
-			<script>
+<!-- 			<script>
 				var navigation = responsiveNav("#nav", {customToggle: "#toggle"});
 			</script>
-
+ -->
 			<hr>
 
 			<footer>

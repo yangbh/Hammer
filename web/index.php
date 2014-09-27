@@ -16,14 +16,19 @@ require_once('common.php');
 
 		<!-- Bootstrap core CSS -->
 		<link href="css/bootstrap.min.css" rel="stylesheet">
-		<!-- Custom styles for this template -->
-		<!-- <link href="css/jumbotron.css" rel="stylesheet"> -->
+
+		<style type="text/css">
+
+		</style>
+
 		
-		<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+		<script src="js/jquery.min.js"></script>
+		<!-- <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script> -->
+
 		<script type="text/javascript">
-			$("#username").change(function(){
-				alert($("#username").value);
-			});
+			// $("#username").change(function(){
+			// 	alert($("#username").value);
+			// });
 		</script>
 
 	</head>
@@ -39,7 +44,7 @@ require_once('common.php');
 						<span class="icon-bar">2</span>
 						<span class="icon-bar">3</span>
 					</button>
-<!-- 					<img src="images/favicon.ico" class="img-circle"> -->
+<!-- 				<img src="images/favicon.ico" class="img-circle"> -->
 					<a class="navbar-brand" href="#"><strong>Hammer</strong></a>
 				</div>
 				<div class="navbar-collapse collapse">
@@ -59,38 +64,34 @@ echo <<<EOF
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 								<i class="glyphicon glyphicon-user"></i> $username<b class="caret"></b>
 							</a>
-						 	<ul class="dropdown-menu">
-								<li>
+							<ul class="dropdown-menu" role="meun">
+								<li role="presentation">
 									<a href="/user_setting"><i class="glyphicon glyphicon-cog"></i> 设置</a>
 								</li>
-								<li>
+								<li role="presentation">
 								</li>
-								<li>
+								<li role="presentation">
 									<a href="/logout.php"><i class="glyphicon glyphicon-off"></i> 退出</a>
 								</li>
-						  	</ul>
+							</ul>
 						</li>
 					</ul>
 EOF;
 }
 else{
 echo <<<EOF
-					<form class="navbar-form navbar-right" role="form" action="login.php" method="post">
-						<div class="form-group">
-							<input type="text" placeholder="Name" class="form-control" name="username" id="username">
-						</div>
-						<div class="form-group">
-							<input type="password" placeholder="Password" class="form-control" name="password" id="password">
-						</div>
-						<button type="submit" class="btn btn-success">Sign in</button>
-					</form>
+					<div class="navbar-form navbar-right">
+						<button class="btn btn-success" data-toggle="modal" data-target="#myModal">
+							Sign in
+						</button>
+					</div>
 EOF;
 }
 ?>
-
 				</div><!--/.navbar-collapse -->
 			</div>
 		</div>
+
 
 		<!-- Main jumbotron for a primary marketing message or call to action -->
 		<div class="jumbotron">
@@ -128,11 +129,43 @@ EOF;
 			</footer>
 		</div> <!-- /container -->
 
+<?php
+if (!already_login()) {
+echo <<<EOF
+		<!-- 模态框（Modal） -->
+		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" 
+		   aria-labelledby="myModalLabel" aria-hidden="true">
+		   <div class="modal-dialog" style="width:400px">
+			  <div class="modal-content">
+				 <div class="modal-header">
+					<button type="button" class="close" 
+					   data-dismiss="modal" aria-hidden="true">
+						  &times;
+					</button>
+					<h4 class="modal-title" id="myModalLabel">
+					   Sign In
+					</h4>
+				 </div>
+				 <div class="modal-body">
+					<form role="form" action="login.php" method="post">
+						<div class="form-group">
+							<input type="text" placeholder="Name" class="form-control" name="username" id="username">
+						</div>
+						<div class="form-group">
+							<input type="password" placeholder="Password" class="form-control" name="password" id="password">
+						</div>
+						<button type="submit" class="btn btn-success">Sign in</button>
+					</form>
+				 </div>
+			  </div><!-- /.modal-content -->
+		</div><!-- /.modal -->
+EOF;
+}
+?>
 
 		<!-- Bootstrap core JavaScript
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
-		<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
 		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 		<script src="js/ie10-viewport-bug-workaround.js"></script>

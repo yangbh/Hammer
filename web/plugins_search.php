@@ -35,7 +35,7 @@ function search_plugin($type=0,$keyword=''){
 			break;
 	}
 	// print($query.'<br>');
-	$ret = array('data' => [], );
+	$ret = array('data' => array(), );
 	$result = mysql_query($query);
 	while ($row = mysql_fetch_row($result)){
 		// var_dump($row);
@@ -53,7 +53,7 @@ function get_code($name){
 	// $pName = check_sql($name);
 	$query = "SELECT Code FROM Plugin WHERE Name='$name'";
 	// print($query.'<br>');
-	// $ret = array('data' => [], );
+	// $ret = array('data' => array(), );
 	$result = mysql_query($query);
 	if ($row = mysql_fetch_row($result)) {
 		// $code = check_xss($row[0]);

@@ -14,13 +14,14 @@ class Database(object):
 		super(Database, self).__init__()
 		try:
 			print 'dbFile:\t',dbFile
-			self.conn = sqlite3.connect(dbFile,isolation_level=None, check_same_thread = False) #让它自动commit，效率也有所提升. 多线程共用
-			# self.conn = None
-			self.conn.execute('''CREATE TABLE IF NOT EXISTS
-							Webpage (id INTEGER PRIMARY KEY AUTOINCREMENT, 
-							url TEXT, 
-							pageSource TEXT,
-							keyword TEXT)''')
+			self.conn = None
+			# self.conn = sqlite3.connect(dbFile,isolation_level=None, check_same_thread = False) #让它自动commit，效率也有所提升. 多线程共用
+			print id(self.conn)
+			# self.conn.execute('''CREATE TABLE IF NOT EXISTS
+			# 				Webpage (id INTEGER PRIMARY KEY AUTOINCREMENT, 
+			# 				url TEXT, 
+			# 				pageSource TEXT,
+			# 				keyword TEXT)''')
 		except Exception, e:
 			print 'Exception',e
 			self.conn = None
@@ -52,7 +53,8 @@ def main():
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
 	import multiprocessing
-	p = multiprocessing.Pool()
-	p.apply(main)
+	p = multiprocessing.Pool(8)
+	p.apply_async(main)
+	p.apply_async(main)
 	p.close()
 	p.join()

@@ -35,7 +35,7 @@ class WebInterface(object):
 				self.id = json.loads(r.text)['id']
 			else:
 				print 'return error, please check session and server'
-
+			pass
 		except requests.HTTPError,e:
 			print 'requests.HTTPError', e
 
