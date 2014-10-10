@@ -49,6 +49,7 @@ function get_userid(){
 	if (already_login()) {
 		$username = $_SESSION['user'];
 		$query = "SELECT ID FROM User WHERE Name='$username'";
+		// echo '$query='.$query.'<br>';
 		$result = mysql_query($query);
 		if ($row = mysql_fetch_array($result)) {
 			return $row[0];

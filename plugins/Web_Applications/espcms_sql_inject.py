@@ -24,6 +24,7 @@ def Audit(services):
 				if rqu.status_code == 200 and rqu.text.find('ESPCMS SQL Error:') != -1:
 					retinfo = {'level':'low','content':url}
 					output += 'Vula:\t' + url
+					security_note(url)
 			except:
 				pass
 	return (retinfo,output)

@@ -24,6 +24,7 @@ def Audit(services):
 				if rqu.status_code == 200 and rqu.text.find('MySQL client version') != -1 and rqu.text.find('root@localhost') != -1:
 					retinfo = {'level':'low','content':url}
 					output += 'Vula:\t' + url
+					security_warming(url)
 			except:
 				pass
 	return (retinfo,output)

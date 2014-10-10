@@ -18,7 +18,12 @@ sys.path.append(PLUGINDIR)
 
 from pprint import pprint
 
-from lib.common import genFilename
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# very important
+# here it is common, not lib.common, because of python import strategies
+from common import genFilename,security_note,security_info,security_warning,security_hole
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 from lib.nmap_class import NmapScanner
 from lib.neighborHost_class import NeighborHost
 # from lib.knock_class import SubDomain

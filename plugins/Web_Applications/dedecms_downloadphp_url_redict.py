@@ -24,6 +24,8 @@ def Audit(services):
 				if rqu.url == 'http://www.baidu.com':
 					retinfo = {'level':'low','content':url}
 					output += 'Vula:\t' + url
+					security_note(url)
+
 			except:
 				pass
 	return (retinfo,output)

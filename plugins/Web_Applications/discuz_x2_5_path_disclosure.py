@@ -30,6 +30,7 @@ def Audit(services):
 						if m:
 							retinfo = {'level':'low','content':m.group(1)}
 							output += 'Vula:\t' + url
+							security_note(m.group(1))
 				except:
 					pass
 	return (retinfo,output)

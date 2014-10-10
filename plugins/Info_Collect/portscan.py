@@ -10,7 +10,7 @@ info = {
 	'TIME':'20140707',
 	'WEB':''
 }
-#print locals()
+# print locals()
 #print globals()
 def Audit(services):
 	# print locals()
@@ -39,6 +39,12 @@ def Audit(services):
 			#print 'services:\t',services
 			#output += 'services:\t' + str(services) + os.linesep
 			retinfo = {'level':'info','content':str(services['ports'])}
+			# print 'calling secruity_note-----------------'
+			if services.has_key('noSubprocess') and services['noSubprocess'] == True:
+				pass
+			else:
+				security_note(str(services['ports']))
+
 			#print services
 
 		except IndexError,e:
@@ -56,6 +62,6 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	services={'ip':'10.202.18.81'}
+	services={'ip':'106.185.36.44'}
 	print Audit(services)
 	pprint(services)

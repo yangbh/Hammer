@@ -179,6 +179,7 @@ def Audit(services):
 
 	if ret != '':
 		retinfo = {'level':'high','content':ret}
+		security_hole(str(ret))
 
 	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------

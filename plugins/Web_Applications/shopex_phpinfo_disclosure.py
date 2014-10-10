@@ -27,6 +27,7 @@ def Audit(services):
 					if rqu.text.find('<b>Warning</b>:  INSERT INTO `') != -1 or clock()-start in range(7,12):
 						retinfo = {'level':'low','content':url}
 						output += 'Vula:\t' + url
+						security_note(url)
 			except:
 				pass
 	return (retinfo,output)

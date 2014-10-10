@@ -2,8 +2,10 @@
 #coding:utf-8
 import os
 import sys
-import copy
+import globalVar
 from dummy import BASEDIR
+from pprint import pprint
+
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
@@ -98,7 +100,45 @@ class PluginLoader(object):
 
 		return True
 
+	def _initSubProcess(self):
+		# sub porcess information
+		pid = os.getpid()
+		# parent process information
+		ppid = os.getppid()
+		# print 'pid=\t',os.getpid()
+		tmpdict = {}
+		tmpdict['pid'] = pid
+		tmpdict['ppid'] = ppid
+		tmpdict['target'] = self.services
+		try:
+			# only sub process scan will invovied in scan_task_dict
+			if self.services.has_key('noSubprocess') and self.services['noSubprocess'] == True:
+				pass
+			else:
+				# globalVar.scan_task_dict_lock.acquire()
+				print 'main porcess pid=\t',os.getpid()
+				print 'id(globalVar)=\t',id(globalVar)
+				globalVar.scan_task_dict['subtargets'] = tmpdict
+				pprint(globalVar.scan_task_dict)
+				# globalVar.scan_task_dict_lock.release()
+		except Exception,e:
+			print 'Exception',e
+
+	def _getPluginInfo(self,pluginfilepath):
+		# print '>>>running plugin:',pluginfilepath
+		modulepath = pluginfilepath.replace(BASEDIR+'/plugins/','')
+		modulepath = modulepath.replace('.py','')
+		modulepath = modulepath.replace('.','')
+		modulepath = modulepath.replace('/','.')
+
+		importcmd = 'from ' + modulepath + ' import info'
+		exec(importcmd)
+
+		# print info
+		return info
+
 	def loadPlugins(self, path=None):
+		self._initSubProcess()
 		#print '>>>loading plugins'
 		self.output = '>>>loading plugins'  + os.linesep
 		if path == None:
@@ -119,6 +159,14 @@ class PluginLoader(object):
 			print '>>>running plugin:',pluginfilepath
 			self.output += '>>>running plugin:' + pluginfilepath  + os.linesep
 			
+			# init globalVar
+			plugininfo = self._getPluginInfo(pluginfilepath)
+			pluginname = plugininfo['NAME']
+			# globalVar.plugin_now_lock.acquire()
+			globalVar.plugin_now = pluginname
+			# pprint(globalVar.plugin_now)
+			# globalVar.plugin_now_lock.release()
+
 			if services == None:
 				services = dict(self.services)
 
@@ -130,11 +178,18 @@ class PluginLoader(object):
 
 			#from dummy import *
 			importcmd = 'global services' + os.linesep
+			# importcmd += 'import globalVar' + os.linesep
+			# print '1id(globalVar)=',id(globalVar)
+			# importcmd += 'from common import genFilename,security_note,security_info,security_warning,security_hole' + os.linesep
 			#importcmd += 'from dummy import *' + os.linesep
 			importcmd += 'from ' + modulepath + ' import Audit,info'
 
 			exec(importcmd)
 
+			# print 'in running plugin'
+			# print 'plugin pid=\t',os.getpid()
+			# print 'id(globalVar)=\t',id(globalVar)
+			# print 'globalVar.scan_task_dict=\t',globalVar.scan_task_dict
 			if locals().has_key('Audit'):
 				# MAudit = copy.copy(Audit)
 				#print '\tPlugin function Audit loaded'
@@ -214,7 +269,7 @@ def main():
 	services={'url':'http://www.leesec.com'}
 	pl = PluginLoader(None,services)
 	pl.path = basedir+'/plugins'
-	pl.runEachPlugin(basedir+'/plugins/Info_Collect/crawler.py',services)
+	pl.runEachPlugin(basedir+'/plugins/Info_Collect/portscan.py',services)
 	# pl.runEachPlugin(basedir+'/plugins/Sensitive_Info/backupfile.py',services)
 	
 	# print pl.loadPlugins()

@@ -18,7 +18,7 @@ sys.path.append(PLUGINDIR)
 
 from pprint import pprint
 
-from lib.common import genFilename
+from common import genFilename,security_note,security_info,security_warning,security_hole
 # from lib.ruleFile_class import RuleFile
 # from lib.nmap_class import NmapScanner
 # from lib.neighborHost_class import NeighborHost

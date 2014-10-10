@@ -176,6 +176,7 @@ def Audit(services):
 						ret = check_rfi(action, pairs, k, v, normal_res)
 						if ret:
 							retinfo += ret + os.linesep
+							security_warning(ret)
 							return (retinfo,output)
 				except Exception,e:
 					print 'Exception:\t',e
@@ -220,7 +221,11 @@ def Audit(services):
 					if v.find('.') != -1:
 						suffix = v.split('.')[-1]
 					# 开始fuzz本地文件包含漏洞
-					if check_lfi(action, pairs, k, v, set(files), suffix, flags):
+					# 
+					ret = check_lfi(action, pairs, k, v, set(files), suffix, flags)
+					if ret:
+						retinfo += ret + os.linesep
+						security_warning(ret)
 						return (retinfo,output)
 		except Exception,e:
 			print 'Exception:\t',e

@@ -10,6 +10,8 @@ import urllib2
 import logging
 import multiprocessing
 
+import globalVar
+
 from pprint import pprint
 
 from nmap_class import NmapScanner
@@ -77,7 +79,7 @@ class Scanner(object):
 		self.result = {}
 
 		# thread arguments
-		self.lock = threading.Lock()
+		# self.lock = threading.Lock()
 
 		# urls
 		self.urls = {}
@@ -89,6 +91,7 @@ class Scanner(object):
 			host = self.host
 		services={}
 		services['host'] = host
+		services['noSubprocess'] = True
 		pl = PluginLoader(None,services)
 		pl.runEachPlugin(PLUGINDIR+'/Info_Collect/subdomain.py')
 		print pl.services
@@ -100,6 +103,7 @@ class Scanner(object):
 			ip = self.ip
 		services={}
 		services['ip'] = ip
+		services['noSubprocess'] = True
 		pl = PluginLoader(None,services)
 		pl.runEachPlugin(PLUGINDIR+'/Info_Collect/neighborhost.py')
 		neighborhosts = []
@@ -112,6 +116,7 @@ class Scanner(object):
 			ip = self.ip
 		services={}
 		services['ip'] = ip
+		services['noSubprocess'] = True
 		# get all opened ports
 		pl = PluginLoader(None,services)
 		pl.runEachPlugin(PLUGINDIR+'/Info_Collect/portscan.py')
@@ -173,6 +178,7 @@ class Scanner(object):
 		try:
 			print '>>>starting scan'
 			self._noticeStartToWeb()
+			self._initGlobalVar()
 			# get subdomains
 			print '>>>collecting subdomain info'
 			subdomains = self.getSubDomains(self.host)
@@ -203,6 +209,7 @@ class Scanner(object):
 				urls[eachip] = self.generateUrl(eachip,ip_hosts,httpports)
 
 			# urls = {'106.185.36.44': ['http://www.hengtiansoft.com','http://www.leesec.com']}
+			# urls = {'10.183.0.103': []}
 			self.urls = urls
 			print 'urls\t',urls
 
@@ -235,12 +242,20 @@ class Scanner(object):
 					print 'scan start:\t',pl.services
 
 			results = []
+
 			proPool = multiprocessing.Pool(8)
 			for eachpl in pls:
 				results.append(proPool.apply_async(procFunc,(eachpl,)))
 
 			proPool.close()
-			proPool.join()
+
+			try:		
+				proPool.join()
+			except EOFError,e:
+				# isexit = raw_input('Sure to exit?yes/no')
+				# if isexit.lower() == 'y' or isexit.lower() == 'yes':
+				proPool.terminate()
+
 
 			newpls = []
 			for res in results:
@@ -250,6 +265,7 @@ class Scanner(object):
 			self.setResult(urls=self.urls,pls=newpls)
 			#self.saveResultToFile(pls)
 			self._saveResultToWeb()
+
 		except Exception,e:
 			print 'Exception',e
 
@@ -289,8 +305,27 @@ class Scanner(object):
 		print 'self.url\t',self.host
 		self.web_interface.task_start(self.host,self.url)
 			
+	def _initGlobalVar(self):
+		# process information
+		pid = os.getpid()
+		globalVar.scan_task_dict_lock.acquire()
+		globalVar.scan_task_dict['pid'] = pid
+		globalVar.scan_task_dict['target'] = self.url
+		globalVar.scan_task_dict['server'] = self.web_interface.server
+		globalVar.scan_task_dict['session'] = self.web_interface.phpsession
+		globalVar.scan_task_dict['subtargets'] = {}
+		globalVar.scan_task_dict['scanID'] = self.web_interface.id
+		globalVar.scan_task_dict_lock.release()
 
-	def _saveResultToWeb(self,pls=None):
+	def _saveResultToWeb(self):
+		print '>>>saving scan result to server'
+		if self.web_interface == None:
+			print'server not exists'
+			return False
+		else:
+			self.web_interface.task_end()
+
+	def _saveResultToWebOld(self,pls=None):
 		''' '''
 		print '>>>saving scan result to server'
 		if self.web_interface == None:
@@ -362,7 +397,7 @@ class Scanner(object):
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	server = 'www.hammer.org'
-	phpsession = 'rr7dd12fb01hhmq1suo2vet0j0'
+	phpsession = 'uqehr2qqcsuqr0sh1p8shgu4a7'
 
 	url = 'http://www.leesec.com'
 	if len(sys.argv) ==  2:

@@ -28,7 +28,8 @@ def Audit(services):
 			
 			if ret.has_key('plugins'):
 				retinfo = {'level':'info','content':ret['plugins']}
-
+				security_info(str(ret['plugins']))
+				
 				# wordpress
 				if ret['plugins'].has_key('WordPress'):
 					#print services
@@ -37,6 +38,7 @@ def Audit(services):
 					if ret['plugins']['WordPress'].has_key('version'):
 						services['cmsversion'] = ret['plugins']['WordPress']['version'][0]
 						output += 'cmsversion: ' + services['cmsversion'] + os.linesep
+
 				# Discuz
 				elif ret['plugins'].has_key('Discuz'):
 					#print services

@@ -129,6 +129,7 @@ def Audit(services):
 	
 	if ret != '':
 		retinfo = {'level':'medium','content':ret}
+		security_warming(str(ret))
 
 	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------

@@ -42,6 +42,8 @@ def Audit(services):
 
 					output +=  'Vulnerable dns server found:' + server + os.linesep
 					retinfo = {'level':'medium','content':domain}
+					security_warming(domain)
+
 		except Exception,e:
 			pass
 		return(retinfo,output)

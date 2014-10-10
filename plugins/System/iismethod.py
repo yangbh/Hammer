@@ -39,6 +39,8 @@ def Audit(services):
 				level = 'medium'
 			retinfo = {'level':'info','content':method}
 			output += 'HTTP Methods found:\t' + method
+			security_info(method)
+
 			return (retinfo,output)
 
 		# else, option method not useful
@@ -55,6 +57,8 @@ def Audit(services):
 			if method != '':
 				retinfo = {'level':'medium','content':method}
 				output += 'HTTP Methods found:\t' + method
+				security_info(method)
+
 				return (retinfo,output)
 		except Exception,e:
 			print 'Exception:\t',e

@@ -4,7 +4,12 @@ A web vulnnerability scanner
 
 Install
 =================================== 
-
+```
+目前建议再kali上运行：
+1. 数据库导入sql文件，地址再temp/hammer.sql
+2. 配置web，修改config文件
+3. 修改lib/scanner_class_mp.py中的session，并运行python lib/scanner_class_mp.py http://www.leesec.com
+```
  Require
 ----------------------------------- 
 Required software:

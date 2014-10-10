@@ -122,20 +122,99 @@ EOF;
 						<p>Hammer is a web vulnnerability scanner, but more of a vulnerability scan framework. It supports plug-in extensions, you can design your own hammer, that is your hacking tool. Hammer is open source, and i hope you can share yours!</p>
 					<hr>					
 					<h2 id="plugin">Plugin Interfaces</h2>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-						<p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
-					<hr>	
+					<p>The following is a typical plugin with detailed comments, To detect the sensitive information in robots.txt:</p>
+					<pre>
+#!/usr/bin/python2.7
+#coding:utf-8
+
+import os
+import urllib2
+from dummy import *
+
+info = {
+	'NAME':'Robots.txt Sensitive Information',
+	'AUTHOR':'yangbh',
+	'TIME':'20140707',
+	'WEB':''
+}
+
+def Audit(services):
+	if services.has_key('url'):
+		url = services['url']
+		if url[-1]!='/':
+			url += '/'
+		url = url + 'robots.txt'
+		
+		respone = urllib2.urlopen(url)
+		redirected = respone.geturl()
+		if redirected == url:
+			ret = respone.read()
+			if 'Disallow: ' in ret:
+				security_note(url)
+# ----------------------------------------------------------------------------------------------------
+#
+# ----------------------------------------------------------------------------------------------------
+if __name__=='__main__':
+	services = {'url':'http://www.eguan.cn'}
+	pprint(Audit(services))
+					</pre>
+					<h3>1. Plugin Information: info</h3>
+					<p>A standard info:</p>
+					<pre>
+info = {
+	'NAME':'Robots.txt Sensitive Information',	# the plugin name, must be unique
+	'AUTHOR':'yangbh',		# the author, coludn't be none
+	'TIME':'20140707',		# the plugin coded time, coludn't be none
+	'WEB':'http://',		# any website to introduce this vulnerabilisty, maybe none
+	'Description':'',		# your description about this plugin, maybe none
+	'Version':'0.1'			# the plugin version, maybe none
+}
+					</pre>
+					<h3>2. Global Variable: services</h3>
+					<p>Variable services is a global dict, it contains informations that plugin need.</p>
+					<p>Keys in services and its meaning:</p>
+					<pre>
+services = {
+	# commonly used
+	'ip':'127.0.0.1',
+	'host':'www.hammer.org',
+	'url':'http://www.hammer.org',
+	'cms':'Wordpress',	# please refer whatweb plugin
+	'cmsversion':'3.9.1',
+	'ports': [22,80],	# a list port table, please refer portscan plugin
+	'port_detail':{22:{}},	# a dict port table, contains detail port information, please refer portscan plugin
+
+	# not commonly used
+	'noSubprocess': True,
+	'issubdomain': True,
+}
+					</pre>
+					<p>At last, you can design you key in services dict whatever you want!</p>
+					<h3>3. Result Interfaces</h3>
+					<p>Function used to report vulnerability:</p>
+					<pre>
+security_note(vulninfo) 	# information level
+security_info(vulninfo) 	# low level 
+security_warning(vulninfo) 	# mideum level
+security_hole(vulninfo) 	# high level
+					</pre>
+					<p>Choose a right one when your plugin find a vulnerability.</p>
+					<hr>
 					<h2 id="framework">Framework</h2>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-						<p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
 					<hr>	
 					<h2 id="questions">Questions</h2>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-						<p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
+					<h4>1. Windows, Linux or Mac?</h4>
+					<p>For now, suggest run hammer on linux.</p>
+					<h4>2. 中文版什么时候出？</h4>
+					<p>尽快，最近有点忙。。。</p>
+					<h4>3. 自己写的插件怎么提交？</h4>
+					<p>建议在github加入这个项目，发我邮件我整理也行～～Hammer只是一个框架，只有大家一起开发插件，Hammer才能变成一个扫描器</p>
+					<h4>4. 如何测试自己的插件？</h4>
+					<p>每个插件都是可以自己单独运行的，所以单独测试就ok，也请大家测试完成后再提交</p>	
 					<hr>	
 					<h2 id="contact">ContactMe</h2>
-						<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam eu sem tempor, varius quam at, luctus dui. Mauris magna metus, dapibus nec turpis vel, semper malesuada ante. Vestibulum id metus ac nisl bibendum scelerisque non non purus. Suspendisse varius nibh non aliquet sagittis. In tincidunt orci sit amet elementum vestibulum. Vivamus fermentum in arcu in aliquam. Quisque aliquam porta odio in fringilla. Vivamus nisl leo, blandit at bibendum eu, tristique eget risus. Integer aliquet quam ut elit suscipit, id interdum neque porttitor. Integer faucibus ligula.</p>
-						<p>Vestibulum quis quam ut magna consequat faucibus. Pellentesque eget nisi a mi suscipit tincidunt. Ut tempus dictum risus. Pellentesque viverra sagittis quam at mattis. Suspendisse potenti. Aliquam sit amet gravida nibh, facilisis gravida odio. Phasellus auctor velit at lacus blandit, commodo iaculis justo viverra. Etiam vitae est arcu. Mauris vel congue dolor. Aliquam eget mi mi. Fusce quam tortor, commodo ac dui quis, bibendum viverra erat. Maecenas mattis lectus enim, quis tincidunt dui molestie euismod. Curabitur et diam tristique, accumsan nunc eu, hendrerit tellus.</p>
+						<p>If you have any problem, please notice me at github.</p>
+						<p>If necessary, please contact QQ:2452355068.</p>
 					<hr>	
 				</div><!--/span-->
 

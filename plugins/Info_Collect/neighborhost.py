@@ -25,6 +25,10 @@ def Audit(services):
 			services['neighborhosts'] = neighborhosts
 			ret = neighborhosts
 			retinfo = {'level':'info','content':ret}
+			if services.has_key('noSubprocess') and services['noSubprocess'] == True:
+				pass
+			else:
+				security_note(str(services['ports']))
 
 	# else:
 	# 	output += 'plugin does not run' + os.linesep

@@ -164,6 +164,7 @@ def Audit(services):
 		
 	if ret != '':
 		retinfo = {'level':'low','content':ret}
+		security_warming(str(ret))
 		# 
 		ret = ''
 	bigLock.release()

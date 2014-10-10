@@ -115,6 +115,7 @@ def Audit(services):
 				s.send(hb)
 				if hit_hb(s):
 					retinfo = {'level':'high','content':host}
+					security_hole(host)
 				s.close()
 
 			except:

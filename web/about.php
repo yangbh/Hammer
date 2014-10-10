@@ -116,6 +116,10 @@ EOF;
 
 				<div class="col-xs-10 col-sm-10 col-md-10" role="main" class="main">
 					<h2 id="1.2">1.2</h2>
+					<h3>1.2.1.141011_Beta</h3>
+						<p><strong>修改：</strong></p>
+						<p>a).统一漏洞提交接口，改用security_info等类似函数，与return retinfo返回结果并用</p>
+					<hr>
 					<h3>1.2.0.140928_Beta</h3>
 						<p>第一个发布的测试版本</p>
 						<p><strong>修复漏洞：</strong></p>

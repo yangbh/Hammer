@@ -31,6 +31,7 @@ def Audit(services):
 				ret = respone.read()
 				if 'Disallow: ' in ret:
 					retinfo = {'level':'info','content':ret}
+					security_note(url)
 					return (retinfo,output)
 
 		except urllib2.URLError,e:

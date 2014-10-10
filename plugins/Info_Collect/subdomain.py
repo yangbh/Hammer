@@ -68,7 +68,11 @@ def Audit(services):
 
 		ret = subdomains
 		retinfo = {'level':'info','content':ret}
-
+		if services.has_key('noSubprocess') and services['noSubprocess'] == True:
+			pass
+		else:
+			security_note(str(services['ports']))
+	
 		if services['host'] not in subdomains:
 			subdomains.append(services['host'])
 		services['subdomains'] = subdomains
