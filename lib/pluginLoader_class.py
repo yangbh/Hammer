@@ -161,9 +161,11 @@ class PluginLoader(object):
 			
 			# init globalVar
 			plugininfo = self._getPluginInfo(pluginfilepath)
+			# pprint(plugininfo)
 			pluginname = plugininfo['NAME']
 			# globalVar.plugin_now_lock.acquire()
 			globalVar.plugin_now = pluginname
+			# print id(globalVar)
 			# pprint(globalVar.plugin_now)
 			# globalVar.plugin_now_lock.release()
 
@@ -242,6 +244,11 @@ class PluginLoader(object):
 			services = self.services
 		# find auxiliary path and 
 		self._saveRunningInfo(isinit=True)
+
+
+		# for test
+		# path = BASEDIR + '/plugins/Info_Collect'
+		# self.plugindict = {path:['whatweb.py','portscan.py']}
 
 		for path in self.plugindict:
 			if path[-12:]=='Info_Collect':

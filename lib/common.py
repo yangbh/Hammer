@@ -26,7 +26,7 @@ def addslashes(s):
 # ----------------------------------------------------------------------------------------------------
 def getScanInfo():
 	# globalVar.scan_task_dict_lock.acquire()
-	pprint(globalVar.scan_task_dict)
+	# pprint(globalVar.scan_task_dict)
 	scanid = globalVar.scan_task_dict['scanID']
 	server = globalVar.scan_task_dict['server']
 	session = globalVar.scan_task_dict['session']
@@ -37,22 +37,23 @@ def getSubProInfo():
 	# print 'getting sub process info'
 	# globalVar.scan_task_dict_lock.acquire()
 	services = globalVar.scan_task_dict['subtargets']
-	pprint(services)
+	# print 'services:'
+	# print(services)
 	# globalVar.scan_task_dict_lock.release()
 	target = None
 	if services.has_key('target'):
 		if services['target'].has_key('ip'):
 			target = services['target']['ip']
-		elif services['target'].has_key['url']:
+		elif services['target'].has_key('url'):
 			target = services['target']['url']
-		elif services['target'].has_key['host']:
+		elif services['target'].has_key('host'):
 			target = services['target']['host']
-	# print target
+	# print 'target=',target
 	return {'target':target}
 
 def getPluginInfo():
 	# globalVar.plugin_now_lock.acquire()
-	pprint(globalVar.plugin_now)
+	# pprint(globalVar.plugin_now)
 	pluginname = globalVar.plugin_now
 	# globalVar.plugin_now_lock.release()
 	return {'pluginname':pluginname}
@@ -82,7 +83,7 @@ def vuln_add(scanid=None,subtarget=None,pluginname=None,vulnlevel=None,vulninfo=
 
 def security_note(vulnInfo):
 	# print globals()
-	# print 'in security_note'
+	print 'in security_note'
 	# print 'plugin pid=\t',os.getpid()
 	# print 'id(globalVar)=\t',id(globalVar)
 	# print 'globalVar.scan_task_dict=\t',globalVar.scan_task_dict
@@ -107,15 +108,22 @@ def security_note(vulnInfo):
 	return
 
 def security_info(vulnInfo):
+	print 'in security_info'
 	scaninfo = getScanInfo()
+	# print 'scaninfo:'
+	# pprint(scaninfo)
 	scanID = scaninfo['scanid']
 	server = scaninfo['server']
 	session = scaninfo['session']
 
 	subproinfo = getSubProInfo()
+	# print 'subproinfo:'
+	# pprint(subproinfo)
 	subTarget = subproinfo['target']
 
 	plugininfo = getPluginInfo()
+	# print 'plugininfo:'
+	# pprint(plugininfo)
 	pluginName = plugininfo['pluginname']
 	print scanID,server,session,subTarget,pluginName,vulnInfo
 	vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='low',vulninfo=vulnInfo,server=server,session=session)

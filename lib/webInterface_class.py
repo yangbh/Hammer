@@ -12,7 +12,7 @@ class WebInterface(object):
 	def __init__(self,server,phpsession):
 		super(WebInterface, self).__init__()
 		self.server = server
-		if phpsession  and type(phpsession) == str and len(phpsession) == 26:
+		if phpsession  and type(phpsession) == str:
 			self.phpsession = phpsession
 		else:
 			raise SystemExit,  "invalid phpsession for class WebInterface"

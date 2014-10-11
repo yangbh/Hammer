@@ -69,12 +69,12 @@ echo <<<EOF
 							</a>
 							<ul class="dropdown-menu">
 								<li>
-									<a href="/user_setting"><i class="glyphicon glyphicon-cog"></i> 设置</a>
+									<a href="user_setting"><i class="glyphicon glyphicon-cog"></i> 设置</a>
 								</li>
 								<li>
 								</li>
 								<li>
-									<a href="/logout.php"><i class="glyphicon glyphicon-off"></i> 退出</a>
+									<a href="logout.php"><i class="glyphicon glyphicon-off"></i> 退出</a>
 								</li>
 								</ul>
 						</li>

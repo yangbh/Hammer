@@ -208,8 +208,11 @@ class Scanner(object):
 				httpports = self.getHttpPorts(eachip)
 				urls[eachip] = self.generateUrl(eachip,ip_hosts,httpports)
 
+			# just for test
 			# urls = {'106.185.36.44': ['http://www.hengtiansoft.com','http://www.leesec.com']}
 			# urls = {'10.183.0.103': []}
+			urls = {'106.185.36.44': ['http://www.leesec.com']}
+			
 			self.urls = urls
 			print 'urls\t',urls
 
@@ -396,8 +399,9 @@ class Scanner(object):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
+	# server = '0xff.sinaapp.com/web/'
 	server = 'www.hammer.org'
-	phpsession = 'uqehr2qqcsuqr0sh1p8shgu4a7'
+	phpsession = '1i7lf33p0ubee4i9lnui0gbk00'
 
 	url = 'http://www.leesec.com'
 	if len(sys.argv) ==  2:
