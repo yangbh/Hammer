@@ -1,9 +1,0 @@
-*************************     scan info     *************************
-# this is a http type scan
-url:	http://depth.eguan.cn
-isneighborhost:	False
-
-*************************   scan services   *************************
-
-Step 1. Running Auxiliary Plugins
-

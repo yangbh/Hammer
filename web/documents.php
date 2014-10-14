@@ -190,6 +190,7 @@ services = {
 }
 					</pre>
 					<p>At last, you can design you key in services dict whatever you want!</p>
+					
 					<h3>3. Result Interfaces</h3>
 					<p>Function used to report vulnerability:</p>
 					<pre>
@@ -198,7 +199,19 @@ security_info(vulninfo) 	# low level
 security_warning(vulninfo) 	# mideum level
 security_hole(vulninfo) 	# high level
 					</pre>
-					<p>Choose a right one when your plugin find a vulnerability.</p>
+					<p>Choose the right one when your plugin find a vulnerability.</p>
+					<h3>4. Plugin Type</h3>
+					<p></p>
+					<pre>
+Info Collect 		# in directory plugins/Info_Collect, these plugins run first!
+Common			# in directory plugins/Common
+Sensitive Info		# in directory plugins/Sensitive_Info
+System			# in directory plugins/System
+Web Applications	# in directory plugins/Web_Applications
+Weak Password		# in directory plugins/Weak_Password
+Others			# in directory plugins/Others
+					</pre>
+					<p>Put your plugin into the right directory.</p>
 					<hr>
 					<h2 id="framework">Framework</h2>
 					<hr>	

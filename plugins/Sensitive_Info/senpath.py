@@ -1,5 +1,6 @@
 #!/usr/bin/python2.7
 #coding:utf-8
+import re
 import sys
 import os
 import urllib2
@@ -92,7 +93,19 @@ def generateUrls(url):
 			eachurl = url + eachpath
 			urls.append(eachurl)
 
+		# rule file urls
+		# rule file by kttzd
+		rulefile = BASEDIR + '/lib/db/sensitive_file.rule'
+		target_url=re.match(r'\w+:\/\/\w+\.(.*?)\.\w+',url).group(1)
+		args = {'com':target_url}
+		rf = RuleFile(rulefile,args)
+		rf._getRules()
+		# print rf.ret
+		for i in rf.ret:
+			urls.append(url + '/' +i)
+
 		urls = list(set(urls))
+		# pprint(urls)
 		return urls
 
 	except Exception,e:

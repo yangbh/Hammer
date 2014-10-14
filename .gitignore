@@ -8,7 +8,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 #env/
-bin/
+#bin/
 build/
 develop-eggs/
 dist/
@@ -21,7 +21,9 @@ var/
 .installed.cfg
 *.egg
 #test
-temp
+temp/
+cache/
+output/
 
 # Installer logs
 pip-log.txt
