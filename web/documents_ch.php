@@ -120,7 +120,7 @@ EOF;
 
 					<h2 id="about">关于</h2>
 						<p>Hammer 不只是一款网络扫描器，更是一个扫描框架，一句话比喻，Hammer是开源的yascanner（当然，目前功能还远不如yascanner，yascanner是我的偶像），与yascanner类似，它偏向于WEB漏洞的收集与检测，不太具有攻击性，有喜欢这种类型的妹子否？</p>
-						<p>开源不易，希望大家能够开源出自己的插件。</p>
+						<p>开源不易，希望大家也能够开源出自己的插件。</p>
 					<hr>					
 					<h2 id="plugin">插件</h2>
 					<p>下面是一个典型的Hammer插件，功能为扫描robots.txt文件存在与否:</p>

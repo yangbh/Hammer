@@ -63,17 +63,17 @@ if (!already_login()) {
 								User
 							</div>
 							<div class="panel-body">
-								<b><?php echo get_userinfo()['Name'];?></b>
+								<b><?php $a=get_userinfo();echo $a['Name'];?></b>
 							</div>
 						</div>
 						<div class="panel panel-default" id="token">
 							<div class="panel-heading">
 								<a href="user_token_refresh.php"><span class="glyphicon glyphicon-refresh"></span></a>
-								Token: <?php echo get_userinfo()['Token'];?>
+								Token: <?php $a=get_userinfo();echo $a['Token'];?>
 							</div>
 							<div class="panel-body">
 								<p>Run Hammer like this:</p>
-								<code>python hammer.py --server www.hammer.org --token <?php echo get_userinfo()['Token'];?> -u http://www.leesec.com</code>
+								<code>python hammer.py --server www.hammer.org --token <?php $a=get_userinfo();echo $a['Token'];?> -u http://www.leesec.com</code>
 							</div>
 						</div>
 					</div>

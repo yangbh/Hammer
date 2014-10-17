@@ -115,7 +115,7 @@ def Audit(services):
 				respone = requests.get(url + '/ooxx*~1.*/x.aspx')
 				if respone.status_code == 400:
 					retinfo = {'level':'medium','content':url}
-					security_warming(url)
+					security_warning(url)
 		except Exception,e:
 			print 'Exception:\t',e
 	return (retinfo,output)

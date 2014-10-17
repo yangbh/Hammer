@@ -5,8 +5,8 @@ require_once('config.php');
 session_set_cookie_params(2*3600);
 session_start();
 
-error_reporting(E_ERROR | E_WARNING | E_PARSE);
-
+// error_reporting(E_ERROR | E_WARNING | E_PARSE);
+error_reporting(E_ERROR);
 // $con = mysql_connect($DB_HOST.':'.$DB_PORT,$DB_USER,$DB_PWD,$DB_NAME);
 
 $con = mysql_connect($DB_HOST,$DB_USER,$DB_PWD,$DB_NAME);
@@ -63,7 +63,7 @@ function login_check($username,$password){
 		}
 	}
 
-	# check token
+	// check token
 	$token = check_sql(trim($_REQUEST['token']));
 	if ($token and $token != '') {
 		$query = "SELECT * From User WHERE Token='$token'";

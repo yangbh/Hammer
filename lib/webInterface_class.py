@@ -49,7 +49,7 @@ class WebInterface(object):
 
 			r = requests.post(serverurl,data=postdata)
 			# print r.request.headers
-			print r.request.body
+			# print r.request.body
 			print r.text
 			if r.status_code == 200:
 				# print r.text

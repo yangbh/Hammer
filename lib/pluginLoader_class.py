@@ -247,8 +247,9 @@ class PluginLoader(object):
 
 
 		# for test
-		# path = BASEDIR + '/plugins/Info_Collect'
-		# self.plugindict = {path:['whatweb.py','portscan.py']}
+		# path1 = BASEDIR + '/plugins/Info_Collect'
+		# path2 = BASEDIR + '/plugins/System'
+		# self.plugindict = {path1:['whatweb.py'],path2:['iisshort.py']}
 
 		for path in self.plugindict:
 			if path[-12:]=='Info_Collect':

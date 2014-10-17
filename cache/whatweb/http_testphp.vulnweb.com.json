@@ -1,0 +1,1 @@
+{"target":"http://testphp.vulnweb.com","http_status":200,"plugins":{"HTTPServer":{"string":["nginx/1.4.1"]},"X-Powered-By":{"string":["PHP/5.3.10-1~lucid+2uwsgi2"]}}}
