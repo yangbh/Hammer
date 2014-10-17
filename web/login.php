@@ -1,19 +1,5 @@
 <?php
 require_once('common.php');
-
-function login_check($username,$password){
-	global $con,$DB_SALT;
-	// $Pwd = strrev($username).'#'. $DB_SALT .'#'.strrev($password);	
-	// $Pwd = md5($Pwd);
-	$Pwd = pwd_encode($username,$password);
-	$query = "SELECT * FROM User WHERE NAME='" . $username . "' AND Password='". $Pwd . "'";
-	// print '$query= '. $query . '<br>';
-	$result = mysql_query($query);
-	if ($row = mysql_fetch_array($result)) {
-		return $row;
-	}
-	return False;
-}
 ?>
 <?php
 // check session first
@@ -22,17 +8,14 @@ if(already_login()){
 	header('Location: index.php');
 	exit;
 }
-
+// print 'hehe';
 $user = check_sql(trim($_POST['username']));
 $pwd = check_sql(trim($_POST['password']));
 // var_dump($_POST);
 // print('$user='.$user.'<br>');
 // print('$pwd='.$pwd.'<br>');
 
-if ($logininfo=login_check($user,$pwd)) {
-
-	$_SESSION['user'] = $logininfo['Name'];
-	$_SESSION['isadmin'] = $logininfo['Is_Admin'];
+if (login_check($user,$pwd)) {
 	// print 'login success';
 	header('Location: index.php');
 	exit;

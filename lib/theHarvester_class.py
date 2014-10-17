@@ -3,6 +3,7 @@
 
 from dummy import LIBDIR
 import sys
+
 sys.path.append(LIBDIR+'/theHarvester')
 sys.path.append(LIBDIR+'/theHarvester/lib')
 

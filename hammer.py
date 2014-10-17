@@ -4,98 +4,67 @@
 import sys
 import getopt
 import re
-
+sys.path.append('./lib')
+from scanner_class_mp import Scanner
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
 def show():
 	print'''
-	####################################################
-	##
-	##
-	##
-	##	
-	##	author	:  yangbh
-	##	email  	:  
-	####################################################
+   ██░ ██  ▄▄▄       ███▄ ▄███▓ ███▄ ▄███▓▓█████  ██▀███  
+  ▓██░ ██▒▒████▄    ▓██▒▀█▀ ██▒▓██▒▀█▀ ██▒▓█   ▀ ▓██ ▒ ██▒
+  ▒██▀▀██░▒██  ▀█▄  ▓██    ▓██░▓██    ▓██░▒███   ▓██ ░▄█ ▒
+  ░▓█ ░██ ░██▄▄▄▄██ ▒██    ▒██ ▒██    ▒██ ▒▓█  ▄ ▒██▀▀█▄  
+  ░▓█▒░██▓ ▓█   ▓██▒▒██▒   ░██▒▒██▒   ░██▒░▒████▒░██▓ ▒██▒
+   ▒ ░░▒░▒ ▒▒   ▓▒█░░ ▒░   ░  ░░ ▒░   ░  ░░░ ▒░ ░░ ▒▓ ░▒▓░
+   ▒ ░▒░ ░  ▒   ▒▒ ░░  ░      ░░  ░      ░ ░ ░  ░  ░▒ ░ ▒░
+   ░  ░░ ░  ░   ▒   ░      ░   ░      ░      ░     ░░   ░ 
+   ░  ░  ░      ░  ░       ░          ░      ░  ░   ░     
+  
 	'''
 
 def usage():
 	print "Usage: hammer.py [options] -u url\n"
-	print "\t-u --url: url address, like http://www.leesec.com/"
+	# print "\t-u --url: url address, like http://www.leesec.com/"
+	print "[options]"
+	print "\t-s --server: your hammer web server host address, like www.hammer.org"
+	print "\t-t --token: token, find it in http://www.hammer.org/user.php"
 	print "\t-h: help"
-	print "\nExamples:"
-	print "\thammer.py -u http://www.leesec.com/\n"
+	print "[Examples]"
+	print "\thammer.py -u http://www.leesec.com/ -s www.hammer.org --t 3r75... \n"
 	sys.exit(0)
 
 def main():
 	# step1: get arguments
 	show()
 	try :
-		opts, args = getopt.getopt(sys.argv[1:], "hu:")
+		opts, args = getopt.getopt(sys.argv[1:], "hs:t:u:",['help','server=','token=','url='])
 	except getopt.GetoptError:
 		usage()
 
 	_url = None
+	_server = None
+	_token = None
 
 	for opt, arg in opts:
-		if opt == '-h':
+		if opt in ('-h','--help'):
 			usage()
-		elif opt == '-u':
+		elif  opt in ('-u','--url'):
 			_url = arg
 			if _url[-1] != '/':
 				_url += '/'
+		elif opt in ('-s','--server'):
+			_server = arg
+		elif opt in ('-t','--token'):
+			_token = arg
 		else:
 			pass
 	if _url == None:
 		usage()
 
-	m = re.match('(http[s]?)://([^:^/]+):?([^/]*)/',_url)
-	_http_type,_host,_ports,_domain = None,None,None,None
-	if m:
-		_http_type = m.group(1)
-		_host = m.group(2)
-		_ports = m.group(3)
-		_domain = _host[(_host.find('.')+1):]
-		print _http_type,_host,_ports,_domain
-
-	# step2: init syspath
-	basepath = sys.path[0]
-	sys.path.append(basepath +'/lib')
-	sys.path.append(basepath +'/plugins')
-	sys.path.append(basepath +'/bin')
-
-	# step3: get subdomains
-	from lib.knock_class import SubDomain
-
-	checksubdomain = False
-	if checksubdomain == True:
-		
-		sb = SubDomain(_domain)
-		#sb.help()
-		if 	sb.CheckForWildcard(sb.host) != False:
-			sys.exit(1)
-
-		sb.checkzone(sb.host)
-		sb.subscan(sb.host,sb.wordlist)
-		print sb.found
-	
-	_suburls = []
-	# step4: run scans
-	from lib.scanner_class import Scanner
-	
-	sn = Scanner(_url)
-	#sn.getServices()
-	sn.startScan()
-	print ">>>scan result:"
-	print sn.result
-
-	for eachurl in _suburls:
-		sn = Scanner(_url)
-		#sn.getServices()
+	if _url and _server and _token:
+		sn = Scanner(_url,_server,_token)
 		sn.startScan()
-		print ">>>scan result:"
-		print sn.result
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------

@@ -47,9 +47,9 @@ def Audit(services):
 
 			#print services
 
-		except IndexError,e:
-			print 'IndexError:',e
-			output += 'IndexError: ' + str(e) + os.linesep
+		# except IndexError,e:
+		# 	print 'IndexError:',e
+		# 	output += 'IndexError: ' + str(e) + os.linesep
 		except KeyError,e:
 			print 'KeyError:',e
 			output += 'KeyError: ' + str(e) + os.linesep

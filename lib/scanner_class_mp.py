@@ -40,7 +40,7 @@ def procFunc(pluginheader):
 # ----------------------------------------------------------------------------------------------------
 class Scanner(object):
 	"""docstring for Scanner"""
-	def __init__(self,url=None,server=None,session=None):
+	def __init__(self,url=None,server=None,token=None):
 		super(Scanner, self).__init__()
 		#url
 		if url[-1] != '/':
@@ -49,8 +49,8 @@ class Scanner(object):
 
 		# web server class
 		self.web_interface = None
-		if server and session:
-			self.web_interface = WebInterface(server,session)
+		if server and token:
+			self.web_interface = WebInterface(server,token)
 
 		m = re.match('(http[s]?)://([^:^/]+):?([^/]*)/',url)
 		if m:
@@ -93,7 +93,7 @@ class Scanner(object):
 		services['host'] = host
 		services['noSubprocess'] = True
 		pl = PluginLoader(None,services)
-		pl.runEachPlugin(PLUGINDIR+'/Info_Collect/subdomain.py')
+		pl.runEachPlugin(BASEDIR+'/plugins/Info_Collect/subdomain.py')
 		print pl.services
 		subdomains = pl.services['subdomains']
 		return subdomains
@@ -105,7 +105,7 @@ class Scanner(object):
 		services['ip'] = ip
 		services['noSubprocess'] = True
 		pl = PluginLoader(None,services)
-		pl.runEachPlugin(PLUGINDIR+'/Info_Collect/neighborhost.py')
+		pl.runEachPlugin(BASEDIR+'/plugins/Info_Collect/neighborhost.py')
 		neighborhosts = []
 		if pl.services.has_key('neighborhosts'):
 			neighborhosts = pl.services['neighborhosts']
@@ -119,7 +119,7 @@ class Scanner(object):
 		services['noSubprocess'] = True
 		# get all opened ports
 		pl = PluginLoader(None,services)
-		pl.runEachPlugin(PLUGINDIR+'/Info_Collect/portscan.py')
+		pl.runEachPlugin(BASEDIR+'/plugins/Info_Collect/portscan.py')
 		ports = {}
 		if pl.services.has_key('port_detail'):
 			ports = pl.services['port_detail']
@@ -210,8 +210,8 @@ class Scanner(object):
 
 			# just for test
 			# urls = {'106.185.36.44': ['http://www.hengtiansoft.com','http://www.leesec.com']}
-			# urls = {'10.183.0.103': []}
-			urls = {'106.185.36.44': ['http://www.leesec.com']}
+			# urls = {'172.16.15.2': []}
+			# urls = {'106.185.36.44': ['http://www.leesec.com']}
 			
 			self.urls = urls
 			print 'urls\t',urls
@@ -310,12 +310,15 @@ class Scanner(object):
 			
 	def _initGlobalVar(self):
 		# process information
+		# print 'in scaner_class_mp process pid=\t',os.getpid()
+		# print 'id(globalVar)=\t',id(globalVar)
+		# print globals()
 		pid = os.getpid()
 		globalVar.scan_task_dict_lock.acquire()
 		globalVar.scan_task_dict['pid'] = pid
 		globalVar.scan_task_dict['target'] = self.url
 		globalVar.scan_task_dict['server'] = self.web_interface.server
-		globalVar.scan_task_dict['session'] = self.web_interface.phpsession
+		globalVar.scan_task_dict['token'] = self.web_interface.token
 		globalVar.scan_task_dict['subtargets'] = {}
 		globalVar.scan_task_dict['scanID'] = self.web_interface.id
 		globalVar.scan_task_dict_lock.release()
@@ -401,13 +404,13 @@ class Scanner(object):
 if __name__=='__main__':
 	# server = '0xff.sinaapp.com/web/'
 	server = 'www.hammer.org'
-	phpsession = '1i7lf33p0ubee4i9lnui0gbk00'
+	token = 'dqc8mcv6ukaso3fsj1qvujss06'
 
 	url = 'http://www.leesec.com'
 	if len(sys.argv) ==  2:
 		url = sys.argv[1]
 
-	sn =Scanner(url,server,phpsession)
+	sn =Scanner(url,server,token)
 	sn.startScan()
 	# print ">>>scan result:"
 	#print sn.result

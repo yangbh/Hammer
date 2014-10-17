@@ -8,13 +8,14 @@ BASEDIR = __file__.replace('/plugins/Weak_Password/dummy.pyc','')
 BASEDIR = BASEDIR.replace('/plugins/Weak_Password/dummy.py','')
 
 LIBDIR = BASEDIR + '/lib'
-PLUGINDIR = BASEDIR + '/plugins'
-CACHEDIR = BASEDIR + '/cache'
+# PLUGINDIR = BASEDIR + '/plugins'
+# CACHEDIR = BASEDIR + '/cache'
 
 # system path
-sys.path.append(BASEDIR)
-sys.path.append(LIBDIR)
-sys.path.append(PLUGINDIR)
+if BASEDIR not in sys.path:
+	sys.path.append(BASEDIR)
+if LIBDIR not in sys.path:
+	sys.path.append(LIBDIR)
 
 from pprint import pprint
 

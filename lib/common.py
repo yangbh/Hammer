@@ -29,9 +29,9 @@ def getScanInfo():
 	# pprint(globalVar.scan_task_dict)
 	scanid = globalVar.scan_task_dict['scanID']
 	server = globalVar.scan_task_dict['server']
-	session = globalVar.scan_task_dict['session']
+	token = globalVar.scan_task_dict['token']
 	# globalVar.scan_task_dict_lock.release()
-	return {'scanid':scanid,'server':server,'session':session}
+	return {'scanid':scanid,'server':server,'token':token}
 
 def getSubProInfo():
 	# print 'getting sub process info'
@@ -58,10 +58,10 @@ def getPluginInfo():
 	# globalVar.plugin_now_lock.release()
 	return {'pluginname':pluginname}
 
-def vuln_add(scanid=None,subtarget=None,pluginname=None,vulnlevel=None,vulninfo=None,server=None,session=None):
+def vuln_add(scanid=None,subtarget=None,pluginname=None,vulnlevel=None,vulninfo=None,server=None,token=None):
 	try:
 		serverurl = 'http://' + server +'/scans_add.php'
-		cookies = {'PHPSESSID':session}
+		# cookies = {'TOKEN':token}
 		retinfo = {}
 		retinfo['scanid'] = scanid
 		retinfo['pluginname'] = pluginname
@@ -69,14 +69,14 @@ def vuln_add(scanid=None,subtarget=None,pluginname=None,vulnlevel=None,vulninfo=
 		retinfo['vulnlevel'] = vulnlevel
 		retinfo['vulninfo'] = vulninfo
 		
-		postdata = {'type':'vuln','retinfo':json.dumps(retinfo)}
+		postdata = {'type':'vuln','token':token,'retinfo':json.dumps(retinfo)}
 		# pprint(postdata)
 
-		r = requests.post(serverurl,cookies=cookies,data=postdata)
+		r = requests.post(serverurl,data=postdata)
 		if r.status_code == 200 and r.text != '':
 			print r.text
 		else:
-			print 'return error, please check session and server'
+			print 'return error, please check token and server'
 		pass
 	except requests.HTTPError,e:
 		print 'requests.HTTPError', e
@@ -84,15 +84,15 @@ def vuln_add(scanid=None,subtarget=None,pluginname=None,vulnlevel=None,vulninfo=
 def security_note(vulnInfo):
 	# print globals()
 	print 'in security_note'
-	# print 'plugin pid=\t',os.getpid()
-	# print 'id(globalVar)=\t',id(globalVar)
-	# print 'globalVar.scan_task_dict=\t',globalVar.scan_task_dict
+	print 'plugin pid=\t',os.getpid()
+	print 'id(globalVar)=\t',id(globalVar)
+	print 'globalVar.scan_task_dict=\t',globalVar.scan_task_dict
 	scaninfo = getScanInfo()
 	# print 'scaninfo:'
 	# pprint(scaninfo)
 	scanID = scaninfo['scanid']
 	server = scaninfo['server']
-	session = scaninfo['session']
+	token = scaninfo['token']
 
 	subproinfo = getSubProInfo()
 	# print 'subproinfo:'
@@ -103,8 +103,8 @@ def security_note(vulnInfo):
 	# print 'plugininfo:'
 	# pprint(plugininfo)
 	pluginName = plugininfo['pluginname']
-	print scanID,server,session,subTarget,pluginName,vulnInfo
-	vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='info',vulninfo=vulnInfo,server=server,session=session)
+	print scanID,server,token,subTarget,pluginName,vulnInfo
+	vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='info',vulninfo=vulnInfo,server=server,token=token)
 	return
 
 def security_info(vulnInfo):
@@ -114,7 +114,7 @@ def security_info(vulnInfo):
 	# pprint(scaninfo)
 	scanID = scaninfo['scanid']
 	server = scaninfo['server']
-	session = scaninfo['session']
+	token = scaninfo['token']
 
 	subproinfo = getSubProInfo()
 	# print 'subproinfo:'
@@ -125,38 +125,38 @@ def security_info(vulnInfo):
 	# print 'plugininfo:'
 	# pprint(plugininfo)
 	pluginName = plugininfo['pluginname']
-	print scanID,server,session,subTarget,pluginName,vulnInfo
-	vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='low',vulninfo=vulnInfo,server=server,session=session)
+	print scanID,server,token,subTarget,pluginName,vulnInfo
+	vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='low',vulninfo=vulnInfo,server=server,token=token)
 	return
 
 def security_warning(vulnInfo):
 	scaninfo = getScanInfo()
 	scanID = scaninfo['scanid']
 	server = scaninfo['server']
-	session = scaninfo['session']
+	token = scaninfo['token']
 
 	subproinfo = getSubProInfo()
 	subTarget = subproinfo['target']
 
 	plugininfo = getPluginInfo()
 	pluginName = plugininfo['pluginname']
-	print scanID,server,session,subTarget,pluginName,vulnInfo
-	vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='medium',vulninfo=vulnInfo,server=server,session=session)
+	print scanID,server,token,subTarget,pluginName,vulnInfo
+	vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='medium',vulninfo=vulnInfo,server=server,token=token)
 	return
 
 def security_hole(vulnInfo):
 	scaninfo = getScanInfo()
 	scanID = scaninfo['scanid']
 	server = scaninfo['server']
-	session = scaninfo['session']
+	token = scaninfo['token']
 
 	subproinfo = getSubProInfo()
 	subTarget = subproinfo['target']
 
 	plugininfo = getPluginInfo()
 	pluginName = plugininfo['pluginname']
-	print scanID,server,session,subTarget,pluginName,vulnInfo
-	vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='high',vulninfo=vulnInfo,server=server,session=session)
+	print scanID,server,token,subTarget,pluginName,vulnInfo
+	vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='high',vulninfo=vulnInfo,server=server,token=token)
 	return
 # ----------------------------------------------------------------------------------------------------
 # 	

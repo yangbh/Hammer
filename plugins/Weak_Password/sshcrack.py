@@ -27,7 +27,7 @@ def getPwds(neighborhosts):
 
 	commonpwd = []
 	#pwdfile = '../../lib/db/temp.txt'
-	pwdfile = LIBDIR+'/db/password_small.dict'
+	pwdfile = BASEDIR+'/lib/db/password_small.dict'
 
 	fp = open(pwdfile,'r')
 	for eachline in fp:
@@ -64,6 +64,7 @@ def getPwds(neighborhosts):
 def ssh2(ip,port,username,passwd,lock):  
 	global ret
 	printinfo = 'ssh://%s:%s@%s:%d' % (username,passwd,ip,port)
+	sshcmd = printinfo
 	printinfo += os.linesep
 	flg = False
 	for i in range(5):
@@ -74,6 +75,7 @@ def ssh2(ip,port,username,passwd,lock):
 			#print 'login success'
 			printinfo +=  'login success' + os.linesep
 			ssh.close()
+			security_hole(sshcmd)
 			flg = True
 			break
 
@@ -179,7 +181,7 @@ def Audit(services):
 
 	if ret != '':
 		retinfo = {'level':'high','content':ret}
-		security_hole(str(ret))
+		# security_hole(str(ret))
 
 	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------

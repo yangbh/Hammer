@@ -49,7 +49,7 @@ class MutiScanner(threading.Thread):
 # ----------------------------------------------------------------------------------------------------
 class Scanner(object):
 	"""docstring for Scanner"""
-	def __init__(self,url=None,server=None,session=None):
+	def __init__(self,url=None,server=None,token=None):
 		super(Scanner, self).__init__()
 		#url
 		if url[-1] != '/':
@@ -58,8 +58,8 @@ class Scanner(object):
 
 		# web server class
 		self.web_interface = None
-		if server and session:
-			self.web_interface = WebInterface(server,session)
+		if server and token:
+			self.web_interface = WebInterface(server,token)
 
 		m = re.match('(http[s]?)://([^:^/]+):?([^/]*)/',url)
 		if m:
@@ -101,7 +101,7 @@ class Scanner(object):
 		services={}
 		services['host'] = host
 		pl = PluginLoader(None,services)
-		pl.runEachPlugin(PLUGINDIR+'/Info_Collect/subdomain.py')
+		pl.runEachPlugin(BASEDIR+'/plugins/Info_Collect/subdomain.py')
 		print pl.services
 		subdomains = pl.services['subdomains']
 		return subdomains
@@ -112,7 +112,7 @@ class Scanner(object):
 		services={}
 		services['ip'] = ip
 		pl = PluginLoader(None,services)
-		pl.runEachPlugin(PLUGINDIR+'/Info_Collect/neighborhost.py')
+		pl.runEachPlugin(BASEDIR+'/plugins/Info_Collect/neighborhost.py')
 		neighborhosts = []
 		if pl.services.has_key('neighborhosts'):
 			neighborhosts = pl.services['neighborhosts']
@@ -125,7 +125,7 @@ class Scanner(object):
 		services['ip'] = ip
 		# get all opened ports
 		pl = PluginLoader(None,services)
-		pl.runEachPlugin(PLUGINDIR+'/Info_Collect/portscan.py')
+		pl.runEachPlugin(BASEDIR+'/plugins/Info_Collect/portscan.py')
 		ports = {}
 		if pl.services.has_key('port_detail'):
 			ports = pl.services['port_detail']
@@ -394,13 +394,13 @@ class Scanner(object):
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	server = 'www.hammer.org'
-	phpsession = 'hfv57pmfg0htiafm5v4v9hc6j0'
+	token = 'hfv57pmfg0htiafm5v4v9hc6j0'
 
 	url = 'http://www.eguan.cn'
 	if len(sys.argv) ==  2:
 		url = sys.argv[1]
 
-	sn =Scanner(url,server,phpsession)
+	sn =Scanner(url,server,token)
 	sn.startScan()
 	# print ">>>scan result:"
 	#print sn.result

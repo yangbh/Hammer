@@ -66,7 +66,7 @@ echo <<<EOF
 							</a>
 							<ul class="dropdown-menu" role="meun">
 								<li role="presentation">
-									<a href="user_setting"><i class="glyphicon glyphicon-cog"></i> 设置</a>
+									<a href="user.php"><i class="glyphicon glyphicon-cog"></i> 设置</a>
 								</li>
 								<li role="presentation">
 								</li>

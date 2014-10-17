@@ -5,17 +5,15 @@ A web vulnnerability scanner
 Install
 =================================== 
 
-目前建议在kali上运行：
-1. 数据库导入sql文件，地址在temp/hammer.sql
-2. 将plugins目录下所有插件内容导入数据库
+		目前建议在kali上运行：
+		1. 数据库导入sql文件，地址在temp/hammer.sql
+		2. 配置web，修改web目录下config配置文件
+		3. 将plugins目录下所有插件内容导入web数据库
 ```
-1)修改lib/plugin2sql.py 内的数据库地址、账户、密码
+1)修改lib/plugin2sql.py 内的server 和 session
 2)hammer#python lib/plugin2sql.py plugins/
-```
-可以先导入本地，导出Plugins表，再导入到Hammer数据库（关键是没写添加plugin的web接口，这个有点很蛋疼，待改）
-3. 配置web，修改web目录下config配置文件
-4. 修改lib/scanner_class_mp.py中的web服务器server和session
-5. 运行python lib/scanner_class_mp.py 进行扫描
+```	
+		4. 运行python hammer.py 进行扫描
 
  Require
 ----------------------------------- 
@@ -50,22 +48,25 @@ Quick help
 Basic usage
 ----------------------------------- 
 ```
-	####################################################
-	##
-	##
-	##
-	##	
-	##	author	:  yangbh
-	##	email  	:  
-	####################################################
+   ██░ ██  ▄▄▄       ███▄ ▄███▓ ███▄ ▄███▓▓█████  ██▀███  
+  ▓██░ ██▒▒████▄    ▓██▒▀█▀ ██▒▓██▒▀█▀ ██▒▓█   ▀ ▓██ ▒ ██▒
+  ▒██▀▀██░▒██  ▀█▄  ▓██    ▓██░▓██    ▓██░▒███   ▓██ ░▄█ ▒
+  ░▓█ ░██ ░██▄▄▄▄██ ▒██    ▒██ ▒██    ▒██ ▒▓█  ▄ ▒██▀▀█▄  
+  ░▓█▒░██▓ ▓█   ▓██▒▒██▒   ░██▒▒██▒   ░██▒░▒████▒░██▓ ▒██▒
+   ▒ ░░▒░▒ ▒▒   ▓▒█░░ ▒░   ░  ░░ ▒░   ░  ░░░ ▒░ ░░ ▒▓ ░▒▓░
+   ▒ ░▒░ ░  ▒   ▒▒ ░░  ░      ░░  ░      ░ ░ ░  ░  ░▒ ░ ▒░
+   ░  ░░ ░  ░   ▒   ░      ░   ░      ░      ░     ░░   ░ 
+   ░  ░  ░      ░  ░       ░          ░      ░  ░   ░     
+  
 	
 Usage: hammer.py [options] -u url
 
-	-u --url: url address, like http://www.leesec.com/
+[options]
+	-s --server: your hammer web server host address, like www.hammer.org
+	-t --token: token, find it in http://www.hammer.org/user.php
 	-h: help
-
-Examples:
-	hammer.py -u http://www.leesec.com/
+[Examples]
+	hammer.py -u http://www.leesec.com/ --server www.hammer.org --token 
 ```
 
 Available plugins

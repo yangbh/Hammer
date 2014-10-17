@@ -116,7 +116,7 @@ class PluginLoader(object):
 				pass
 			else:
 				# globalVar.scan_task_dict_lock.acquire()
-				print 'main porcess pid=\t',os.getpid()
+				print 'in pluginLoader porcess pid=\t',os.getpid()
 				print 'id(globalVar)=\t',id(globalVar)
 				globalVar.scan_task_dict['subtargets'] = tmpdict
 				pprint(globalVar.scan_task_dict)

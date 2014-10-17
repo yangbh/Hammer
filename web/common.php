@@ -35,15 +35,61 @@ function check_xss($value){
 	return htmlspecialchars($value,ENT_QUOTES,'UTF-8');
 }
 
+function pwd_encode($username,$password){
+	global $DB_SALT;
+	$Pwd = strrev($username).'#'. $DB_SALT .'#'.strrev($password);
+	$Pwd = md5($Pwd);
+	return $Pwd;
+}
+
+function error_jump(){
+	echo "<script>window.location='index.php';</script>";
+}
+
+function login_check($username,$password){
+	global $con,$DB_SALT;
+	// print $username.$password.$DB_SALT;
+	// $Pwd = strrev($username).'#'. $DB_SALT .'#'.strrev($password);	
+	// $Pwd = md5($Pwd);
+	if ($username && $password) {
+		$Pwd = pwd_encode($username,$password);
+		$query = "SELECT * FROM User WHERE NAME='" . $username . "' AND Password='". $Pwd . "'";
+		// print '$query= '. $query . '<br>';
+		$result = mysql_query($query);
+		if ($row = mysql_fetch_array($result)) {
+			$_SESSION['user'] = $row['Name'];
+			$_SESSION['isadmin'] = $row['Is_Admin'];
+			return True;
+		}
+	}
+
+	# check token
+	$token = check_sql(trim($_REQUEST['token']));
+	if ($token and $token != '') {
+		$query = "SELECT * From User WHERE Token='$token'";
+		// print '$query= '. $query . '<br>';
+		$result = mysql_query($query);
+		if ($row = mysql_fetch_array($result)) {
+			$_SESSION['user'] = $row['Name'];
+			$_SESSION['isadmin'] = $row['Is_Admin'];
+			return True;
+		}
+	}
+
+	return False;
+}
+
 function already_login(){
 	if ($_SESSION['user']) {
+		// print $_SESSION['user'];
 		// header('Location: index.php');
 		// exit;
 		return True;
 	}
+	return login_check();
 	// header('Location: login.php');
 	// exit;
-	return False;
+	// return False;
 }
 
 function get_userid(){
@@ -62,14 +108,30 @@ function get_userid(){
 	}
 }
 
-function pwd_encode($username,$password){
-	global $DB_SALT;
-	$Pwd = strrev($username).'#'. $DB_SALT .'#'.strrev($password);
-	$Pwd = md5($Pwd);
-	return $Pwd;
+function get_userinfo(){
+	global $con;
+	if (already_login()) {
+		$username = $_SESSION['user'];
+		$query = "SELECT * FROM User WHERE Name='$username'";
+		// echo '$query='.$query.'<br>';
+		$result = mysql_query($query);
+		if ($row = mysql_fetch_array($result)) {
+			return $row;
+		}
+	}
+	else{
+		return False;
+	}
 }
 
-function error_jump(){
-	echo "<script>window.location='index.php';</script>";
+function getRandChar($length){
+	$str = null;
+	$strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+	$max = strlen($strPol)-1;
+	for($i=0;$i<$length;$i++){
+		$str.=$strPol[rand(0,$max)];//rand($min,$max)生成介于min和max两个数之间的一个随机整数
+	}
+	return $str;
 }
+
 ?>
