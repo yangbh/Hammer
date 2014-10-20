@@ -31,11 +31,10 @@ def usage():
 	print "\t-t --token: token, find it in http://www.hammer.org/user.php"
 	print "\t-h: help"
 	print "[Examples]"
-	print "\thammer.py -u http://www.leesec.com/ -s www.hammer.org --t 3r75... \n"
+	print "\thammer.py -u http://www.leesec.com/ -s www.hammer.org -t 3r75... \n"
 	sys.exit(0)
 
 def main():
-	# step1: get arguments
 	show()
 	try :
 		opts, args = getopt.getopt(sys.argv[1:], "hs:t:u:",['help','server=','token=','url='])
