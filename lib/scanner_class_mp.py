@@ -26,14 +26,17 @@ from dummy import *
 #
 # ----------------------------------------------------------------------------------------------------
 def procFunc(pluginheader):
-	if type(pluginheader) == PluginLoader:
-		pl = pluginheader
-		pl.loadPlugins()
-		pl.runPlugins()
-		return pl
-	else:
-		print 'pl is not a pluginLoader_class.PluginLoader class'
-		return None
+	try:
+		if type(pluginheader) == PluginLoader:
+			pl = pluginheader
+			pl.loadPlugins()
+			pl.runPlugins()
+			return pl
+		else:
+			print 'pl is not a pluginLoader_class.PluginLoader class'
+			return None
+	except (KeyboardInterrupt, SystemExit):
+			print "Exiting..."
 
 # ----------------------------------------------------------------------------------------------------
 #
@@ -64,7 +67,7 @@ class Scanner(object):
 			sys.exit(0)
 		commonports = '21,22,23,25,110,53,67,80,443,1521,1526,3306,3389,8080,8580'
 		if self.ports != '':
-			self.ports = commonports + ',' +ports
+			self.ports = commonports + ',' + self.ports
 		else:
 			self.ports = commonports
 
@@ -246,23 +249,29 @@ class Scanner(object):
 
 			results = []
 
-			proPool = multiprocessing.Pool(8)
-			for eachpl in pls:
-				results.append(proPool.apply_async(procFunc,(eachpl,)))
+			# for eachpl in pls:
+			# 	results.append(proPool.apply_async(procFunc,(eachpl,)))
 
-			proPool.close()
+			# proPool.close()
 
-			try:		
-				proPool.join()
-			except EOFError,e:
-				# isexit = raw_input('Sure to exit?yes/no')
-				# if isexit.lower() == 'y' or isexit.lower() == 'yes':
-				proPool.terminate()
+			# try:		
+			# 	proPool.join()
+			# except KeyboardInterrupt,e:
+			# 	# isexit = raw_input('Sure to exit?yes/no')
+			# 	# if isexit.lower() == 'y' or isexit.lower() == 'yes':
+			# 	proPool.terminate()
 
+			# 改用map_async的方式
+			proPool = multiprocessing.Pool(10)
+			p = proPool.map_async(procFunc, pls)
+			try:
+				results = p.get(0xFFFF)
+			except KeyboardInterrupt,e:
+				print "Caught KeyboardInterrupt, terminating workers"
 
 			newpls = []
 			for res in results:
-				newpls.append(res.get())
+				newpls.append(res)
 			self.pls = newpls
 
 			self.setResult(urls=self.urls,pls=newpls)

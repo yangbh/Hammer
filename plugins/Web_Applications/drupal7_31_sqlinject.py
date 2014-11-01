@@ -47,6 +47,6 @@ def Audit(services):
 #	untest yet
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	services = {'url':'http://www.danpros.com','cms':'Drupal'}
+	services = {'url':'http://drupalnews.cn','cms':'Drupal'}
 	pprint(Audit(services))
 	pprint(services)

@@ -1,6 +1,6 @@
 What's Hammer?
 ===================================  
-A web vulnnerability scanner
+A web vulnerability scanner framework
 
 Basic usage
 ===================================  
@@ -30,14 +30,16 @@ Usage: hammer.py [options] -u url
 Install
 =================================== 
 
-		目前建议在kali上运行：
 ```
-		1. 数据库导入sql文件，地址在temp/hammer.sql
-		2. 配置web，修改web目录下config配置文件
-		3. 将plugins目录下所有插件内容导入web数据库
-			1)修改lib/plugin2sql.py 内的server 和 token（token在user.php中获取）
-			2)hammer#python lib/plugin2sql.py plugins/
-		4. 运行python hammer.py 进行扫描
+目前建议在kali上运行：
+```
+```
+1. 数据库导入sql文件，地址在temp/hammer.sql
+2. 配置web，修改web目录下config配置文件
+3. 将plugins目录下所有插件内容导入web数据库
+	1)修改lib/plugin2sql.py 内的server 和 token（token在user.php中获取）
+	2)hammer#python lib/plugin2sql.py plugins/
+4. 运行python hammer.py 进行扫描
 ```
  Require
 ----------------------------------- 

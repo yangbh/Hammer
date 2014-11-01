@@ -8,7 +8,6 @@ def getbasedir():
 	cwd = os.getcwd()
 	filepath = __file__
 	print cwd
-	print fil
 	tmp = __file__.replace(cwd+'/','')
 	tmp = cwd + tmp
 	return os.path.dirname(tmp)

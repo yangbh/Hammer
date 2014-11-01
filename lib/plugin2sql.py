@@ -142,7 +142,8 @@ def loadPlugins(path=None,server='localhost',token=''):
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	server = 'www.hammer.org'
-	token = '422fop1km8ot4tb3if136ckiu1'
+	server = '0xff.sinaapp.com'
+	token = 'j7m0w78GTGPaMFn6B3s1NDF5oOSsNbFw'
 	if len(sys.argv) ==  2:
 		filepath = sys.argv[1]
 		loadPlugins(filepath,server,token)

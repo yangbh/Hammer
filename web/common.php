@@ -7,9 +7,9 @@ session_start();
 
 // error_reporting(E_ERROR | E_WARNING | E_PARSE);
 error_reporting(E_ERROR);
-// $con = mysql_connect($DB_HOST.':'.$DB_PORT,$DB_USER,$DB_PWD,$DB_NAME);
+$con = mysql_connect($DB_HOST.':'.$DB_PORT,$DB_USER,$DB_PWD,$DB_NAME);
 
-$con = mysql_connect($DB_HOST,$DB_USER,$DB_PWD,$DB_NAME);
+// $con = mysql_connect($DB_HOST,$DB_USER,$DB_PWD,$DB_NAME);
 
 if (!$con) {
 	die('Could not connect: ' . mysql_error());

@@ -116,6 +116,16 @@ EOF;
 
 				<div class="col-xs-10 col-sm-10 col-md-10" role="main" class="main">
 					<h2 id="1.2">1.2</h2>
+					<h3>1.2.2.141101_Beta</h3>
+						<p><strong>改进：</strong></p>
+						<p>a).弃用session，改用token</p>
+						<p>b).ctrl+c子进程退出</p>
+						<p>c).一些其他bug修复以及插件添加</p>
+						<p><strong>待完善：</strong></p>
+						<p>a).插件分配机制(终于体会yascanner的assign接口函数的用处了)</p>
+						<p>b).分布式</p>
+						<p>c).跨平台</p>
+					<hr>
 					<h3>1.2.1.141011_Beta</h3>
 						<p><strong>修改：</strong></p>
 						<p>a).统一漏洞提交接口，改用security_info等类似函数，与return retinfo返回结果并用</p>

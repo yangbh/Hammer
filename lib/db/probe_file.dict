@@ -2,7 +2,8 @@
 
 /.bash_history
 /.viminfo
-/.git
+#	git information tool: rip-git.pl
+/.git/config
 /.gitignore
 /.tag
 /.tags_sorted_by_file
