@@ -65,7 +65,7 @@ class Scanner(object):
 		else:
 			print 'not a valid url',url
 			sys.exit(0)
-		commonports = '21,22,23,25,110,53,67,80,443,1521,1526,3306,3389,8080,8580'
+		commonports = '21,22,23,25,110,53,67,80,443,1521,1526,3306,3389,4899,8080,8580'
 		if self.ports != '':
 			self.ports = commonports + ',' + self.ports
 		else:

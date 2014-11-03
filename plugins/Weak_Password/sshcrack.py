@@ -37,15 +37,16 @@ def getPwds(neighborhosts):
 			commonpwd.append(tp)
 	
 	#
-	for eachhost in neighborhosts:
-		eachdomain = GetFirstLevelDomain(eachhost)
-		tplist = eachdomain.split('.')
-		usernames.append(tplist[0])
-		usernames.append(eachhost)
-		usernames.append(eachdomain)
-		commonpwd.append(eachhost)
-		commonpwd.append(eachdomain)
-		commonpwd.append(tplist[0])
+	if neighborhosts:
+		for eachhost in neighborhosts:
+			eachdomain = GetFirstLevelDomain(eachhost)
+			tplist = eachdomain.split('.')
+			usernames.append(tplist[0])
+			usernames.append(eachhost)
+			usernames.append(eachdomain)
+			commonpwd.append(eachhost)
+			commonpwd.append(eachdomain)
+			commonpwd.append(tplist[0])
 
 	#
 	rulefile = BASEDIR +'/lib/db/passwd_gen.rule'

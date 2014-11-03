@@ -119,7 +119,7 @@ EOF;
 				<div class="col-xs-12 col-sm-9 col-md-10" role="main" class="main">
 
 					<h2 id="about">关于</h2>
-						<p>Hammer 不只是一款网络扫描器，更是一个扫描框架，一句话比喻，Hammer是开源的yascanner（当然，目前功能还远不如yascanner，yascanner是我的偶像），与yascanner类似，它偏向于WEB漏洞的收集与检测，不太具有攻击性，有喜欢这种类型的妹子否？</p>
+						<p>Hammer 不只是一款网络扫描器，更是一个扫描框架，一句话比喻，Hammer是开源的yascanner（当然，目前功能还远不如yascanner，yascanner是我的偶像），与yascanner类似，它偏向于WEB漏洞的收集与检测，不太具有攻击性.</p>
 						<p>开源不易，希望大家也能够开源出自己的插件，一起打造自己的锤子！！！</p>
 					<hr>					
 					<h2 id="plugin">插件</h2>
@@ -215,7 +215,7 @@ Web Applications	# WEB应用类插件，目录：plugins/Web_Applications
 Weak Password	# 弱口令类插件，目录：plugins/Weak_Password
 Others		# 其它类型插件，目录：plugins/Others
 					</pre>
-					<p>请一定注意Info_Collect类插件，这类插件最先运行，将一些信息手机类的插件放在这个目录（如会改动services全局变量的插件），其它的插件的运行顺序未知，这点会在以后优化。</p>
+					<p>请一定注意Info_Collect类插件，这类插件最先运行，将一些信息收集类的插件放在这个目录（如会改动services全局变量的插件），其它的插件的运行顺序未知，这点会在以后优化。</p>
 					<hr>
 					<h2 id="framework">框架</h2>
 					<h3>1. 插件调用的实现</h3>

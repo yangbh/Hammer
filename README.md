@@ -24,7 +24,7 @@ Usage: hammer.py [options] -u url
 	-t --token: token, find it in http://www.hammer.org/user.php
 	-h: help
 [Examples]
-	hammer.py -u http://www.leesec.com/ -s www.hammer.org -t 3r75...
+	hammer.py -s www.hammer.org -t 3r75... -u http://www.leesec.com/
 ```
 
 Install
@@ -53,18 +53,20 @@ whatweb
 
 Required python plugins:
 ```
-python-nmap
-httplib
+# framework basic
+futures		# for Parallel Processing
+argparse 	# for input handling
+sqlite3		# for local database
+MySQLdb
+beautifulsoup4	# for crawler
+＃ used in plugins
+python-nmap	# for nmap scanning
+httplib		# for http request
 urllib
 urllib2
-sqlite3
-argparse 
-json
-paramiko
 requests
-gevent
-MySQLdb
+paramiko	# for ssh cracker
+easywebdav	# for webdav
+json		# others
 pyquery
-beautifulsoup4
-easywebdav
 ```
