@@ -28,7 +28,7 @@ def getPortByService(services,scname):
 		print 'KeyError:\t', e
 
 
-BASEDIR = __file__.replace('/bin/dummy.pyc','')
+BASEDIR = os.path.realpath(__file__).replace('/bin/dummy.pyc','')
 BASEDIR = BASEDIR.replace('/bin/dummy.py','')
 
 LIBDIR = BASEDIR + '/lib'

@@ -4,7 +4,7 @@
 import os
 import sys
 
-BASEDIR = __file__.replace('/lib/crawler/dummy.pyc','')
+BASEDIR = os.path.realpath(__file__).replace('/lib/crawler/dummy.pyc','')
 BASEDIR = BASEDIR.replace('/lib/crawler/dummy.py','')
 
 LIBDIR = BASEDIR + '/lib'

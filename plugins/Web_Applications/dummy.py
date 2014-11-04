@@ -4,7 +4,7 @@
 import os
 import sys
 
-BASEDIR = __file__.replace('/plugins/Web_Applications/dummy.pyc','')
+BASEDIR = os.path.realpath(__file__).replace('/plugins/Web_Applications/dummy.pyc','')
 BASEDIR = BASEDIR.replace('/plugins/Web_Applications/dummy.py','')
 
 LIBDIR = BASEDIR + '/lib'

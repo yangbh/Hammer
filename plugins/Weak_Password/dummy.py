@@ -4,7 +4,7 @@
 import os
 import sys
 
-BASEDIR = __file__.replace('/plugins/Weak_Password/dummy.pyc','')
+BASEDIR = os.path.realpath(__file__).replace('/plugins/Weak_Password/dummy.pyc','')
 BASEDIR = BASEDIR.replace('/plugins/Weak_Password/dummy.py','')
 
 LIBDIR = BASEDIR + '/lib'

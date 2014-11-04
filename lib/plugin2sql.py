@@ -85,7 +85,7 @@ def write2web(filepath=None,server='localhost',token=''):
 		serverurl = 'http://' + server +'/plugins_add.php'
 		# cookies = {'PHPSESSID':token}
 		postdata = {'name':pName,'type':pType,'token':token,'author':pAuthor,'time':pTime,'version':pVersion,'web':pWeb,'description':pDescription,'code':pCode}
-
+		print postdata
 		r = requests.post(serverurl,data=postdata)
 		print r.status_code,r.text
 		if r.status_code == 200:
@@ -109,6 +109,7 @@ def runEachPlugin(pluginfilepath):
 	modulepath = modulepath.replace('.py','')
 	modulepath = modulepath.replace('.','')
 	modulepath = modulepath.replace('/','.')
+	print 'modulepath',modulepath
 
 	importcmd = 'from ' + modulepath + ' import info'
 	exec(importcmd)
@@ -142,8 +143,8 @@ def loadPlugins(path=None,server='localhost',token=''):
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	server = 'www.hammer.org'
-	server = '0xff.sinaapp.com'
-	token = 'j7m0w78GTGPaMFn6B3s1NDF5oOSsNbFw'
+	# server = '0xff.sinaapp.com'
+	token = 'PNykhMYzMSOMevsNU9SZzmdUgi6t85Cn'
 	if len(sys.argv) ==  2:
 		filepath = sys.argv[1]
 		loadPlugins(filepath,server,token)

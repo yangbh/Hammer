@@ -17,14 +17,16 @@ Basic usage
 	 ░  ░  ░      ░  ░       ░          ░      ░  ░   ░     
 	
 	
-Usage: hammer.py [options] -u url
+Usage: hammer.py [options] [-u url]
 
 [options]
 	-s --server: your hammer web server host address, like www.hammer.org
 	-t --token: token, find it in http://www.hammer.org/user.php
+	-U --update-plugins: update new added plugins to web
 	-h: help
 [Examples]
 	hammer.py -s www.hammer.org -t 3r75... -u http://www.leesec.com/
+	hammer.py -s www.hammer.org -t 3r75... -U plugins/Info_Collect/
 ```
 
 Install
@@ -37,8 +39,10 @@ Install
 1. 数据库导入sql文件，地址在temp/hammer.sql
 2. 配置web，修改web目录下config配置文件
 3. 将plugins目录下所有插件内容导入web数据库
-	1)修改lib/plugin2sql.py 内的server 和 token（token在user.php中获取）
-	2)hammer#python lib/plugin2sql.py plugins/
+	1)登录web，在user.php中获取token，执行更新插件:
+	python hammer.py -s www.hammer.org -t yourtokenhere -U
+	2) 以后若添加插件，可以-U指定单独.py插件，也可以指定目录
+	python hammer.py -s www.hammer.org -t yourtokenhere -U yourpluginpath
 4. 运行python hammer.py 进行扫描
 ```
  Require
