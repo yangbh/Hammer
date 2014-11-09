@@ -36,7 +36,7 @@ class NeighborHost(object):
 		try:
 			if ip == None:
 				ip = self.ip
-			url = 'http://tool.chinaz.com/Same/'
+			url = 'http://s.tool.chinaz.com/same/'
 			post = {'s':ip}
 			post = urllib.urlencode(post)
 			content = urllib2.urlopen(url, post).read()
@@ -48,5 +48,5 @@ class NeighborHost(object):
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-	nebordom = neiborDomain('www.leesec.com')
-	print nebordom.getFromBing()
+	nebordom = NeighborHost('61.164.42.190')
+	print nebordom.getFromChinaZ()

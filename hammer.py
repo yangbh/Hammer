@@ -5,7 +5,8 @@ import sys
 import getopt
 import re
 sys.path.append('./lib')
-from scanner_class_mp import Scanner
+# from scanner_class_mp import Scanner
+from scanner_class_basic import Scanner
 from plugin2sql import loadPlugins
 # ----------------------------------------------------------------------------------------------------
 # 
@@ -21,46 +22,48 @@ def show():
    ▒ ░▒░ ░  ▒   ▒▒ ░░  ░      ░░  ░      ░ ░ ░  ░  ░▒ ░ ▒░
    ░  ░░ ░  ░   ▒   ░      ░   ░      ░      ░     ░░   ░ 
    ░  ░  ░      ░  ░       ░          ░      ░  ░   ░     
-  
 	'''
 
 def usage():
-	print "Usage: hammer.py [options] [-u url]\n"
+	print "Usage: hammer.py [Options] [Targets]\n"
 	# print "\t-u --url: url address, like http://www.leesec.com/"
-	print "[options]"
+	print "[Options]"
 	print "\t-s --server: your hammer web server host address, like www.hammer.org"
 	print "\t-t --token: token, find it in http://www.hammer.org/user.php"
 	print "\t-U --update-plugins: update new added plugins to web"
 	print "\t-h: help"
+	print "[Targets]"
+	print "\t-T --target: target, can be an ip address, an url or an iprange"
 	print "[Examples]"
-	print "\thammer.py -s www.hammer.org -t 3r75... -u http://www.leesec.com/"
 	print "\thammer.py -s www.hammer.org -t 3r75... -U plugins/Info_Collect/"
+	print "\thammer.py -s www.hammer.org -t 3r75... -T http://www.leesec.com/"
+	print "\thammer.py -s www.hammer.org -t 3r75... -T 192.168.1.1/24"
 	# print ''
 	sys.exit(0)
 
 def main():
 	show()
 	try :
-		opts, args = getopt.getopt(sys.argv[1:], "hs:t:u:U:",['help','server=','token=','url=','update-plugins='])
-	except getopt.GetoptError:
+		opts, args = getopt.getopt(sys.argv[1:], "hs:t:UU:T:",['help','server=','token=','update-plugins','update-plugins=','target='])
+	except getopt.GetoptError,e:
+		print 'getopt.GetoptError',e
 		usage()
 
 	_url = None
 	_server = None
 	_token = None
 
+
 	for opt, arg in opts:
 		if opt in ('-h','--help'):
 			usage()
-		elif  opt in ('-u','--url'):
-			_url = arg
-			if _url[-1] != '/':
-				_url += '/'
 		elif opt in ('-s','--server'):
 			_server = arg
+		elif opt in ('-T','--target'):
+			_target = arg
 		elif opt in ('-t','--token'):
 			_token = arg
-		elif opt in('-U','--update-plugins'):
+		elif opt in ('-U','--update-plugins'):
 			if arg:
 				_pluginpath = arg
 			else:
@@ -68,16 +71,21 @@ def main():
 		else:
 			pass
 
-	if _server and _token and  _pluginpath:
-		# print '_pluginpath=',_pluginpath
-		# print '_server=',_server
-		# print '_token=',_token
-		loadPlugins(_pluginpath,_server,_token)
+	if _server and _token:
+		if '_pluginpath' in dir():
+			# print '_pluginpath=',_pluginpath
+			# print '_server=',_server
+			# print '_token=',_token
+			loadPlugins(_pluginpath,_server,_token)
 
-	elif _url and _server and _token:
-		sn = Scanner(_url,_server,_token)
-		sn.startScan()
+		elif '_target' in dir():
+			sn = Scanner(_server,_token,_target)
+			sn.initInfo()
+			sn.infoGather()
+			sn.scan()
 
+		else:
+			usage()
 	else:
 		usage()
 # ----------------------------------------------------------------------------------------------------

@@ -108,6 +108,7 @@ EOF;
 
 				<div class="col-xs-2 col-sm-2 col-md-2" id="myScrollspy">
 					<ul class="nav nav-tabs nav-stacked" id="myNav">
+						<li><a href="#1.3">1.3</a></li>
 						<li><a href="#1.2">1.2</a></li>
 						<li><a href="#1.1">1.1</a></li>
 						<li><a href="#1.0">1.0</a></li>
@@ -115,6 +116,13 @@ EOF;
 				</div>
 
 				<div class="col-xs-10 col-sm-10 col-md-10" role="main" class="main">
+					<h2 id="1.3">1.3</h2>
+					<h3>1.3.0.141109_Beta</h3>
+						<p><strong>改进：</strong></p>
+						<p>a).对框架的调整，明确分为信息收集模块和漏洞扫描模块，信息收集模块支持动态添加</p>
+						<p>b).添加ip段扫描</p>
+						<p>c).一些关键插件性能优化</p>
+					<hr>
 					<h2 id="1.2">1.2</h2>
 					<h3>1.2.2.141101_Beta</h3>
 						<p><strong>改进：</strong></p>

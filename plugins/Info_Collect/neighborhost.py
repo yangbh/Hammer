@@ -9,7 +9,10 @@ info = {
 	'NAME':'Neighborhood-Host Scanning',
 	'AUTHOR':'yangbh',
 	'TIME':'20140709',
-	'WEB':''
+	'WEB':'',
+	'DESCRIPTION':'旁站扫描',
+	'VERSION':'1.0',
+	'RUNLEVEL':0
 }
 
 def Audit(services):
@@ -20,16 +23,14 @@ def Audit(services):
 		neighborhosts = []
 		nbh = NeighborHost(services['ip'])
 		neighborhosts = nbh.getFromChinaZ()
-		#print 'neighborhosts=\t',neighborhosts
+		print 'neighborhosts=\t',neighborhosts
 		if neighborhosts and len(neighborhosts) != 0:
 			services['neighborhosts'] = neighborhosts
 			ret = neighborhosts
 			retinfo = {'level':'info','content':ret}
-			if services.has_key('noSubprocess') and services['noSubprocess'] == True:
-				pass
-			else:
-				security_note(str(services['ports']))
-
+			for each_neighbor in neighborhosts:
+				security_note(each_neighbor)
+				add_scan_task(each_neighbor)
 	# else:
 	# 	output += 'plugin does not run' + os.linesep
 
@@ -40,6 +41,6 @@ def Audit(services):
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	# www.leesec.com
-	services = {'ip':'106.187.37.47'}
+	services = {'ip':'61.164.42.190'}
 	print Audit(services)
 	pprint(services)

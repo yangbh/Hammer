@@ -14,13 +14,10 @@ class PluginLoader(object):
 	def __init__(self, pluginpath=None, services = None,outputpath=''):
 		super(PluginLoader, self).__init__()
 		if pluginpath == None:
-			pluginpath = os.path.dirname(__file__)[:-3] +'plugins'
-		if pluginpath[-1] =='/':
-			pluginpath = pluginpath[:-1]
+			pluginpath = BASEDIR +'/plugins'
 		self.path = pluginpath
-		#print self.path
-		if self.path not in sys.path:
-			sys.path.append(sys.path)
+		# print 'self.path=',self.path
+
 		self.services = services
 
 		self.plugindict = {}
@@ -28,9 +25,10 @@ class PluginLoader(object):
 		self.output = ''
 
 		# output file
-		if outputpath == None or outputpath == '':
-			self.outputfile = ''
-		elif services.has_key('ip'):
+		outputpath = outputpath.replace('://','_')
+		outputpath = outputpath.replace('/','')
+
+		if services.has_key('ip'):
 			self.outputfile = BASEDIR + '/output/' + outputpath + '/' + services['ip']
 		elif services.has_key('url'):
 			threadName = services['url']
@@ -38,6 +36,9 @@ class PluginLoader(object):
 			tmpurl = tmpurl.replace(':','_')
 			tmpurl = tmpurl.replace('/','')
 			self.outputfile = BASEDIR + '/output/' + outputpath + '/' + tmpurl
+		elif services.has_key('host'):
+			self.outputfile = BASEDIR + '/output/' + outputpath + '/' + services['host']
+
 		else:
 			self.outputfile = ''
 
@@ -61,20 +62,17 @@ class PluginLoader(object):
 				tmp += '*'*25 + '     scan info     '+ '*'*25 + os.linesep
 				tmp += '# this is an ip type scan'  + os.linesep
 				tmp += 'ip:\t' + self.services['ip'] + os.linesep
-				if self.services.has_key('issubdomain'):
-					tmp +='issubdomain:\t' + 'True' + os.linesep
-				else:
-					tmp +='issubdomain:\t' + 'False' + os.linesep
 
 			elif self.services.has_key('url'):
 				tmp += '*'*25 + '     scan info     '+ '*'*25 + os.linesep
 				tmp += '# this is a http type scan' + os.linesep
 				tmp += 'url:\t' + self.services['url'] + os.linesep
-				if self.services.has_key('isneighborhost'):
-					tmp +='isneighborhost:\t' + 'True' + os.linesep
-				else:
-					tmp +='isneighborhost:\t' + 'False' + os.linesep
 			
+			elif self.services.has_key('host'):
+				tmp += '*'*25 + '     scan info     '+ '*'*25 + os.linesep
+				tmp += '# this is an host type scan'  + os.linesep
+				tmp += 'host:\t' + self.services['host'] + os.linesep
+
 			tmp += os.linesep
 			tmp += '*'*25 + '   scan services   '+ '*'*25 + os.linesep
 
@@ -131,11 +129,27 @@ class PluginLoader(object):
 		modulepath = modulepath.replace('.','')
 		modulepath = modulepath.replace('/','.')
 
+
 		importcmd = 'from ' + modulepath + ' import info'
+		# importcmd += '\nprint info'
+		# exec_code = compile(importcmd,'','exec')
+		# importcmd = 'from temp.explugin import Audit'
+		# print 'importcmd=',importcmd
+		# print sys.path
 		exec(importcmd)
 
 		# print info
 		return info
+		# info = {
+		# 	'NAME':'Port and Service Discover',
+		# 	'AUTHOR':'yangbh',
+		# 	'TIME':'20140707',
+		# 	'WEB':'',
+		# 	'DESCRIPTION':'端口扫描',
+		# 	'VERSION':'1.0',
+		# 	'RUNLEVEL':0
+		# }
+		# return info
 
 	def loadPlugins(self, path=None):
 		self._initSubProcess()
@@ -147,7 +161,7 @@ class PluginLoader(object):
 		for root, dis, files in os.walk(path):  
 			ret[root] =[]
 			for eachfile in files:
-				if eachfile != '__init__.py' and '.pyc' not in eachfile and eachfile != 'dummy.py':
+				if eachfile != '__init__.py' and '.pyc' not in eachfile and eachfile != 'dummy.py' and eachfile.endswith('.py'):
 					ret[root].append(eachfile)
 
 		self.plugindict = ret
@@ -172,7 +186,7 @@ class PluginLoader(object):
 			if services == None:
 				services = dict(self.services)
 
-			modulepath = pluginfilepath.replace(self.path+'/','')
+			modulepath = pluginfilepath.replace(BASEDIR+'/plugins/','')
 			modulepath = modulepath.replace('.py','')
 			modulepath = modulepath.replace('.','')
 			modulepath = modulepath.replace('/','.')
@@ -186,6 +200,7 @@ class PluginLoader(object):
 			#importcmd += 'from dummy import *' + os.linesep
 			importcmd += 'from ' + modulepath + ' import Audit,info'
 
+			# print 'importcmd=',importcmd
 			exec(importcmd)
 
 			# print 'in running plugin'
@@ -219,7 +234,8 @@ class PluginLoader(object):
 			self._saveRunningInfo(self.output+os.linesep)
 			# clear output
 			self.output = ''
-		except Exception,e:
+		except IndexError,e:
+		# except Exception,e:
 			print 'Exception',e
 
 		# fp = open(pluginfilepath)
@@ -258,8 +274,11 @@ class PluginLoader(object):
 
 		self._saveRunningInfo(os.linesep+'Step 1. Running Auxiliary Plugins'+os.linesep*2)
 		# step1: run auxiliary plugins
-		for eachfile in self.plugindict[auxpath]:
-			self.runEachPlugin(auxpath+'/'+eachfile)
+		if self.services.has_key('alreadyrun') and self.services['alreadyrun'] == True:
+			pass
+		else:
+			for eachfile in self.plugindict[auxpath]:
+				self.runEachPlugin(auxpath+'/'+eachfile)
 
 		self._saveRunningInfo(os.linesep+'Step 2. Running Other Plugins'+os.linesep*2)
 		# step2: run other plugins

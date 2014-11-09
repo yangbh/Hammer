@@ -2,6 +2,7 @@
 #coding:utf-8
 
 import os
+import urllib2
 import socket
 from dummy import *
 
@@ -9,8 +10,48 @@ info = {
 	'NAME':'Sub-Domain Scanning',
 	'AUTHOR':'yangbh',
 	'TIME':'20140709',
-	'WEB':''
+	'WEB':'',
+	'DESCRIPTION':'子域名扫描',
+	'VERSION':'1.0',
+	'RUNLEVEL':0
 }
+
+def generateUrl(hosts=None):
+	''''''
+	# url redict  hasn't been considered
+	urls = []
+	tmpurls = []
+	if hosts != None:
+		for eachhost in hosts:
+			url = 'http://' + eachhost
+			tmpurls.append(url)
+			url = 'https://' + eachhost
+			tmpurls.append(url)
+	print 'tmpurls:\t',tmpurls
+
+	for url in tmpurls:
+		try:
+			print 'url=',url
+			respone = urllib2.urlopen(url,timeout=10)
+			redirected = respone.geturl()
+			if redirected == url:
+				urls.append(url)
+			continue
+		except urllib2.URLError,e:
+			#print 'urllib2.URLError',e,url
+			pass
+		except urllib2.HTTPError,e:
+			#print 'urllib2.HTTPError',e,url
+			pass
+		except urllib2.socket.timeout,e:
+			#print 'urllib2.socket.timeout',e,url
+			pass
+		except urllib2.socket.error,e:
+			#print 'urllib2.socket.error',e,url
+			pass
+	print 'urls:\t',urls
+	
+	return urls
 
 def Audit(services):
 	retinfo = {}
@@ -68,14 +109,16 @@ def Audit(services):
 
 		ret = subdomains
 		retinfo = {'level':'info','content':ret}
-		if services.has_key('noSubprocess') and services['noSubprocess'] == True:
-			pass
-		else:
-			security_note(str(services['ports']))
-	
+		security_note(str(subdomains))
+
 		if services['host'] not in subdomains:
 			subdomains.append(services['host'])
 		services['subdomains'] = subdomains
+
+		# add sub scan task
+		urls = generateUrl(subdomains)
+		for url in urls:
+			add_scan_task(url)
 
 	# else:
 	# 	output += 'plugin does not run' + os.linesep

@@ -35,7 +35,7 @@ def Audit(services):
 							if res and res.find('\\"><ScRiPt>alert(/xss test/)</ScRiPt>') != -1:
 								retinfo = {'level':'medium','content':url}
 								output += 'Vula:\t' + url
-								security_warming(url)
+								security_warning(url)
 
 			except:
 				pass

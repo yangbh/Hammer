@@ -10,7 +10,10 @@ info = {
 	'NAME':'Web Application Recognition',
 	'AUTHOR':'yangbh',
 	'TIME':'20140707',
-	'WEB':''
+	'WEB':'',
+	'DESCRIPTION':'CMS识别',
+	'VERSION':'1.0',
+	'RUNLEVEL':1
 }
 
 def Audit(services):

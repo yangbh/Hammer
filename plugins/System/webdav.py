@@ -34,13 +34,13 @@ def Audit(services):
 			if respone.status_code == 207:
 				retinfo = {'level':'medium','content':url}
 				output += 'WebDAV service is open:\t' + url
-				security_warming(output)
+				security_warning(output)
 				
 				return (retinfo,output)
 			elif respone.status_code == 401:
 				retinfo = {'level':'low','content':url}
 				output += 'WebDAV service is open(need password):\t' + url
-				security_warming(output)
+				security_warning(output)
 
 				return (retinfo,output)
 				crackflag = True

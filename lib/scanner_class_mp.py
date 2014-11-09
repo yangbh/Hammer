@@ -274,15 +274,14 @@ class Scanner(object):
 				newpls.append(res)
 			self.pls = newpls
 
-			self.setResult(urls=self.urls,pls=newpls)
-			#self.saveResultToFile(pls)
+			self._setResult(urls=self.urls,pls=newpls)
+			#self._saveResultToFile(pls)
 			self._saveResultToWeb()
 
 		except Exception,e:
 			print 'Exception',e
 
-
-	def setResult(self,urls=None,pls=None):
+	def _setResult(self,urls=None,pls=None):
 		''' '''
 		urls = self.urls if urls==None else urls
 		pls = self.pls if pls==None else pls
@@ -359,8 +358,7 @@ class Scanner(object):
 			pprint(retinfo)
 			self.web_interface.task_end(ipurl,retinfo)
 
-
-	def saveResultToFile(self,pls,outputpath=None):
+	def _saveResultToFile(self,pls,outputpath=None):
 		''' '''
 		print '>>>saving scan result to file'
 		if outputpath == None:

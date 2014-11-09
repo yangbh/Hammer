@@ -9,7 +9,10 @@ info = {
 	'NAME':'Robots.txt Sensitive Information',
 	'AUTHOR':'yangbh',
 	'TIME':'20140707',
-	'WEB':''
+	'WEB':'',
+	'DESCRIPTION':'robots.txt文件扫描',
+	'VERSION':'1.0',
+	'RUNLEVEL':2
 }
 
 def Audit(services):

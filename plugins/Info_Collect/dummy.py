@@ -22,7 +22,7 @@ from pprint import pprint
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # very important
 # here it is common, not lib.common, because of python import strategies
-from common import genFilename,security_note,security_info,security_warning,security_hole
+from common import genFilename,security_note,security_info,security_warning,security_hole,add_scan_task
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 from lib.nmap_class import NmapScanner

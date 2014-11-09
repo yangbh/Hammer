@@ -2,7 +2,6 @@
 #coding:utf-8
 
 import time
-import sys
 import re
 import requests
 import futures
@@ -10,10 +9,10 @@ from dummy import *
 
 info = {
 	'NAME':'Tomcat Weak Password',
-	'AUTHOR':'tank,yangbh',
+	'AUTHOR':'yangbh,tank',
 	'TIME':'20141102',
 	'WEB':'http://zone.wooyun.org/content/15989',
-	'DeSCRIPTION':'Tomcat 暴力破解'
+	'DESCRIPTION':'Tomcat 暴力破解'
 }
 # ----------------------------------------------------------------------------------------------------
 #

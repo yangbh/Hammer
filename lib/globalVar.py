@@ -3,6 +3,17 @@
 
 import multiprocessing
 
+manager = multiprocessing.Manager()
+
+#	targets
+target_lock = multiprocessing.Lock()
+# done_targets = []
+# undone_targets =[]
+done_targets = manager.list()
+undone_targets = manager.list()
+willdone_targets = manager.list()
+
+
 #	main scan task
 
 # scan_task_dict just like

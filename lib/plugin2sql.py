@@ -128,7 +128,7 @@ def loadPlugins(path=None,server='localhost',token=''):
 		for root, dis, files in os.walk(path):  
 			ret[root] =[]
 			for eachfile in files:
-				if eachfile != '__init__.py' and '.pyc' not in eachfile and eachfile != 'dummy.py':
+				if eachfile != '__init__.py' and '.pyc' not in eachfile and eachfile != 'dummy.py' and eachfile.endswith('.py'):
 					ret[root].append(root + '/' + eachfile)
 					# write2sql(root + '/' + eachfile)
 					write2web(root + '/' + eachfile,server,token)

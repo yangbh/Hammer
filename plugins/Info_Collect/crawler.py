@@ -3,11 +3,16 @@
 
 from dummy import *
 
+
+
 info = {
 	'NAME':'Crawl Href Links',
 	'AUTHOR':'yangbh',
 	'TIME':'20140725',
-	'WEB':''
+	'WEB':'',
+	'DESCRIPTION':'web爬虫',
+	'VERSION':'1.0',
+	'RUNLEVEL':1
 }
 
 def Audit(services):

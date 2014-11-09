@@ -16,17 +16,19 @@ Basic usage
 	 ░  ░░ ░  ░   ▒   ░      ░   ░      ░      ░     ░░   ░ 
 	 ░  ░  ░      ░  ░       ░          ░      ░  ░   ░     
 	
-	
-Usage: hammer.py [options] [-u url]
+Usage: hammer.py [Options] [Targets]
 
-[options]
+[Options]
 	-s --server: your hammer web server host address, like www.hammer.org
 	-t --token: token, find it in http://www.hammer.org/user.php
 	-U --update-plugins: update new added plugins to web
 	-h: help
+[Targets]
+	-T --target: target, can be an ip address, an url or an iprange
 [Examples]
-	hammer.py -s www.hammer.org -t 3r75... -u http://www.leesec.com/
 	hammer.py -s www.hammer.org -t 3r75... -U plugins/Info_Collect/
+	hammer.py -s www.hammer.org -t 3r75... -T http://www.leesec.com
+	hammer.py -s www.hammer.org -t 3r75... -T 192.168.1.0/24
 ```
 
 Install
@@ -43,7 +45,8 @@ Install
 	python hammer.py -s www.hammer.org -t yourtokenhere -U
 	2) 以后若添加插件，可以-U指定单独.py插件，也可以指定目录
 	python hammer.py -s www.hammer.org -t yourtokenhere -U yourpluginpath
-4. 运行python hammer.py 进行扫描
+4. 运行hammer.py进行扫描
+	python hammer.py -s www.hammer.org -t yourtokenhere -T yourTargethere
 ```
  Require
 ----------------------------------- 
@@ -63,6 +66,7 @@ argparse 	# for input handling
 sqlite3		# for local database
 MySQLdb
 beautifulsoup4	# for crawler
+ipaddress	# for handling input ip
 ＃ used in plugins
 python-nmap	# for nmap scanning
 httplib		# for http request

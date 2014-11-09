@@ -5,6 +5,8 @@ import os
 import urllib2
 import socket
 import threading
+import futures
+import requests
 
 from urlparse import urlparse
 from dummy import *
@@ -89,14 +91,13 @@ def httpcrack(url,lock):
 	flg = False
 
 	for i in range(3):
+		# 改用requests库
 		try:
-			ul = urllib2.urlopen(url)
-			httpcode = ul.getcode()
-			if httpcode == 200:
-			 	httpcont = ul.read()
-			 	# print url
-			 	# print httpcont
-			 	# print httpcont.find('Frederico Caldeira Knabben')
+			rq = requests.get(url,allow_redirects=False)
+			print url,rq.status_code
+			if rq.status_code in [200,401,403]:
+			 	httpcont = rq.text
+			 	code = rq.status_code
 			 	flg = True
 				if httpcont.find('<title>phpinfo()</title>') != -1:
 					printinfo =  '<phpinfo>' + url + os.linesep
@@ -104,24 +105,49 @@ def httpcrack(url,lock):
 					printinfo =  '<readme.txt>' + url + os.linesep
 				elif url.find('fckeditor')  != -1 and httpcont.find('Frederico Caldeira Knabben') != -1:
 					printinfo =  '<fckeditor>' + url + os.linesep
+			 	elif url.find('/.svn') != -1:
+					printinfo =  '<svn>' + url + '\t code:' + str(code) + os.linesep	
 			 	else:
-			 		flg = False
+			 		printinfo = url + '\t code:' + str(code) + os.linesep
+
 			break
-		except socket.timeout,e:
-			continue
+		# 一些并发导致的异常
 		except Exception,e:
-			if type(e) == urllib2.HTTPError:
-				if e.getcode() in [401,403]:
-					flg = True
-					if url.find('/.svn') != -1:
-						printinfo =  '<svn>' + url + '\t code:' + str(e.getcode()) + os.linesep
-					else:
-						printinfo = url + '\t code:' + str(e.getcode()) + os.linesep
-				else:
-					printinfo = url + '\t code:' + str(e.getcode()) + os.linesep
-			else:
-				printinfo = url + '\tException' + str(e) + os.linesep
-			break
+			print 'Exception',url,e
+
+		# try:
+		# 	ul = urllib2.urlopen(url)
+		# 	httpcode = ul.getcode()
+		# 	if httpcode == 200:
+		# 	 	httpcont = ul.read()
+		# 	 	# print url
+		# 	 	# print httpcont
+		# 	 	# print httpcont.find('Frederico Caldeira Knabben')
+		# 	 	flg = True
+		# 		if httpcont.find('<title>phpinfo()</title>') != -1:
+		# 			printinfo =  '<phpinfo>' + url + os.linesep
+		# 		elif url.endswith('readme.txt'):
+		# 			printinfo =  '<readme.txt>' + url + os.linesep
+		# 		elif url.find('fckeditor')  != -1 and httpcont.find('Frederico Caldeira Knabben') != -1:
+		# 			printinfo =  '<fckeditor>' + url + os.linesep
+		# 	 	else:
+		# 	 		flg = False
+		# 	break
+		# except socket.timeout,e:
+		# 	continue
+		# except Exception,e:
+		# 	if type(e) == urllib2.HTTPError:
+		# 		if e.getcode() in [401,403]:
+		# 			flg = True
+		# 			if url.find('/.svn') != -1:
+		# 				printinfo =  '<svn>' + url + '\t code:' + str(e.getcode()) + os.linesep
+		# 			else:
+		# 				printinfo = url + '\t code:' + str(e.getcode()) + os.linesep
+		# 		else:
+		# 			printinfo = url + '\t code:' + str(e.getcode()) + os.linesep
+		# 	else:
+		# 		printinfo = url + '\tException' + str(e) + os.linesep
+		# 	break
 
 	lock.acquire()
 	if printinfo:
@@ -139,37 +165,41 @@ def Audit(services):
 		output += 'plugin run' + os.linesep
 		urls = generateUrls(services['url'])
 		#print 'urls=\t'
-		#pprint(urls)
+		pprint(urls)
 
 		#  threads
 		lock = threading.Lock()
 		threads = []
 		maxthreads = 20
 
-		for url in urls:
-			th = threading.Thread(target=httpcrack,args=(url,lock))
-			threads.append(th)
-		i = 0
-		while i<len(threads):
-			if i+maxthreads >len(threads):
-				numthreads = len(threads) - i
-			else:
-				numthreads = maxthreads
-			print 'threads:',i,' - ', i + numthreads
+		# for url in urls:
+		# 	th = threading.Thread(target=httpcrack,args=(url,lock))
+		# 	threads.append(th)
+		# i = 0
+		# while i<len(threads):
+		# 	if i+maxthreads >len(threads):
+		# 		numthreads = len(threads) - i
+		# 	else:
+		# 		numthreads = maxthreads
+		# 	print 'threads:',i,' - ', i + numthreads
 
-			# start threads
-			for j in range(numthreads):
-				threads[i+j].start()
+		# 	# start threads
+		# 	for j in range(numthreads):
+		# 		threads[i+j].start()
 
-			# wait for threads
-			for j in range(numthreads):
-				threads[i+j].join()
+		# 	# wait for threads
+		# 	for j in range(numthreads):
+		# 		threads[i+j].join()
 
-			i += maxthreads
+		# 	i += maxthreads
+		# 改用futures模块
+		with futures.ThreadPoolExecutor(max_workers=maxthreads) as executor:      #默认10线程
+			future_to_url = dict((executor.submit(httpcrack, url, lock), url)
+						 for url in urls)
 	
 	if ret != '':
 		retinfo = {'level':'low','content':ret}
-		security_warming(str(ret))
+		security_warning(str(ret))
 
 	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------

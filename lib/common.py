@@ -17,6 +17,11 @@ def genFilename(url):
 	name = ulp.scheme + '_' + ulp.netloc.replace(':','_')
 	return name
 
+def genFileName_v2(target):
+	target = target.replace('://','_')
+	target = target.replace('/','')
+	return target
+
 def addslashes(s):
     d = {'"':'\\"', "'":"\\'", "\\":"\\\\"}
     return ''.join(d.get(c, c) for c in s)
@@ -82,82 +87,106 @@ def vuln_add(scanid=None,subtarget=None,pluginname=None,vulnlevel=None,vulninfo=
 		print 'requests.HTTPError', e
 
 def security_note(vulnInfo):
-	# print globals()
-	print 'in security_note'
-	print 'plugin pid=\t',os.getpid()
-	print 'id(globalVar)=\t',id(globalVar)
-	print 'globalVar.scan_task_dict=\t',globalVar.scan_task_dict
-	scaninfo = getScanInfo()
-	# print 'scaninfo:'
-	# pprint(scaninfo)
-	scanID = scaninfo['scanid']
-	server = scaninfo['server']
-	token = scaninfo['token']
+	try:
+		# print globals()
+		# print 'in security_note'
+		# print 'plugin pid=\t',os.getpid()
+		# print 'id(globalVar)=\t',id(globalVar)
+		# print 'globalVar.scan_task_dict=\t',globalVar.scan_task_dict
+		scaninfo = getScanInfo()
+		# print 'scaninfo:'
+		# pprint(scaninfo)
+		scanID = scaninfo['scanid']
+		server = scaninfo['server']
+		token = scaninfo['token']
 
-	subproinfo = getSubProInfo()
-	# print 'subproinfo:'
-	# pprint(subproinfo)
-	subTarget = subproinfo['target']
+		subproinfo = getSubProInfo()
+		# print 'subproinfo:'
+		# pprint(subproinfo)
+		subTarget = subproinfo['target']
 
-	plugininfo = getPluginInfo()
-	# print 'plugininfo:'
-	# pprint(plugininfo)
-	pluginName = plugininfo['pluginname']
-	print scanID,server,token,subTarget,pluginName,vulnInfo
-	vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='info',vulninfo=vulnInfo,server=server,token=token)
-	return
+		plugininfo = getPluginInfo()
+		# print 'plugininfo:'
+		# pprint(plugininfo)
+		pluginName = plugininfo['pluginname']
+		print scanID,server,token,subTarget,pluginName,vulnInfo
+		vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='info',vulninfo=vulnInfo,server=server,token=token)
+		return
+	except KeyError,e:
+		print 'KeyError',e
 
 def security_info(vulnInfo):
-	print 'in security_info'
-	scaninfo = getScanInfo()
-	# print 'scaninfo:'
-	# pprint(scaninfo)
-	scanID = scaninfo['scanid']
-	server = scaninfo['server']
-	token = scaninfo['token']
+	try:
+		# print 'in security_info'
+		scaninfo = getScanInfo()
+		# print 'scaninfo:'
+		# pprint(scaninfo)
+		scanID = scaninfo['scanid']
+		server = scaninfo['server']
+		token = scaninfo['token']
 
-	subproinfo = getSubProInfo()
-	# print 'subproinfo:'
-	# pprint(subproinfo)
-	subTarget = subproinfo['target']
+		subproinfo = getSubProInfo()
+		# print 'subproinfo:'
+		# pprint(subproinfo)
+		subTarget = subproinfo['target']
 
-	plugininfo = getPluginInfo()
-	# print 'plugininfo:'
-	# pprint(plugininfo)
-	pluginName = plugininfo['pluginname']
-	print scanID,server,token,subTarget,pluginName,vulnInfo
-	vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='low',vulninfo=vulnInfo,server=server,token=token)
-	return
-
+		plugininfo = getPluginInfo()
+		# print 'plugininfo:'
+		# pprint(plugininfo)
+		pluginName = plugininfo['pluginname']
+		print scanID,server,token,subTarget,pluginName,vulnInfo
+		vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='low',vulninfo=vulnInfo,server=server,token=token)
+		return
+	except KeyError,e:
+		print 'KeyError',e
 def security_warning(vulnInfo):
-	scaninfo = getScanInfo()
-	scanID = scaninfo['scanid']
-	server = scaninfo['server']
-	token = scaninfo['token']
+	try:
+		scaninfo = getScanInfo()
+		scanID = scaninfo['scanid']
+		server = scaninfo['server']
+		token = scaninfo['token']
 
-	subproinfo = getSubProInfo()
-	subTarget = subproinfo['target']
+		subproinfo = getSubProInfo()
+		subTarget = subproinfo['target']
 
-	plugininfo = getPluginInfo()
-	pluginName = plugininfo['pluginname']
-	print scanID,server,token,subTarget,pluginName,vulnInfo
-	vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='medium',vulninfo=vulnInfo,server=server,token=token)
-	return
+		plugininfo = getPluginInfo()
+		pluginName = plugininfo['pluginname']
+		print scanID,server,token,subTarget,pluginName,vulnInfo
+		vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='medium',vulninfo=vulnInfo,server=server,token=token)
+		return
+	except KeyError,e:
+		print 'KeyError',e
 
 def security_hole(vulnInfo):
-	scaninfo = getScanInfo()
-	scanID = scaninfo['scanid']
-	server = scaninfo['server']
-	token = scaninfo['token']
+	try:
+		scaninfo = getScanInfo()
+		scanID = scaninfo['scanid']
+		server = scaninfo['server']
+		token = scaninfo['token']
 
-	subproinfo = getSubProInfo()
-	subTarget = subproinfo['target']
+		subproinfo = getSubProInfo()
+		subTarget = subproinfo['target']
 
-	plugininfo = getPluginInfo()
-	pluginName = plugininfo['pluginname']
-	print scanID,server,token,subTarget,pluginName,vulnInfo
-	vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='high',vulninfo=vulnInfo,server=server,token=token)
-	return
+		plugininfo = getPluginInfo()
+		pluginName = plugininfo['pluginname']
+		print scanID,server,token,subTarget,pluginName,vulnInfo
+		vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='high',vulninfo=vulnInfo,server=server,token=token)
+		return
+	except KeyError,e:
+		print 'KeyError',e
+def add_scan_task(target):
+	''' 添加一个扫描任务'''
+	# print globals()
+	print 'in add_scan_task'
+	print 'plugin pid=\t',os.getpid()
+	print 'id(globalVar.undone_targets)=\t',id(globalVar.undone_targets)
+	print 'globalVar.undone_targets=',globalVar.undone_targets
+	# globalVar.target_lock.acquire()
+	if target not in globalVar.done_targets and target not in globalVar.undone_targets:
+		globalVar.undone_targets.append(target)
+	# globalVar.target_lock.release()
+	print 'globalVar.undone_targets=',globalVar.undone_targets
+
 # ----------------------------------------------------------------------------------------------------
 # 	
 # ----------------------------------------------------------------------------------------------------

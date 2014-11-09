@@ -73,7 +73,7 @@ if (!already_login()) {
 							</div>
 							<div class="panel-body">
 								<p>Run Hammer like this:</p>
-								<code>python hammer.py --server www.hammer.org --token <?php $a=get_userinfo();echo $a['Token'];?> -u http://www.leesec.com</code>
+								<code>python hammer.py -s www.hammer.org -t <?php $a=get_userinfo();echo $a['Token'];?> -T http://www.leesec.com</code>
 							</div>
 						</div>
 					</div>

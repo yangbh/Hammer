@@ -5,6 +5,8 @@ import os
 import urllib2
 import socket
 import threading
+import futures
+import requests
 
 from urlparse import urlparse
 from dummy import *
@@ -17,7 +19,6 @@ info = {
 	'DESCRIPTION':'Tries to find sensitive backup files.'
 }
 
-bigLock = threading.Lock()
 ret = ''
 # ----------------------------------------------------------------------------------------------------
 #
@@ -96,22 +97,32 @@ def httpcrack(url,lock):
 	flg = False
 
 	for i in range(3):
+		# 改用requests库
 		try:
-			 httpcode = urllib2.urlopen(url).getcode()
-			 if httpcode == 200:
-			 	printinfo = url + '\t code:' + str(httpcode) + os.linesep
-			 	flg = True
-			 break
-		except socket.timeout,e:
-				continue
-		except Exception,e:
-			if type(e) == urllib2.HTTPError:
-				if e.getcode() in [401,403]:
-					flg = True
-				printinfo = url + '\t code:' + str(e.getcode()) + os.linesep
-			else:
-				printinfo = url + '\tException' + str(e) + os.linesep
+			rq = requests.get(url,allow_redirects=False)
+			if rq.status_code in [200,401,403]:
+				printinfo = url + '\t code:' + str(rq.status_code) + os.linesep
+				flg = True
 			break
+		# 一些并发导致的异常
+		except Exception,e:
+			print 'Exception',e
+		# try:
+		# 	 httpcode = urllib2.urlopen(url).getcode()
+		# 	 if httpcode == 200:
+		# 		printinfo = url + '\t code:' + str(httpcode) + os.linesep
+		# 		flg = True
+		# 	 break
+		# except socket.timeout,e:
+		# 		continue
+		# except Exception,e:
+		# 	if type(e) == urllib2.HTTPError:
+		# 		if e.getcode() in [401,403]:
+		# 			flg = True
+		# 		printinfo = url + '\t code:' + str(e.getcode()) + os.linesep
+		# 	else:
+		# 		printinfo = url + '\tException' + str(e) + os.linesep
+		# 	break
 
 	lock.acquire()
 	if printinfo:
@@ -123,11 +134,10 @@ def httpcrack(url,lock):
 	return(flg,printinfo)
 
 def Audit(services):
-	global bigLock,ret
+	global ret
 	retinfo = {}
 	output = ''
 	#print'ok'
-	bigLock.acquire()
 	if services.has_key('url'):
 		#print'ok'
 		output += 'plugin run' + os.linesep
@@ -140,41 +150,45 @@ def Audit(services):
 		threads = []
 		maxthreads = 20
 
-		for url in urls:
-			th = threading.Thread(target=httpcrack,args=(url,lock))
-			threads.append(th)
-		i = 0
+		# for url in urls:
+		# 	th = threading.Thread(target=httpcrack,args=(url,lock))
+		# 	threads.append(th)
+		# i = 0
 		
-		while i<len(threads):
-			if i+maxthreads >len(threads):
-				numthreads = len(threads) - i
-			else:
-				numthreads = maxthreads
-			print 'threads:',i,' - ', i + numthreads
+		# while i<len(threads):
+		# 	if i+maxthreads >len(threads):
+		# 		numthreads = len(threads) - i
+		# 	else:
+		# 		numthreads = maxthreads
+		# 	print 'threads:',i,' - ', i + numthreads
 
-			# start threads
-			for j in range(numthreads):
-				threads[i+j].start()
+		# 	# start threads
+		# 	for j in range(numthreads):
+		# 		threads[i+j].start()
 
-			# wait for threads
-			for j in range(numthreads):
-				threads[i+j].join()
+		# 	# wait for threads
+		# 	for j in range(numthreads):
+		# 		threads[i+j].join()
 
-			i += maxthreads
-		
+		# 	i += maxthreads
+
+		# 改用futures模块
+		with futures.ThreadPoolExecutor(max_workers=maxthreads) as executor:      #默认10线程
+			future_to_url = dict((executor.submit(httpcrack, url, lock), url)
+						 for url in urls)
+
 	if ret != '':
 		retinfo = {'level':'low','content':ret}
-		security_warming(str(ret))
+		security_warning(str(ret))
 		# 
 		ret = ''
-	bigLock.release()
 
 	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	url='http://www.eguan.cn'
+	url='http://www.hengtiansoft.com'
 	if len(sys.argv) ==  2:
 		url = sys.argv[1]
 	services = {'url':url}

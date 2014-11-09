@@ -2,14 +2,63 @@
 #coding:utf-8
 
 import os
+import urllib2
 from dummy import *
 
 info = {
 	'NAME':'Port and Service Discover',
 	'AUTHOR':'yangbh',
 	'TIME':'20140707',
-	'WEB':''
+	'WEB':'',
+	'DESCRIPTION':'端口扫描',
+	'VERSION':'1.0',
+	'RUNLEVEL':0
 }
+
+def generateUrl(ip=None,ports=None):
+	''''''
+	httpports = []
+	for eachport in ports.keys():
+		if ports[eachport]['name'] == 'http':
+			httpports.append(eachport)
+	print 'httpports:\t',httpports
+
+	# url redict  hasn't been considered
+	urls = []
+	tmpurls = []
+
+	if ip != None and httpports != None:
+		for eachport in httpports:
+			url = 'http://' + ip + ':' + str(eachport)
+			tmpurls.append(url)
+			url = 'https://' + ip + ':' + str(eachport)
+			tmpurls.append(url)
+	print 'tmpurls:\t',tmpurls
+
+	for url in tmpurls:
+		try:
+			print 'url=',url
+			respone = urllib2.urlopen(url,timeout=10)
+			redirected = respone.geturl()
+			if redirected == url:
+				urls.append(url)
+			continue
+		except urllib2.URLError,e:
+			#print 'urllib2.URLError',e,url
+			pass
+		except urllib2.HTTPError,e:
+			#print 'urllib2.HTTPError',e,url
+			pass
+		except urllib2.socket.timeout,e:
+			#print 'urllib2.socket.timeout',e,url
+			pass
+		except urllib2.socket.error,e:
+			#print 'urllib2.socket.error',e,url
+			pass
+	print 'urls:\t',urls
+
+	return urls
+
 # print locals()
 #print globals()
 def Audit(services):
@@ -45,6 +94,11 @@ def Audit(services):
 			else:
 				security_note(str(services['ports']))
 
+				# add sub task
+				urls = generateUrl(ip,services['port_detail'])
+				for url in urls:
+					add_scan_task(url)
+
 			#print services
 
 		# except IndexError,e:
@@ -62,6 +116,6 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	services={'ip':'106.185.36.44'}
+	services={'ip':'87.230.29.167'}
 	print Audit(services)
 	pprint(services)
