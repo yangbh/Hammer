@@ -44,7 +44,7 @@ def usage():
 def main():
 	show()
 	try :
-		opts, args = getopt.getopt(sys.argv[1:], "hs:t:UU:T:",['help','server=','token=','update-plugins','update-plugins=','target='])
+		opts, args = getopt.getopt(sys.argv[1:], "hs:t:U:T:",['help','server=','token=','update-plugins=','target='])
 	except getopt.GetoptError,e:
 		print 'getopt.GetoptError',e
 		usage()

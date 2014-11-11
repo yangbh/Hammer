@@ -149,7 +149,7 @@ def check_lfi(action, query, k, v, files, suffix, flags):
 def Audit(services):
 	retinfo = {}
 	output = ''
-	if services.has_key('url'):
+	if services.has_key('url') and False:
 		output += 'plugin run' + os.linesep
 		url = services['url']
 		hrefs = getCrawlerHrefs(url)

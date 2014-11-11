@@ -274,7 +274,9 @@ class Scanner(object):
 						# 	time.sleep(1)
 						# pass
 					except KeyboardInterrupt,e:
+						# proPool.terminate()
 						print "Caught KeyboardInterrupt, terminating workers"
+					proPool.terminate()
 
 					newpls = []
 					for res in results:
@@ -317,13 +319,14 @@ class Scanner(object):
 			try:
 				results = p.get()
 			except KeyboardInterrupt,e:
-				proPool.terminate()
+				# proPool.terminate()
 				print "Caught KeyboardInterrupt, terminating workers"
+			proPool.terminate()
 
-			newpls = []
-			for res in results:
-				newpls.append(res)
-			self.pls = newpls
+			# newpls = []
+			# for res in results:
+			# 	newpls.append(res)
+			# self.pls = newpls
 
 			# self._saveResultToFile()
 			self._saveResultToWeb()

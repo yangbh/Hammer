@@ -27,7 +27,7 @@ def Audit(services):
 					if content.find('c4ca4238a0b923820dcc509a6f75849b1') != -1:
 						retinfo = {'level':'high','content':url}
 						output += 'Vula:\t' + url
-						security_note(url)
+						security_hole(url)
 				except:
 					pass
 	return (retinfo,output)

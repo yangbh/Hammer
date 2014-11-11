@@ -42,11 +42,11 @@ Install
 2. 配置web，修改web目录下config配置文件
 3. 将plugins目录下所有插件内容导入web数据库
 	1)登录web，在user.php中获取token，执行更新插件:
-	python hammer.py -s www.hammer.org -t yourtokenhere -U
+	python hammer.py -s www.hammer.org -t yourtokenhere -U plugins/
 	2) 以后若添加插件，可以-U指定单独.py插件，也可以指定目录
-	python hammer.py -s www.hammer.org -t yourtokenhere -U yourpluginpath
+	python hammer.py -s www.hammer.org -t yourtokenhere -U yourpluginfilepath
 4. 运行hammer.py进行扫描
-	python hammer.py -s www.hammer.org -t yourtokenhere -T yourTargethere
+	python hammer.py -s www.hammer.org -t yourtokenhere -T yourtargethere
 ```
  Require
 ----------------------------------- 

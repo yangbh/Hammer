@@ -4,6 +4,7 @@ import os
 import socket
 import paramiko
 import threading
+import futures
 import sys
 import time
 from dummy import *
@@ -154,28 +155,36 @@ def Audit(services):
 		ip = services['ip']
 		maxthreads = 20
 
-		for eachname in pwddicts.keys():
-			for eachpwd in pwddicts[eachname]:
-				th = threading.Thread(target=ssh2,args=(ip,ssh_port,eachname,eachpwd,lock))
-				threads.append(th)
+		# for eachname in pwddicts.keys():
+		# 	for eachpwd in pwddicts[eachname]:
+		# 		th = threading.Thread(target=ssh2,args=(ip,ssh_port,eachname,eachpwd,lock))
+		# 		threads.append(th)
 
-		i = 0
-		while i<len(threads):
-			if i+maxthreads >len(threads):
-				numthreads = len(threads) - i
-			else:
-				numthreads = maxthreads
-			print 'threads:',i,' - ', i + numthreads
+		# i = 0
+		# while i<len(threads):
+		# 	if i+maxthreads >len(threads):
+		# 		numthreads = len(threads) - i
+		# 	else:
+		# 		numthreads = maxthreads
+		# 	print 'threads:',i,' - ', i + numthreads
 
-			# start threads
-			for j in range(numthreads):
-				threads[i+j].start()
+		# 	# start threads
+		# 	for j in range(numthreads):
+		# 		threads[i+j].start()
 
-			# wait for threads
-			for j in range(numthreads):
-				threads[i+j].join()
+		# 	# wait for threads
+		# 	for j in range(numthreads):
+		# 		threads[i+j].join()
 
-			i += maxthreads
+		# 	i += maxthreads
+
+
+		with futures.ThreadPoolExecutor(max_workers=maxthreads) as executor:      #默认10线程
+			for eachname in pwddicts.keys():
+				for eachpwd in pwddicts[eachname]:
+					# print 'starting\t',eachname+':'+eachpwd
+					future = executor.submit(ssh2,ip,ssh_port,eachname,eachpwd,lock)
+
 
 	# else:
 	# 	output += 'plugin does not run' + os.linesep
@@ -189,6 +198,7 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__': 
-	services={'ip':'127.0.0.1','ports':[80,8080],'port_detail':{22:{'name':'ssh'}}, 'neighborhosts': ['eguan.cn']}
+	# services={'ip':'127.0.0.1','ports':[80,8080],'port_detail':{22:{'name':'ssh'}}, 'neighborhosts': ['eguan.cn']}
+	services={'ip':'106.185.36.44','ports':[80,8080],'port_detail':{22:{'name':'ssh'}}, 'neighborhosts': ['eguan.cn']}
 	pprint(Audit(services))
 	pprint(services)
