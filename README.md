@@ -74,6 +74,7 @@ urllib
 urllib2
 requests
 paramiko	# for ssh cracker
+pymongo		# for mongodb
 easywebdav	# for webdav
 json		# others
 pyquery
