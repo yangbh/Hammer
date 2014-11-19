@@ -95,21 +95,23 @@ def httpcrack(url,lock):
 		try:
 			rq = requests.get(url,allow_redirects=False)
 			print url,rq.status_code
-			if rq.status_code in [200,401,403]:
+			if rq.status_code in [200,403]:
 			 	httpcont = rq.text
 			 	code = rq.status_code
 			 	flg = True
 				if httpcont.find('<title>phpinfo()</title>') != -1:
-					printinfo =  '<phpinfo>' + url + os.linesep
+					printinfo =  '<phpinfo>' + url + '\t code:' + str(code)
 				elif url.endswith('readme.txt'):
-					printinfo =  '<readme.txt>' + url + os.linesep
+					printinfo =  '<readme.txt>' + url + '\t code:' + str(code)
 				elif url.find('fckeditor')  != -1 and httpcont.find('Frederico Caldeira Knabben') != -1:
-					printinfo =  '<fckeditor>' + url + os.linesep
+					printinfo =  '<fckeditor>' + url + '\t code:' + str(code)
 			 	elif url.find('/.svn') != -1:
-					printinfo =  '<svn>' + url + '\t code:' + str(code) + os.linesep	
+					printinfo =  '<svn>' + url + '\t code:' + str(code)
 			 	else:
-			 		printinfo = url + '\t code:' + str(code) + os.linesep
+			 		printinfo = url + '\t code:' + str(code)
 
+			 	security_warning(printinfo)
+			 	printinfo += os.linesep
 			break
 		# 一些并发导致的异常
 		except Exception,e:
@@ -199,7 +201,7 @@ def Audit(services):
 	
 	if ret != '':
 		retinfo = {'level':'low','content':ret}
-		security_warning(str(ret))
+		# security_warning(str(ret))
 
 	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------

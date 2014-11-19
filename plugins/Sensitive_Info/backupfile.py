@@ -88,7 +88,7 @@ def generateUrls(url):
 
 	# ret = list(set(urls))
 	# ret.sort()
-	pprint(urls)
+	# pprint(urls)
 	return urls
 
 def httpcrack(url,lock):
@@ -100,8 +100,9 @@ def httpcrack(url,lock):
 		# 改用requests库
 		try:
 			rq = requests.get(url,allow_redirects=False)
-			if rq.status_code in [200,401,403]:
+			if rq.status_code in [200,403]:
 				printinfo = url + '\t code:' + str(rq.status_code) + os.linesep
+				security_warning(url + '\t code:' + str(rq.status_code))
 				flg = True
 			break
 		# 一些并发导致的异常
@@ -142,7 +143,7 @@ def Audit(services):
 		#print'ok'
 		output += 'plugin run' + os.linesep
 		urls = generateUrls(services['url'])
-		# pprint(urls)
+		pprint(urls)
 
 		#  threads
 		
@@ -179,7 +180,7 @@ def Audit(services):
 
 	if ret != '':
 		retinfo = {'level':'low','content':ret}
-		security_warning(str(ret))
+		# security_warning(str(ret))
 		# 
 		ret = ''
 

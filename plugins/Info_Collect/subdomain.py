@@ -32,7 +32,7 @@ def generateUrl(hosts=None):
 	for url in tmpurls:
 		try:
 			print 'url=',url
-			respone = urllib2.urlopen(url,timeout=10)
+			respone = urllib2.urlopen(url,timeout=20)
 			redirected = respone.geturl()
 			if redirected == url:
 				urls.append(url)
@@ -109,7 +109,9 @@ def Audit(services):
 
 		ret = subdomains
 		retinfo = {'level':'info','content':ret}
-		security_note(str(subdomains))
+		# security_note(str(subdomains))
+		for each_domian in subdomains:
+			security_note(each_domian)
 
 		if services['host'] not in subdomains:
 			subdomains.append(services['host'])
@@ -128,6 +130,9 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	services = {'host':'www.eguan.cn'}
+	host = 'kangbtall.com'
+	if len(sys.argv) ==  2:
+		host = sys.argv[1]
+	services = {'host':host}
 	pprint(Audit(services))
 	pprint(services)

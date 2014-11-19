@@ -197,11 +197,11 @@ class Scanner(object):
 							host = m.group(2)
 							ports = m.group(3)
 							ip = socket.gethostbyname(host)
-							# domain = GetFirstLevelDomain(host)
+							domain = GetFirstLevelDomain(host)
 							# print 'ip=',ip
 							targets.append(ip)
 							targets.append(target)
-							targets.append(host)
+							targets.append(domain)
 						else:
 							# host type
 							pass

@@ -1151,3 +1151,4 @@
 /admin/upme2.htm
 /admin1.html
 /admin2.html
+/src/

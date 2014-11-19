@@ -157,38 +157,66 @@ if (!already_login()) {
 						var json = jQuery.parseJSON(data);
 						$.each(json,function(i,n){
 							var ipurl = i;
-							var html="<div><blockquote><h3>"+ipurl+"</h3></blockquote><ul>"
-							$.each(n,function(i2,n2){
-								var plugin = n2[0];
-								var content = n2[1];
-								var level = n2[2];
-								html += "<li>";
-								var color = "text-muted";
-								switch(level){
-									case '1':
-										color = "text-success";
-										break
-									case '2':
-										color = "text-info";
-										break;
-									case '3':
-										color = "text-warning";
-										break;
-									case '4':
-										color = "text-danger";
-										break;
-									default:
-										color = "text-muted";
+							var html="<div><blockquote><h3>"+ipurl+"</h3></blockquote></div>"
+							var extflag = true;
+							$('#scan_results h3').each(function(){
+								if ($(this).text()==i) {
+									extflag = false;
 								}
-								html += "<h4 class=\""+color+"\">"+plugin+"</h4>";
-								html += "<ul><li>";
-								html+= content;
-								html += "</li></ul>";
-								html += "</li>";
-							})
-							html +="</ul></div>"
-							$('#scan_results').append(html);
-						})
+							});
+
+							if (extflag) {
+								$('#scan_results').append(html);
+							};
+
+							$.each(n,function(i2,n2){
+								$('#scan_results h3').each(function(){
+									if ($(this).text()==i) {
+										var plugin = n2[0];
+										var content = n2[1];
+										var level = n2[2];
+										var extflag = true;
+										// console.log($(this));
+										$(this).parent().parent().find('h4').each(function(){
+											console.log('$(this).text()='+$(this).text());
+											console.log('plugin='+plugin);
+											if ($(this).text()==plugin) {
+												extflag = false;
+												html = "<li>";
+												html+= content;
+												html += "</li>";
+												$(this).parent().children('ul').append(html);
+											}
+										});
+										if (extflag) {
+											html = "<ul><li>";
+											var color = "text-muted";
+											switch(level){
+												case '1':
+													color = "text-success";
+													break
+												case '2':
+													color = "text-info";
+													break;
+												case '3':
+													color = "text-warning";
+													break;
+												case '4':
+													color = "text-danger";
+													break;
+												default:
+													color = "text-muted";
+											}
+											html += "<h4 class=\""+color+"\">"+plugin+"</h4>";
+											html += "<ul><li>";
+											html += content;
+											html += "</li></ul>";
+											$(this).parent().after(html);
+										}
+									}
+								});
+							});
+						});
 					});
 				});
 			});

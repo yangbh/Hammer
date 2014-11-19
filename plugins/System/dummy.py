@@ -28,4 +28,4 @@ from common import genFilename,security_note,security_info,security_warning,secu
 # from lib.theHarvester_class import TheHarvester
 # from lib.whatWeb_class import WhatWeb
 from lib.spider.domain import GetFirstLevelDomain
-# from lib.crawler.crawlerFile import CrawlerFile
+from lib.crawler.crawlerFile import CrawlerFile
