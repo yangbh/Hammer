@@ -212,7 +212,7 @@ class Scanner(object):
 				urls[eachip] = self.generateUrl(eachip,ip_hosts,httpports)
 
 			# just for test
-			# urls = {'106.185.36.44': ['http://www.hengtiansoft.com','http://www.leesec.com']}
+			# urls = {'106.185.36.44': ['http://testphp.vulnweb.com','http://www.leesec.com']}
 			# urls = {'172.16.15.2': []}
 			# urls = {'106.185.36.44': ['http://87.230.29.167:80']}
 			

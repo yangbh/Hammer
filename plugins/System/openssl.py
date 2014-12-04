@@ -89,39 +89,43 @@ def assign(service, arg):
 	if service == "ssl":
 		return True, arg
 
-def Audit(services):
-	retinfo = None
-	output = ''
+def Assign(services):
 	if services.has_key('ip'):
 		host = services['ip']
 		if services.has_key('ports'):
-			output += 'plugin run' + os.linesep
-			host = services['ip']
-			if 443 in services['ports']:
-				port = 443
-			else:
+			return True
+	return False
+
+def Audit(services):
+	retinfo = None
+	output = 'plugin run' + os.linesep
+	
+	host = services['ip']
+	if 443 in services['ports']:
+		port = 443
+	else:
+		return(None,output)
+	try:
+		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		s.connect((host, port))
+		s.send(hello)
+		while True:
+			typ, ver, pay = recvmsg(s)
+			if typ == None:
 				return(None,output)
-			try:
-				s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-				s.connect((host, port))
-				s.send(hello)
-				while True:
-					typ, ver, pay = recvmsg(s)
-					if typ == None:
-						return(None,output)
-					# Look for server hello done message.
-					if typ == 22 and ord(pay[0]) == 0x0E:
-						break
-				s.send(hb)
-				if hit_hb(s):
-					retinfo = {'level':'high','content':host}
-					security_hole(host)
-				s.close()
+			# Look for server hello done message.
+			if typ == 22 and ord(pay[0]) == 0x0E:
+				break
+		s.send(hb)
+		if hit_hb(s):
+			retinfo = {'level':'high','content':host}
+			security_hole(host)
+		s.close()
 
-			except:
-				pass
+	except:
+		pass
 
-			return(retinfo,output)
+	return(retinfo,output)
 # ----------------------------------------------------------------------------------------------------
 #	untest yet
 # ----------------------------------------------------------------------------------------------------

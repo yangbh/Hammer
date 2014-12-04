@@ -49,7 +49,6 @@ if (!already_login()) {
 
 		$(document).ready(function () {
 			//  hide plugin_code div
-			$('#code').hide('fast');
 			$('#plugins').show('fast');
 			//  snippet
 			$("pre.python").snippet("python",{style:"vim",menu:false,showNum:true});
@@ -78,7 +77,7 @@ if (!already_login()) {
 						"targets": [1],
 						"render": function ( data, type, full, meta ) {
 								// return "<a class=\"plugin\" href='search.php?name="+encodeURI(data)+"'>"+data+"</a>";
-								return "<a class=\"plugin\" href=# id=\""+full[0]+"\">"+data+"</a>";
+								return "<a class=\"plugin\" href=\""+"result.php#"+full[0]+"\">"+data+"</a>";
 						}
 					},
 					{
@@ -142,88 +141,8 @@ if (!already_login()) {
 				 ]
 			});
 
-			//  <a> links in tables
-			$('#plugins_table').DataTable().on('draw.dt', function () {
-				$('.plugin').bind("click",function() {
-					var scanID= $(this).attr("id");
-					// alert(scanID);
-					$.get("scans_search.php",{scanid: scanID},function(data){
-						$('#plugins').hide('slow');
-						$('#code').show('slow');
-						// $('#plugin_code').html(data);
-						$('#scan_results').empty();
-						$('#scan_title').empty();
-						//
-						var json = jQuery.parseJSON(data);
-						$.each(json,function(i,n){
-							var ipurl = i;
-							var html="<div><blockquote><h3>"+ipurl+"</h3></blockquote></div>"
-							var extflag = true;
-							$('#scan_results h3').each(function(){
-								if ($(this).text()==i) {
-									extflag = false;
-								}
-							});
-
-							if (extflag) {
-								$('#scan_results').append(html);
-							};
-
-							$.each(n,function(i2,n2){
-								$('#scan_results h3').each(function(){
-									if ($(this).text()==i) {
-										var plugin = n2[0];
-										var content = n2[1];
-										var level = n2[2];
-										var extflag = true;
-										// console.log($(this));
-										$(this).parent().parent().find('h4').each(function(){
-											console.log('$(this).text()='+$(this).text());
-											console.log('plugin='+plugin);
-											if ($(this).text()==plugin) {
-												extflag = false;
-												html = "<li>";
-												html+= content;
-												html += "</li>";
-												$(this).parent().children('ul').append(html);
-											}
-										});
-										if (extflag) {
-											html = "<ul><li>";
-											var color = "text-muted";
-											switch(level){
-												case '1':
-													color = "text-success";
-													break
-												case '2':
-													color = "text-info";
-													break;
-												case '3':
-													color = "text-warning";
-													break;
-												case '4':
-													color = "text-danger";
-													break;
-												default:
-													color = "text-muted";
-											}
-											html += "<h4 class=\""+color+"\">"+plugin+"</h4>";
-											html += "<ul><li>";
-											html += content;
-											html += "</li></ul>";
-											$(this).parent().after(html);
-										}
-									}
-								});
-							});
-						});
-					});
-				});
-			});
-
 			$('#plugin_goback').click(function(){
 				$('#plugins').show('slow');
-				$('#code').hide('slow');
 			});
 
 			//  search button click

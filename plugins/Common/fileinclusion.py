@@ -146,89 +146,93 @@ def check_lfi(action, query, k, v, files, suffix, flags):
 
 	return False
 
+def Assign(services):
+	# 这个插件有些问题，先暂停使用
+	if services.has_key('url') and False:
+		return True
+	return False
+
 def Audit(services):
 	retinfo = {}
-	output = ''
-	if services.has_key('url') and False:
-		output += 'plugin run' + os.linesep
-		url = services['url']
-		hrefs = getCrawlerHrefs(url)
-		pprint(hrefs)
-		try:
-			# 尝试每个参数是否有远程文件包含漏洞
-			for eachhref in hrefs:
-				r = urlparse.urlparse(eachhref)
-				# 取出?号前面的地址
-				action = urlparse.urlunsplit((r.scheme, r.netloc, r.path, '', ''))
-				# 取出参数的key
-				pairs = urlparse.parse_qsl(r.query)
-				# 以下参数，为.NET的内置参数，自动跳过，不判断
-				reject_key = ['__VIEWSTATE', 'IbtnEnter.x', 'IbtnEnter.y']
+	output = 'plugin run' + os.linesep
+	url = services['url']
+	hrefs = getCrawlerHrefs(url)
+	pprint(hrefs)
+	try:
+		# 尝试每个参数是否有远程文件包含漏洞
+		for eachhref in hrefs:
+			r = urlparse.urlparse(eachhref)
+			# 取出?号前面的地址
+			action = urlparse.urlunsplit((r.scheme, r.netloc, r.path, '', ''))
+			# 取出参数的key
+			pairs = urlparse.parse_qsl(r.query)
+			# 以下参数，为.NET的内置参数，自动跳过，不判断
+			reject_key = ['__VIEWSTATE', 'IbtnEnter.x', 'IbtnEnter.y']
 
-				try:
-					normal_res = requests.get(action).text
-					# 尝试每个参数是否有远程文件包含漏洞
-					for k, v in pairs:
-						# 跳过指定的内置参数
-						if k in reject_key:
-							continue
-						# 如果发现参数有漏洞，返回
-						ret = check_rfi(action, pairs, k, v, normal_res)
-						if ret:
-							retinfo += ret + os.linesep
-							security_warning(ret)
-							return (retinfo,output)
-				except Exception,e:
-					print 'Exception:\t',e
-
-				# 尝试每个参数是否有本地文件包含读取漏洞, 以当前文件名做为包含文件，传递
-				# 获取当前URL的快照，搜索内容来获取有效的用来判断是否利用成功的签名，如:<?php, <%
-			
-				res = requests.get(eachhref).text
-				# code, head, res, _, _ = curl.curl(url)
-			
-				flags = []
-				for w in ['<\?[\r\n\s=]', '<\?php[\r\n\s=]', '<%[\r\n\s@]']:
-					if not re.search(w, res):
-						flags.append(w)
-				# 没有找到可以使用的签名，返回
-				if not flags:
-					return (retinfo,output)
-
-				paths = ['.', '..', '../..', '../../..', '../../../..', '../../../../..']
-				files = []
-				# 获取URL的文件名
-				filename = r.path.split('/')[-1]
-
-				# 保存到要fuzz的文件列表里
-				files.append(filename)
-
-				# 保存一组递归目录列表，如./a.php, ../a.php, ../../a.php
-				for path in paths:
-					files.append(path + '/' + filename)
-
-				# 保存一组递归的完整文件列表如, /../news/show.php, /../../news/show.php
-				for path in paths:
-					files.append(path + r.path)
-
-				# 开始遍历参数进行fuzz
+			try:
+				normal_res = requests.get(action).text
+				# 尝试每个参数是否有远程文件包含漏洞
 				for k, v in pairs:
-					# 跳过内置的参数
+					# 跳过指定的内置参数
 					if k in reject_key:
 						continue
-					# 如果参数值里面找到类似a.jpg这样文件名特征, 获取文件后缀到suffix里面去
-					suffix = ''
-					if v.find('.') != -1:
-						suffix = v.split('.')[-1]
-					# 开始fuzz本地文件包含漏洞
-					# 
-					ret = check_lfi(action, pairs, k, v, set(files), suffix, flags)
+					# 如果发现参数有漏洞，返回
+					ret = check_rfi(action, pairs, k, v, normal_res)
 					if ret:
 						retinfo += ret + os.linesep
 						security_warning(ret)
 						return (retinfo,output)
-		except Exception,e:
-			print 'Exception:\t',e
+			except Exception,e:
+				print 'Exception:\t',e
+
+			# 尝试每个参数是否有本地文件包含读取漏洞, 以当前文件名做为包含文件，传递
+			# 获取当前URL的快照，搜索内容来获取有效的用来判断是否利用成功的签名，如:<?php, <%
+		
+			res = requests.get(eachhref).text
+			# code, head, res, _, _ = curl.curl(url)
+		
+			flags = []
+			for w in ['<\?[\r\n\s=]', '<\?php[\r\n\s=]', '<%[\r\n\s@]']:
+				if not re.search(w, res):
+					flags.append(w)
+			# 没有找到可以使用的签名，返回
+			if not flags:
+				return (retinfo,output)
+
+			paths = ['.', '..', '../..', '../../..', '../../../..', '../../../../..']
+			files = []
+			# 获取URL的文件名
+			filename = r.path.split('/')[-1]
+
+			# 保存到要fuzz的文件列表里
+			files.append(filename)
+
+			# 保存一组递归目录列表，如./a.php, ../a.php, ../../a.php
+			for path in paths:
+				files.append(path + '/' + filename)
+
+			# 保存一组递归的完整文件列表如, /../news/show.php, /../../news/show.php
+			for path in paths:
+				files.append(path + r.path)
+
+			# 开始遍历参数进行fuzz
+			for k, v in pairs:
+				# 跳过内置的参数
+				if k in reject_key:
+					continue
+				# 如果参数值里面找到类似a.jpg这样文件名特征, 获取文件后缀到suffix里面去
+				suffix = ''
+				if v.find('.') != -1:
+					suffix = v.split('.')[-1]
+				# 开始fuzz本地文件包含漏洞
+				# 
+				ret = check_lfi(action, pairs, k, v, set(files), suffix, flags)
+				if ret:
+					retinfo += ret + os.linesep
+					security_warning(ret)
+					return (retinfo,output)
+	except Exception,e:
+		print 'Exception:\t',e
 	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------
 #	untest yet

@@ -308,38 +308,42 @@ def fuzzParamValue(url):
 
 	return False,reqUrl,'GET'
 
-def Audit(services):
+def Assign(services):
 	if services.has_key('url'):
 		url = services['url']
 		exts = getCrawlerFileExts(url)
 		if '.do' in exts or '.action' in exts or '.jsp' in exts or '.jspx' in exts:
-			urls = getOneUrlByExts(url)
-			print urls
-			for url in urls:
-				print '[*] Checking url: "%s"' %url
-				# fuzz action
-				result,payload,method = fuzzAction(url)
-				if result:
-					print '[+] Fuzz action find struts Vulnerability with method %s' %method
-					# return result,payload,method
-					return
+			return True
+	return False
 
-				#to fuzz <s:a> and <s:url> tag, add a param key	
-				if '?' not in url:
-					url += '?k=v'
+def Audit(services):
+	urls = getOneUrlByExts(url)
+	print urls
+	for url in urls:
+		print '[*] Checking url: "%s"' %url
+		# fuzz action
+		result,payload,method = fuzzAction(url)
+		if result:
+			print '[+] Fuzz action find struts Vulnerability with method %s' %method
+			# return result,payload,method
+			return
 
-				#fuzz parameter
-				result,payload,method = fuzzParam(url)
-				if result:
-					print '[+] Fuzz param find struts Vulnerability with method %s' %method
-					# return result,payload,method
-					return
-				#fuzz value poc
-				result,payload,method = fuzzParamValue(url)
-				if result:
-					print '[+] Fuzz param value find struts Vulnerability with method %s' %method
-					# return result,payload,method
-					return
+		#to fuzz <s:a> and <s:url> tag, add a param key	
+		if '?' not in url:
+			url += '?k=v'
+
+		#fuzz parameter
+		result,payload,method = fuzzParam(url)
+		if result:
+			print '[+] Fuzz param find struts Vulnerability with method %s' %method
+			# return result,payload,method
+			return
+		#fuzz value poc
+		result,payload,method = fuzzParamValue(url)
+		if result:
+			print '[+] Fuzz param value find struts Vulnerability with method %s' %method
+			# return result,payload,method
+			return
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------

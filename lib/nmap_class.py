@@ -12,14 +12,15 @@ from pprint import pprint
 # ----------------------------------------------------------------------------------------------------
 class NmapScanner(object):
 	"""docstring for nmapScanner_class"""
-	# https tcp-443
-	# imaps tcp-993
-	# pop3s tcp-995
-	# smtps tcp-465
-	commonports = '21,22,23,25,110,53,67,80,443,1521,1526,3306,3389,4899,8080,8580'
-	commonports += ',465,993,995'
+	commonports = '21,22,23,25,110,53,67,80,1521,1526,3306,3389,4899,8080,8580'
+	commonports += ',443,465,993,995'	# ssl services port
+		# https tcp-443
+		# imaps tcp-993
+		# pop3s tcp-995
+		# smtps tcp-465
 	commonports += ',28017,27017'	# mongodb default port
 	commonports += ',873'			# rsync default port
+	commonports += ',9200'			# elasticsearch port
 	def __init__(self, hosts,ports=commonports,arguments='-sV '):
 		super(NmapScanner, self).__init__()
 		self.hosts = hosts

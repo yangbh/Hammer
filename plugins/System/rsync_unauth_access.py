@@ -12,19 +12,24 @@ info = {
 	'DESCRIPTION':'Rsync 配置不当导致未授权访问'
 }
 
+def Assign(services):
+	if services.has_key('ip') and services.has_key('ports'):
+		if 873 in services['ports']:
+			return True
+	return False
+
 def Audit(services):
 	retinfo = None
 	output = ''
-	if services.has_key('ip') and services.has_key('ports'):
-		if 873 in services['ports']:
-			ip = services['ip']
-			cmd_res = os.popen('rsync -av --timeout=10 '+ ip +'::').read()
-			# print cmd_res
-			if 'rsync: failed' in cmd_res:
-				return
-			else:
-				output = cmd_res
-				security_warning(cmd_res)
+	
+	ip = services['ip']
+	cmd_res = os.popen('rsync -av --timeout=10 '+ ip +'::').read()
+	# print cmd_res
+	if 'rsync: failed' in cmd_res:
+		return
+	else:
+		output = cmd_res
+		security_warning(cmd_res)
 
 	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------

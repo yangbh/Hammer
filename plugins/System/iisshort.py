@@ -100,24 +100,30 @@ info = {
 	'DESCRIPTION':''
 }
 
+def Assign(services):
+	if services.has_key('url'):
+		return True
+	return False
+
 def Audit(services):
 	retinfo = None
 	output = ''
-	if services.has_key('url'):
-		if services.has_key('HTTPServer') and services['HTTPServer'].lower().find('iis') == -1:
-			return (retinfo,output)
-		output += 'plugin run' + os.linesep
-		url = services['url']
-		try:
-			# changed
-			respone = requests.get(url + '/*~1.*/x.aspx')
-			if respone.status_code == 404:
-				respone = requests.get(url + '/ooxx*~1.*/x.aspx')
-				if respone.status_code == 400:
-					retinfo = {'level':'medium','content':url}
-					security_warning(url)
-		except Exception,e:
-			print 'Exception:\t',e
+
+	if services.has_key('HTTPServer') and services['HTTPServer'].lower().find('iis') == -1:
+		return (retinfo,output)
+	output += 'plugin run' + os.linesep
+	url = services['url']
+	try:
+		# changed
+		respone = requests.get(url + '/*~1.*/x.aspx')
+		if respone.status_code == 404:
+			respone = requests.get(url + '/ooxx*~1.*/x.aspx')
+			if respone.status_code == 400:
+				retinfo = {'level':'medium','content':url}
+				security_warning(url)
+	except Exception,e:
+		print 'Exception:\t',e
+	
 	return (retinfo,output)
 
 # ----------------------------------------------------------------------------------------------------

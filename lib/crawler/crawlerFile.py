@@ -2,10 +2,12 @@
 #coding:utf-8
 
 import os
+
 import traceback
 
 from dummy import BASEDIR
 from lib.common import genFilename
+# print '2222'
 
 class CrawlerFile(object):
 	"""docstring for CrawlerFile"""

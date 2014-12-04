@@ -122,7 +122,7 @@ def getPortByService(services,scname):
 def Audit(services):
 	retinfo = {}
 	output = ''
-	if services.has_key('ip') and services.has_key('ports'):
+	if services.has_key('ip') and services.has_key('ports') and False:
 		# get ssh port
 		ssh_port  = 0
 		if 22 in services['ports']:
@@ -185,7 +185,6 @@ def Audit(services):
 					# print 'starting\t',eachname+':'+eachpwd
 					future = executor.submit(ssh2,ip,ssh_port,eachname,eachpwd,lock)
 
-
 	# else:
 	# 	output += 'plugin does not run' + os.linesep
 
@@ -198,7 +197,10 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__': 
+	ip='176.28.50.165'
+	if len(sys.argv) ==  2:
+		ip = sys.argv[1]
 	# services={'ip':'127.0.0.1','ports':[80,8080],'port_detail':{22:{'name':'ssh'}}, 'neighborhosts': ['eguan.cn']}
-	services={'ip':'106.185.36.44','ports':[80,8080],'port_detail':{22:{'name':'ssh'}}, 'neighborhosts': ['eguan.cn']}
+	services={'ip':ip,'ports':[80,8080],'port_detail':{22:{'name':'ssh'}}, 'neighborhosts': ['eguan.cn']}
 	pprint(Audit(services))
 	pprint(services)

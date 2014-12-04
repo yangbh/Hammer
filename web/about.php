@@ -117,6 +117,15 @@ EOF;
 
 				<div class="col-xs-10 col-sm-10 col-md-10" role="main" class="main">
 					<h2 id="1.3">1.3</h2>
+					<h3>1.3.0.141204_Beta</h3>
+						<p><strong>改进：</strong></p>
+						<p>a).一些bug修复</p>
+						<p>b).引入yascanner的assign接口</p>
+						<p><strong>待完善：</strong></p>
+						<p>a).采用log进行调试输出</p>
+						<p>b).插件不应该每一个子进程（即pluginLoader_class.py）中加载，而应该在scanner_class.py中一次加载完成，避免加载多次</p>
+						<p>c).futures模块主进程ctrl＋c捕获不到，必须要等所有子进程停止才能捕获</p>
+					<hr>
 					<h3>1.3.0.141109_Beta</h3>
 						<p><strong>改进：</strong></p>
 						<p>a).对框架的调整，明确分为信息收集模块和漏洞扫描模块，信息收集模块支持动态添加</p>

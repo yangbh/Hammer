@@ -4,8 +4,11 @@
 import os
 import json
 import requests
+# print '3333'
 
 import globalVar
+# print '4444'
+
 from urlparse import urlparse
 from pprint import pprint
 

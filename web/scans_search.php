@@ -74,7 +74,7 @@ $keyword = check_sql(trim($_REQUEST['keyword']));
 // echo $keyword . '<br>';
 $level = (int)($_REQUEST['level']);
 $scanID = (int)($_REQUEST['scanid']);
-if ($scanID and $scanID!='') {
+if ($scanID) {
 	$data = search_vuln($scanID);
 	echo json_encode($data);
 }

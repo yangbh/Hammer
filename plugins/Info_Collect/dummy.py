@@ -30,6 +30,12 @@ from lib.neighborHost_class import NeighborHost
 # from lib.knock_class import SubDomain
 from lib.theHarvester_class import TheHarvester
 from lib.whatWeb_class import WhatWeb
+# print 'yeah2'
 #from lib.spider.spider import Spider,Strategy,UrlObj
-from lib.crawler.crawler import Crawler,Strategy
+try:
+	from lib.crawler.crawler import Crawler,Strategy
+except Exception,e:
+	print Exception,e
+	sys.exit(2)
+# print 'yeah1'
 from lib.spider.domain import GetFirstLevelDomain

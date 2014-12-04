@@ -24,17 +24,25 @@ from locale import getdefaultlocale
 from bs4 import BeautifulSoup 
 from pprint import pprint
 
+
+
 from database import Database
 from webPage import WebPage
 from threadPool import ThreadPool
+
+
 from crawlerFile import CrawlerFile
+# print '11111'
+
 from dummy import BASEDIR
+
+
 
 from lib.common import genFilename
 
 from threading import Lock
 
-log = logging.getLogger('crawler')
+# log = logging.getLogger('crawler')
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
@@ -127,8 +135,8 @@ class Crawler(object):
 
 				print 'Depth %d Finish. Totally visited %d links. \n' % (
 					self.currentDepth, len(self.visitedHrefs))
-				log.info('Depth %d Finish. Total visited Links: %d\n' % (
-					self.currentDepth, len(self.visitedHrefs)))
+				# log.info('Depth %d Finish. Total visited Links: %d\n' % (
+				# 	self.currentDepth, len(self.visitedHrefs)))
 				self.currentDepth += 1
 			self.stop()
 
@@ -184,6 +192,7 @@ class Crawler(object):
 						fullpath += '/'
 					pos = 0
 					while True:
+						# print 'fullpath=',fullpath
 						pos = fullpath.find('/',pos)
 						if pos == -1:
 							break
@@ -204,7 +213,7 @@ class Crawler(object):
 		try:
 			cf = CrawlerFile(url=self.url)
 			contentlist = self._getCrawlerPaths(self.url)
-			#print contentlist
+			print 'contentlist=',contentlist
 			cf.saveSection('Paths',contentlist)
 			# fp = open(self.file,'w')
 			# #filename = BASEDIR + '/cache/crawler/' + genFilename(self.url) + '.txt'
@@ -253,7 +262,7 @@ class Crawler(object):
 	def _assignCurrentDepthTasks(self):
 		while self.unvisitedHrefs:
 			url = self.unvisitedHrefs.popleft()
-			#print url
+			# print url
 			#向任务队列分配任务
 			self.threadPool.putTask(self._taskHandler, url) 
 			#标注该链接已被访问,或即将被访问,防止重复访问相同链接
@@ -263,6 +272,7 @@ class Crawler(object):
 		# 先拿网页源码，再保存,两个都是高阻塞的操作，交给线程处理
 		# print 'url=\t',url
 		webPage = WebPage(url)
+
 		self.lock.acquire()
 		if webPage.fetch():
 			self._saveTaskResults(webPage)
@@ -279,7 +289,8 @@ class Crawler(object):
 			else:
 				self.database.saveData(url, pageSource)
 		except Exception, e:
-			log.error(' URL: %s ' % url + traceback.format_exc())
+			# log.error(' URL: %s ' % url + traceback.format_exc())
+			pass
 		#print 'ok'
 
 	def _addUnvisitedHrefs(self, webPage):
@@ -287,9 +298,10 @@ class Crawler(object):
 		#对链接进行过滤:1.只获取http或https网页;2.保证每个链接只访问一次
 		#print 'ok2'
 		url, pageSource = webPage.getDatas()
-		#print 'url'
+		# print 'url=',url
+		# print 'pageSource=',pageSource
 		hrefs = self._getAllHrefsFromPage(url, pageSource)
-		#print hrefs
+		# print 'hrefs=',hrefs
 
 		for href in hrefs:
 			#print href
@@ -311,6 +323,10 @@ class Crawler(object):
 				if not self._isHrefRepeated(href):
 					self.unvisitedHrefs.append(href)
 
+	def _isHref(self,href):
+
+		return True
+
 	def _getAllHrefsFromPage(self, url, pageSource):
 		'''解析html源码，获取页面所有链接。返回链接列表'''
 		#print 'ok3'
@@ -318,17 +334,21 @@ class Crawler(object):
 		soup = BeautifulSoup(pageSource)
 		#print 'soup=',soup
 		
-		#print results
 		# 1. as <a href=http://www.example.com></a>
 		results = soup.findAll('a',href=True)
 		for a in results:
 			#必须将链接encode为utf8, 因为中文文件链接如 http://aa.com/文件.pdf 
 			#在bs4中不会被自动url编码，从而导致encodeException
 			href = a.get('href').encode('utf8')
+			# 去除两边空格
+			href = href.strip()
+			# added by mody at 2014-11-28
+			# 
 			if not href.startswith('http'):
 				href = urljoin(url, href)#处理相对链接的问题
-			if href not in hrefs:
-				hrefs.append(href)
+			if self._isHref(href):				
+				if href not in hrefs:
+					hrefs.append(href)
 		
 		# 2. as <from action=http://www.example.com></form>
 		results = soup.findAll('form',action=True)
@@ -374,7 +394,7 @@ class Crawler(object):
 			filetype = href[href.rfind('.'):]
 			if len(filetype) > 8:
 				return False
-			srcfiletps = ('.jpg','.pdf','.doc','.docx','.exe','.jpg','.jpeg','.ico','.swf','.xls','.xlsx')
+			srcfiletps = ('.jpg','.pdf','.png','.doc','.docx','.exe','.jpg','.jpeg','.ico','.swf','.xls','.xlsx')
 			if filetype in srcfiletps:
 				return True
 		except:
@@ -462,7 +482,7 @@ if __name__ == '__main__':
 	import multiprocessing
 	p = multiprocessing.Pool()
 	p.apply_async(main)
-	p.apply_async(main)
-	p.apply_async(main)
+	# p.apply_async(main)
+	# p.apply_async(main)
 	p.close()
 	p.join()

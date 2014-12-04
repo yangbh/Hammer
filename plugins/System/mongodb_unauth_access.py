@@ -12,28 +12,33 @@ info = {
 	'DESCRIPTION':'MongoDB配置不当导致未授权访问'
 }
 
+def Assign(services):
+	if services.has_key('ip') and services.has_key('ports'):
+		return True
+	return False
+
 def Audit(services):
 	retinfo = None
 	output = ''
-	if services.has_key('ip') and services.has_key('ports'):
-		port = None
-		ip = services['ip']
-		if 27017 in services['ports']:
-			port = 27017
-		elif 28017 in services['ports']:
-			port = 27017
-		if port:
-			try:
-				connection = pymongo.MongoClient(ip,port)
-				# connection.api.authenticate("root","1234")
-				# db = connection.admin
-				# db.system.users.find_one()
-				dbs = connection.database_names()
-				output = ip + ':' + str(port)+'/'+str(dbs)
-				security_hole(ip+':'+str(port)+'/'+str(dbs))
-			except pymongo.errors.OperationFailure,e:
-				print 'Exception',e
-				# pass
+	
+	port = None
+	ip = services['ip']
+	if 27017 in services['ports']:
+		port = 27017
+	elif 28017 in services['ports']:
+		port = 28017
+	if port:
+		try:
+			connection = pymongo.MongoClient(ip,port)
+			# connection.api.authenticate("root","1234")
+			# db = connection.admin
+			# db.system.users.find_one()
+			dbs = connection.database_names()
+			output = ip + ':' + str(port)+'/'+str(dbs)
+			security_hole(ip+':'+str(port)+'/'+str(dbs))
+		except pymongo.errors.OperationFailure,e:
+			print 'Exception',e
+			# pass
 	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------
 #	untest yet

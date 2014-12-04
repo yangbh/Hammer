@@ -15,24 +15,25 @@ info = {
 	'RUNLEVEL':0
 }
 
+def Assign(services):
+	if services.has_key('ip'):
+		return True
+	return False
+
 def Audit(services):
 	retinfo = {}
-	output = ''
-	if services.has_key('ip'):
-		output += 'plugin run' + os.linesep
-		neighborhosts = []
-		nbh = NeighborHost(services['ip'])
-		neighborhosts = nbh.getFromChinaZ()
-		print 'neighborhosts=\t',neighborhosts
-		if neighborhosts and len(neighborhosts) != 0:
-			services['neighborhosts'] = neighborhosts
-			ret = neighborhosts
-			retinfo = {'level':'info','content':ret}
-			for each_neighbor in neighborhosts:
-				security_note(each_neighbor)
-				add_scan_task(each_neighbor)
-	# else:
-	# 	output += 'plugin does not run' + os.linesep
+	output = 'plugin run' + os.linesep
+	neighborhosts = []
+	nbh = NeighborHost(services['ip'])
+	neighborhosts = nbh.getFromChinaZ()
+	print 'neighborhosts=\t',neighborhosts
+	if neighborhosts and len(neighborhosts) != 0:
+		services['neighborhosts'] = neighborhosts
+		ret = neighborhosts
+		retinfo = {'level':'info','content':ret}
+		for each_neighbor in neighborhosts:
+			security_note(each_neighbor)
+			add_scan_task(each_neighbor)
 
 	return (retinfo,output)
 

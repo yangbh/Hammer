@@ -38,6 +38,7 @@ def procFunc(pluginheader):
 			return None
 	except (KeyboardInterrupt, SystemExit):
 			print "Exiting..."
+			return None
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
@@ -173,12 +174,13 @@ class Scanner(object):
 		try:
 			#	Step 1
 			print '>>>Step1: init starting info'
+			self.services = []
 			if target==None:
 				target = self.target
 			targets = []
 			if target:
 				# ip range type
-				m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$',target)
+				m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(\/\d{1,2})?$',target)
 				if m:
 					ipnet = list(ipaddress.ip_network(unicode(target)).hosts())
 					for eachipad in ipnet:
@@ -194,34 +196,57 @@ class Scanner(object):
 						m = re.match('(http[s]?)://([^:^/]+):?([^/]*)/?',target)
 						if m:
 							http_type = m.group(1)
-							host = m.group(2)
-							ports = m.group(3)
-							ip = socket.gethostbyname(host)
-							domain = GetFirstLevelDomain(host)
-							# print 'ip=',ip
-							targets.append(ip)
-							targets.append(target)
-							targets.append(domain)
+							# print m.group(2)
+							n = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(\/\d{1,2})?$',m.group(2))
+							# ip
+							if n:
+								# print 'is an ip type url'
+								ip = m.group(2)
+								if target[-1] == '/':
+									target = target[:-1]
+								targets.append(ip)
+								targets.append(target)
+							else:
+								host = m.group(2)
+								ports = m.group(3)
+								ip = socket.gethostbyname(host)
+								domain = GetFirstLevelDomain(host)
+								# print 'ip=',ip
+								if target[-1] == '/':
+									target = target[:-1]
+								targets.append(ip)
+								targets.append(target)
+								targets.append(domain)
 						else:
 							# host type
-							pass
+							domain = GetFirstLevelDomain(target)
+							targets.append(domain)
 
 
 			globalVar.target_lock.acquire()
 			globalVar.undone_targets += targets
 			globalVar.target_lock.release()
 
+			for each_target in globalVar.undone_targets:
+				service = {}
+				service_type = self._getServiceType(each_target)
+				# print service_type
+				service[service_type] = each_target
+				self.services.append(service)
+
+			pprint(self.services)
 
 			self._noticeStartToWeb()
 			self._initGlobalVar()
 
 		except Exception,e:
-			print 'Exception',e
+			print 'Exception:',e
 
 	def infoGather(self,depth=1):
 		try:
 			#	Step 2
 			print '>>>Step2: gathing info'
+			self.services = []
 			for i in range(depth):
 				print '>>>',i,'<<<'
 				print globalVar.done_targets
@@ -262,21 +287,16 @@ class Scanner(object):
 					# Step2:
 					results = []
 					# 改用map_async的方式
-					proPool = MyPool(10)
+					# proPool = multiprocessing.Pool(10)
+					proPool = MyPool(multiprocessing.cpu_count())
 					p = proPool.map_async(procFunc,pls)
-
-
+					proPool.close()
 					try:
-						results = p.get()
-
-						# while True:
-						# 	print 'globalVar.undone_targets=',globalVar.undone_targets
-						# 	time.sleep(1)
-						# pass
+						proPool.join()
 					except KeyboardInterrupt,e:
-						# proPool.terminate()
 						print "Caught KeyboardInterrupt, terminating workers"
-					proPool.terminate()
+
+					results = p.get()
 
 					newpls = []
 					for res in results:
@@ -298,8 +318,8 @@ class Scanner(object):
 
 			pprint(self.services)
 
-		# except IndexError,e:
-		except Exception,e:
+		except IndexError,e:
+		# except Exception,e:
 			pass
 
 	def scan(self):
@@ -313,15 +333,31 @@ class Scanner(object):
 				self.pls.append(pl)
 
 			results = []
+
 			# 改用map_async的方式
-			proPool = MyPool(10)
+			# proPool = multiprocessing.Pool(10)
+			proPool = MyPool(multiprocessing.cpu_count())
 			p = proPool.map_async(procFunc,self.pls)
+			proPool.close()
 			try:
-				results = p.get()
+				proPool.join()
 			except KeyboardInterrupt,e:
-				# proPool.terminate()
 				print "Caught KeyboardInterrupt, terminating workers"
-			proPool.terminate()
+				# while True:
+				print '---------->>hahahaha main thread caught ctrl+c'
+
+
+			print '>>>>>>>>>>>>>>>>>>All Done<<<<<<<<<<<<<<<<'
+
+			# # 改用map_async的方式
+			# proPool = MyPool(10)
+			# p = proPool.map_async(procFunc,self.pls)
+			# try:
+			# 	results = p.get()
+			# except KeyboardInterrupt,e:
+			# 	# proPool.terminate()
+			# 	print "Caught KeyboardInterrupt, terminating workers"
+			# proPool.terminate()
 
 			# newpls = []
 			# for res in results:
@@ -331,7 +367,8 @@ class Scanner(object):
 			# self._saveResultToFile()
 			self._saveResultToWeb()
 
-		except Exception,e:
+		except IndexError,e:
+		# except Exception,e:
 			print 'Exception',e
 
 # ----------------------------------------------------------------------------------------------------

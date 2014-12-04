@@ -134,11 +134,10 @@ class PluginLoader(object):
 		# importcmd += '\nprint info'
 		# exec_code = compile(importcmd,'','exec')
 		# importcmd = 'from temp.explugin import Audit'
-		# print 'importcmd=',importcmd
-		# print sys.path
+		print 'importcmd=',importcmd
+		# from Info_Collect.subdomain import Audit,info
 		exec(importcmd)
-
-		# print info
+		print 'info=',info
 		return info
 		# info = {
 		# 	'NAME':'Port and Service Discover',
@@ -159,16 +158,92 @@ class PluginLoader(object):
 			path = self.path
 		ret = {}
 		for root, dis, files in os.walk(path):  
-			ret[root] =[]
-			for eachfile in files:
-				if eachfile != '__init__.py' and '.pyc' not in eachfile and eachfile != 'dummy.py' and eachfile.endswith('.py'):
-					ret[root].append(eachfile)
+			if len(files) != 0:
+				ret[root] =[]
+				for eachfile in files:
+					if eachfile != '__init__.py' and '.pyc' not in eachfile and eachfile != 'dummy.py' and eachfile.endswith('.py'):
+						ret[root].append(eachfile)
 
 		self.plugindict = ret
 		# print self.plugindict
-		self.output += str(self.plugindict) + os.linesep*2
+		# self.output += str(self.plugindict) + os.linesep*2
+		self._saveRunningInfo(isinit=True)
+		self._saveRunningInfo(os.linesep+str(self.plugindict)+os.linesep*2)
 
 	def runEachPlugin(self, pluginfilepath, services=None):
+		try:
+			print '>>>running plugin:',pluginfilepath
+			self.output += '>>>running plugin:' + pluginfilepath  + os.linesep
+			self._saveRunningInfo(self.output+os.linesep)
+			self.output = ''
+
+			# init globalVar
+			plugininfo = self._getPluginInfo(pluginfilepath)
+			pprint(plugininfo)
+			pluginname = plugininfo['NAME']
+			# globalVar.plugin_now_lock.acquire()
+			globalVar.plugin_now = pluginname
+			# print id(globalVar)
+			# pprint(globalVar.plugin_now)
+			# globalVar.plugin_now_lock.release()
+
+			if services == None:
+				services = dict(self.services)
+
+			modulepath = pluginfilepath.replace(BASEDIR+'/plugins/','')
+			modulepath = modulepath.replace('.py','')
+			modulepath = modulepath.replace('.','')
+			modulepath = modulepath.replace('/','.')
+			print modulepath
+
+			#from dummy import *
+			importcmd = 'global services' + os.linesep
+			# importcmd += 'import globalVar' + os.linesep
+			# print '1id(globalVar)=',id(globalVar)
+			# importcmd += 'from common import genFilename,security_note,security_info,security_warning,security_hole' + os.linesep
+			#importcmd += 'from dummy import *' + os.linesep
+			importcmd += 'from ' + modulepath + ' import info,Audit'
+
+			print 'importcmd=',importcmd
+			exec(importcmd)
+
+			print 'in running plugin'
+			# print 'plugin pid=\t',os.getpid()
+			# print 'id(globalVar)=\t',id(globalVar)
+			# print 'globalVar.scan_task_dict=\t',globalVar.scan_task_dict
+			if locals().has_key('Audit'):
+				# MAudit = copy.copy(Audit)
+				#print '\tPlugin function Audit loaded'
+				ret, output = ({},'')
+				try:
+					ret,output = Audit(services)
+				except Exception,e:
+					print 'Audit Function Exception:\t',e
+				# outputinfo
+				if output != '' and output != None:
+					self.output += output
+				# services info
+				if self.services != services:
+					self.services = services
+					#print 'services changed:\t', services
+					self.output += 'services changed to:\t' + str(services) + os.linesep
+				# return info
+				if ret and ret != {}:
+					#print 'pluginfilepath=\t',pluginfilepath
+					ret['type'] = info['NAME']
+					print 'ret=\t',ret
+					self.retinfo.append(ret)
+
+			# at last, save output infomation
+			self._saveRunningInfo(self.output+os.linesep)
+			# clear output
+			self.output = ''
+		# except IndexError,e:
+		# 这里不能一定要用 所有的 Exception, 防止插件出现的各种bug
+		except Exception,e:
+			print 'Run Plugin Exception:\t',e
+		
+	def runEachPlugin_v1(self, pluginfilepath, services=None):
 		try:
 			print '>>>running plugin:',pluginfilepath
 			self.output += '>>>running plugin:' + pluginfilepath  + os.linesep
@@ -259,7 +334,7 @@ class PluginLoader(object):
 		if services == None:
 			services = self.services
 		# find auxiliary path and 
-		self._saveRunningInfo(isinit=True)
+		# self._saveRunningInfo(isinit=True)
 
 
 		# for test
@@ -290,18 +365,19 @@ class PluginLoader(object):
 		self._saveRunningInfo(isret=True)
 
 def main():
-	basedir = '/Users/mody/study/Python/Hammer'
-	sys.path.append(basedir)
-	sys.path.append(basedir+'/lib')
-	services={'url':'http://www.leesec.com'}
+	# basedir = '/Users/mody/study/Python/Hammer'
+	# sys.path.append(basedir)
+	# sys.path.append(basedir+'/lib')
+	# sys.path.append(basedir+'/plugins')
+	services={'url':'http://www.leesec.com','host':'leesec.com'}
 	pl = PluginLoader(None,services)
-	pl.path = basedir+'/plugins'
-	pl.runEachPlugin(basedir+'/plugins/Info_Collect/portscan.py',services)
+	pl.path = BASEDIR+'/plugins'
+	pl.runEachPlugin(BASEDIR+'/plugins/Info_Collect/subdomain.py',services)
 	# pl.runEachPlugin(basedir+'/plugins/Sensitive_Info/backupfile.py',services)
 	
 	# print pl.loadPlugins()
 	# pl.runPlugins()
-	# print pl.retinfo
+	print pl.retinfo
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
@@ -311,3 +387,4 @@ if __name__=='__main__':
 	p.apply_async(main)
 	p.close()
 	p.join()
+	# main()

@@ -3,6 +3,7 @@
 
 import os
 import urllib2
+
 import socket
 from dummy import *
 
@@ -53,77 +54,74 @@ def generateUrl(hosts=None):
 	
 	return urls
 
+def Assign(services):
+	if services.has_key('host'):
+		return True
+	return False
+
 def Audit(services):
 	retinfo = {}
-	output = ''
-	# pprint(locals())
-	# pprint(globals())
-	if services.has_key('host') and 'issubdomain' not in services.keys():
-		output += 'plugin run' + os.linesep
-		subdomains = []
-		# step1: get host domain
-		# pos = services['host'].find('.')+1
-		# domain = services['host'][pos:]
-		domain = GetFirstLevelDomain(services['host'])
-		
-		# step2: get subdomains by knock
-		if False:
-			sb=SubDomain(domain)
-			if 	sb.CheckForWildcard(sb.host) != False:
-				pass
+	output = 'plugin run' + os.linesep
+	subdomains = []
 
-			sb.checkzone(sb.host)
-			sb.subscan(sb.host,sb.wordlist)
-			for eachdomain in sb.found:
-				subdomains.append(eachdomain[1])
-		
-		# step3: get subdomains by bing
-		# 
-		
-		# step4: get subdomains by baidu
-		# 
-		if True:
+	# step1: get host domain
+	domain = GetFirstLevelDomain(services['host'])
+	
+	# step2: get subdomains by knock
+	if False:
+		sb=SubDomain(domain)
+		if 	sb.CheckForWildcard(sb.host) != False:
+			pass
+
+		sb.checkzone(sb.host)
+		sb.subscan(sb.host,sb.wordlist)
+		for eachdomain in sb.found:
+			subdomains.append(eachdomain[1])
+	
+	# step3: get subdomains by bing
+	# 
+	
+	# step4: get subdomains by baidu
+	# 
+	if True:
+		try:
+			th = TheHarvester(None)
+			print 'domain=\t',domain
+			tmp = th.getSubDomains(domain,'baidu',2)
+			print 'result=\t',tmp
 			try:
-				th = TheHarvester(None)
-				print 'domain=\t',domain
-				tmp = th.getSubDomains(domain,'baidu',2)
-				print 'result=\t',tmp
-				try:
-					for eachdomain in tmp:
-						socket.gethostbyname(eachdomain)
-						subdomains.append(eachdomain)
-				except:
-					pass
-				print 'subdomains=\t',subdomains
+				for eachdomain in tmp:
+					socket.gethostbyname(eachdomain)
+					subdomains.append(eachdomain)
 			except:
 				pass
-		# step5: get subdomains by google
-		# 
-		
-		# step6: get subdomains by sitedossier
-		# 
-		
-		# step : combine subdomains
-		tmp = list(set(subdomains))
-		subdomains = tmp
+			print 'subdomains=\t',subdomains
+		except:
+			pass
+	# step5: get subdomains by google
+	# 
+	
+	# step6: get subdomains by sitedossier
+	# 
+	
+	# step : combine subdomains
+	tmp = list(set(subdomains))
+	subdomains = tmp
 
-		ret = subdomains
-		retinfo = {'level':'info','content':ret}
-		# security_note(str(subdomains))
-		for each_domian in subdomains:
-			security_note(each_domian)
+	ret = subdomains
+	retinfo = {'level':'info','content':ret}
+	# security_note(str(subdomains))
+	for each_domian in subdomains:
+		security_note(each_domian)
 
-		if services['host'] not in subdomains:
-			subdomains.append(services['host'])
-		services['subdomains'] = subdomains
+	if services['host'] not in subdomains:
+		subdomains.append(services['host'])
+	services['subdomains'] = subdomains
 
-		# add sub scan task
-		urls = generateUrl(subdomains)
-		for url in urls:
-			add_scan_task(url)
-
-	# else:
-	# 	output += 'plugin does not run' + os.linesep
+	# add sub scan task
+	urls = generateUrl(subdomains)
+	for url in urls:
+		add_scan_task(url)
 
 	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------

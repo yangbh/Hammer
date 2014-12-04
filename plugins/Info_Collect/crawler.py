@@ -3,8 +3,6 @@
 
 from dummy import *
 
-
-
 info = {
 	'NAME':'Crawl Href Links',
 	'AUTHOR':'yangbh',
@@ -15,27 +13,33 @@ info = {
 	'RUNLEVEL':1
 }
 
-def Audit(services):
-	output = ''
+def Assign(services):
 	if services.has_key('url'):
-		output += 'plugin run' + os.linesep
-		url = services['url']
-		args = Strategy(url=url,max_depth=5,max_count=500,concurrency=20,
-			timeout=10,time=6*3600,headers=None,cookies=None,ssl_verify=False,
-			same_host=False,same_domain=True,keyword=None)
-		crawler = Crawler(args)
-		crawler.start()
-		pprint([i for i in crawler.visitedHrefs]+[i for i in crawler.unvisitedHrefs])
-		crawler.saveAllHrefsToFile()
-		crawler.saveAllPaths()
-		crawler.saveAllFileExtensions()
+		return True
+	return False
+
+def Audit(services):
+	output = 'plugin run' + os.linesep
+	url = services['url']
+	args = Strategy(url=url,max_depth=5,max_count=500,concurrency=20,
+		timeout=10,time=6*3600,headers=None,cookies=None,ssl_verify=False,
+		same_host=True,same_domain=True,keyword=None)
+	crawler = Crawler(args)
+	crawler.start()
+	pprint([i for i in crawler.visitedHrefs]+[i for i in crawler.unvisitedHrefs])
+	print 'saving hrefs to file'
+	crawler.saveAllHrefsToFile()
+	print 'saving paths to file'
+	crawler.saveAllPaths()
+	print 'saving extensions to file'
+	crawler.saveAllFileExtensions()
 
 	return (None,output)
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	url='http://www.eguan.cn'
+	url='http://www.leesec.com'
 	if len(sys.argv) ==  2:
 		url = sys.argv[1]
 	services = {'url':url}

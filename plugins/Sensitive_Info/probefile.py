@@ -23,6 +23,18 @@ ret = ''
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
+http404page = ''
+
+def get404Page(url='404.html'):
+	try:
+		print url
+		rq = requests.get(url,timeout=30)
+		http404page = rq.text
+		return http404page
+	except Exception,e:
+		print 'Exception',e
+		return None
+
 def getCrawlerPaths(url):
 	''' '''
 	try:
@@ -85,17 +97,17 @@ def generateUrls(url):
 	# ret.sort()
 	return urls
 
-def httpcrack(url,lock):
-	global ret
+def httpcrack(url):
+	global ret, http404page
 	printinfo = None
 	flg = False
 
 	for i in range(3):
 		# 改用requests库
 		try:
-			rq = requests.get(url,allow_redirects=False)
+			rq = requests.get(url,allow_redirects=False,timeout=30)
 			print url,rq.status_code
-			if rq.status_code in [200,403]:
+			if rq.status_code in [200,403] and rq.text != http404page:
 			 	httpcont = rq.text
 			 	code = rq.status_code
 			 	flg = True
@@ -151,53 +163,78 @@ def httpcrack(url,lock):
 		# 		printinfo = url + '\tException' + str(e) + os.linesep
 		# 	break
 
-	lock.acquire()
-	if printinfo:
-		print printinfo,
-		if flg:
-			ret += printinfo
-	lock.release()
+	# lock.acquire()
+	# if printinfo:
+	# 	print printinfo,
+	# 	if flg:
+	# 		ret += printinfo
+	# lock.release()
 
 	return(flg,printinfo)
 
-def Audit(services):
-	retinfo = {}
-	output = ''
+def Assign(services):
 	if services.has_key('url'):
-		output += 'plugin run' + os.linesep
-		urls = generateUrls(services['url'])
-		#print 'urls=\t'
-		pprint(urls)
+		return True
+	return False
 
-		#  threads
-		lock = threading.Lock()
-		threads = []
-		maxthreads = 20
+def Audit(services):
+	global ret, http404page
+	retinfo = {}
+	output = 'plugin run' + os.linesep
+	
+	# first get http404 code page
+	http404page = get404Page(services['url']+'/404.html')
+	
+	urls = generateUrls(services['url'])
+	#print 'urls=\t'
+	# pprint(urls)
 
-		# for url in urls:
-		# 	th = threading.Thread(target=httpcrack,args=(url,lock))
-		# 	threads.append(th)
-		# i = 0
-		# while i<len(threads):
-		# 	if i+maxthreads >len(threads):
-		# 		numthreads = len(threads) - i
-		# 	else:
-		# 		numthreads = maxthreads
-		# 	print 'threads:',i,' - ', i + numthreads
+	#  threads
+	lock = threading.Lock()
+	threads = []
+	maxthreads = 20
 
-		# 	# start threads
-		# 	for j in range(numthreads):
-		# 		threads[i+j].start()
+	# for url in urls:
+	# 	th = threading.Thread(target=httpcrack,args=(url,lock))
+	# 	threads.append(th)
+	# i = 0
+	# while i<len(threads):
+	# 	if i+maxthreads >len(threads):
+	# 		numthreads = len(threads) - i
+	# 	else:
+	# 		numthreads = maxthreads
+	# 	print 'threads:',i,' - ', i + numthreads
 
-		# 	# wait for threads
-		# 	for j in range(numthreads):
-		# 		threads[i+j].join()
+	# 	# start threads
+	# 	for j in range(numthreads):
+	# 		threads[i+j].start()
 
-		# 	i += maxthreads
-		# 改用futures模块
-		with futures.ThreadPoolExecutor(max_workers=maxthreads) as executor:      #默认10线程
-			future_to_url = dict((executor.submit(httpcrack, url, lock), url)
-						 for url in urls)
+	# 	# wait for threads
+	# 	for j in range(numthreads):
+	# 		threads[i+j].join()
+
+	# 	i += maxthreads
+	# 改用futures模块
+	# with futures.ThreadPoolExecutor(max_workers=maxthreads) as executor:      #默认10线程
+	# 	future_to_url = dict((executor.submit(httpcrack, url), url)
+	# 				 for url in urls)
+	
+	with futures.ThreadPoolExecutor(max_workers=maxthreads) as executor:
+		# Start the load operations and mark each future with its URL
+		future_to_url = dict((executor.submit(httpcrack, url), url) for url in urls)
+		# try:
+		for future in futures.as_completed(future_to_url):
+			url = future_to_url[future]
+			try:
+				ret = future.result()
+			except Exception as exc:
+				print('%r generated an exception: %s' % (url, exc))
+			else:
+				print('%r returns: %s' % (url, str(ret)))
+		
+		# except (KeyboardInterrupt, SystemExit):
+		# 	print "Exiting..."
+		# 	return (retinfo,output)
 	
 	if ret != '':
 		retinfo = {'level':'low','content':ret}
@@ -208,7 +245,7 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	url='http://www.eguan.cn'
+	url='http://testphp.vulnweb.com'
 	if len(sys.argv) ==  2:
 		url = sys.argv[1]
 	services = {'url':url}
