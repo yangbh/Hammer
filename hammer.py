@@ -45,7 +45,7 @@ def usage():
 def main():
 	show()
 	try :
-		opts, args = getopt.getopt(sys.argv[1:], "hs:t:U:T:",['help','server=','token=','update-plugins=','target=','no-gather'])
+		opts, args = getopt.getopt(sys.argv[1:], "hs:t:u:T:",['help','server=','token=','update-plugins=','target=','no-gather'])
 	except getopt.GetoptError,e:
 		print 'getopt.GetoptError',e
 		usage()
@@ -66,7 +66,7 @@ def main():
 			_target = arg
 		elif opt in ('-t','--token'):
 			_token = arg
-		elif opt in ('-U','--update-plugins'):
+		elif opt in ('-u','--update-plugins'):
 			if arg:
 				_pluginpath = arg
 			else:
