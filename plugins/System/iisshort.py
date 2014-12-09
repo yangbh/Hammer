@@ -122,7 +122,8 @@ def Audit(services):
 				retinfo = {'level':'medium','content':url}
 				security_warning(url)
 	except Exception,e:
-		print 'Exception:\t',e
+		# print 'Exception:\t',e
+		logger('Exception:\t'+str(e))
 	
 	return (retinfo,output)
 

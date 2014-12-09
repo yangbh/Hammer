@@ -82,12 +82,15 @@ def vuln_add(scanid=None,subtarget=None,pluginname=None,vulnlevel=None,vulninfo=
 
 		r = requests.post(serverurl,data=postdata)
 		if r.status_code == 200 and r.text != '':
-			print r.text
+			# print r.text
+			logger(r.text)
 		else:
-			print 'return error, please check token and server'
+			# print 'return error, please check token and server'
+			logger('return error, please check token and server')
 		pass
 	except requests.HTTPError,e:
-		print 'requests.HTTPError', e
+		# print 'requests.HTTPError', e
+		logger('requests.HTTPError'+str(e))
 
 def security_note(vulnInfo):
 	try:
@@ -112,7 +115,8 @@ def security_note(vulnInfo):
 		# print 'plugininfo:'
 		# pprint(plugininfo)
 		pluginName = plugininfo['pluginname']
-		print scanID,server,token,subTarget,pluginName,vulnInfo
+		# print scanID,server,token,subTarget,pluginName,vulnInfo
+		logger('%d %s %s %s %s %s' % (scanID,server,token,subTarget,pluginName,vulnInfo))
 		vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='info',vulninfo=vulnInfo,server=server,token=token)
 		return
 	except KeyError,e:
@@ -137,7 +141,8 @@ def security_info(vulnInfo):
 		# print 'plugininfo:'
 		# pprint(plugininfo)
 		pluginName = plugininfo['pluginname']
-		print scanID,server,token,subTarget,pluginName,vulnInfo
+		# print scanID,server,token,subTarget,pluginName,vulnInfo
+		logger('%d %s %s %s %s %s' % (scanID,server,token,subTarget,pluginName,vulnInfo))
 		vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='low',vulninfo=vulnInfo,server=server,token=token)
 		return
 	except KeyError,e:
@@ -154,7 +159,8 @@ def security_warning(vulnInfo):
 
 		plugininfo = getPluginInfo()
 		pluginName = plugininfo['pluginname']
-		print scanID,server,token,subTarget,pluginName,vulnInfo
+		# print scanID,server,token,subTarget,pluginName,vulnInfo
+		logger('%d %s %s %s %s %s' % (scanID,server,token,subTarget,pluginName,vulnInfo))
 		vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='medium',vulninfo=vulnInfo,server=server,token=token)
 		return
 	except KeyError,e:
@@ -172,7 +178,8 @@ def security_hole(vulnInfo):
 
 		plugininfo = getPluginInfo()
 		pluginName = plugininfo['pluginname']
-		print scanID,server,token,subTarget,pluginName,vulnInfo
+		# print scanID,server,token,subTarget,pluginName,vulnInfo
+		logger('%d %s %s %s %s %s' % (scanID,server,token,subTarget,pluginName,vulnInfo))
 		vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='high',vulninfo=vulnInfo,server=server,token=token)
 		return
 	except KeyError,e:
@@ -180,16 +187,40 @@ def security_hole(vulnInfo):
 def add_scan_task(target):
 	''' 添加一个扫描任务'''
 	# print globals()
-	print 'in add_scan_task'
-	print 'plugin pid=\t',os.getpid()
-	print 'id(globalVar.undone_targets)=\t',id(globalVar.undone_targets)
-	print 'globalVar.undone_targets=',globalVar.undone_targets
+	# print 'in add_scan_task'
+	# print 'plugin pid=\t',os.getpid()
+	# print 'id(globalVar.undone_targets)=\t',id(globalVar.undone_targets)
+	# print 'globalVar.undone_targets=',globalVar.undone_targets
 	# globalVar.target_lock.acquire()
 	if target not in globalVar.done_targets and target not in globalVar.undone_targets:
 		globalVar.undone_targets.append(target)
 	# globalVar.target_lock.release()
-	print 'globalVar.undone_targets=',globalVar.undone_targets
+	# print 'globalVar.undone_targets=',globalVar.undone_targets
+	logger('Adding a target: %s' % target)
+# ----------------------------------------------------------------------------------------------------
+# 	logging 接口
+# ----------------------------------------------------------------------------------------------------
+def logger(log):
+	if globalVar.mainlogger != None:
+		globalVar.mainlogger.debug(log)
+	else:
+		# print 'globalVar.mainlogger has not been valued'
+		print(log)
+	# logger = globalVar.mainlogger
+	# print 'globalVar.mainlogger=',globalVar.mainlogger
 
+# 注：
+# 因为python的import机制，所以直接在common.py中print globalVar.mainlogger=
+# globalVar.mainlogger始终为None,这是因为多次import common其实只导入一次，也
+# 就是最初的那次，而此时内存中的 globalVar.mainlogger 已经在scanner_Class中被
+# 赋值利用函数，然后在插件中调用此函数，那么访问到的就是内存中现在的赋值后的
+# globalVar.mainlogger了
+
+# pprint(globalVar.scan_task_dict)
+# reload(globalVar)
+# print 'globalVar.mainlogger=',globalVar.mainlogger
+# print 'globalVar.scan_task_dict=',globalVar.scan_task_dict
+# print 'logger=',logger
 # ----------------------------------------------------------------------------------------------------
 # 	
 # ----------------------------------------------------------------------------------------------------

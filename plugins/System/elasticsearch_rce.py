@@ -29,7 +29,8 @@ def Audit(services):
 	rqu = requests.get(url)
 	# print rqu.text
 	if rqu.status_code==200 and '/etc/passwd' in rqu.text:
-		print rqu.text
+		# print rqu.text
+		logger(rqu.text)
 		security_hole(url)
 		
 	return (retinfo,output)

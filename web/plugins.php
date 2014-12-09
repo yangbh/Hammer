@@ -165,10 +165,10 @@ EOF;
 						<table id="plugins_table" class="table table-striped">
 							<thead>
 								<tr>
-									<th>Name</th>
-									<th>Author</th>
-									<th>Time</th>
-									<th>Description</th>
+									<th style="width: 30%">Name</th>
+									<th style="width: 10%">Author</th>
+									<th style="width: 10%">Time</th>
+									<th style="width: 50%">Description</th>
 								</tr>
 							</thead>
 						</table>
@@ -181,6 +181,10 @@ EOF;
 				<pre class="python" id="plugin_code"></pre>
 			</div>
 			</div>
+			<hr>
+			<footer>
+				<p>© Company 2014</p>
+			</footer>
 		</div>
 
 		<!-- ================================================== -->

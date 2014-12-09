@@ -28,11 +28,13 @@ def generateUrl(hosts=None):
 			tmpurls.append(url)
 			url = 'https://' + eachhost
 			tmpurls.append(url)
-	print 'tmpurls:\t',tmpurls
-
+	# print 'tmpurls:\t',tmpurls
+	logger('tmpurls:\t'+str(tmpurls))
+	
 	for url in tmpurls:
 		try:
-			print 'url=',url
+			# print 'url=',url
+			logger('url=%s ' % url)
 			respone = urllib2.urlopen(url,timeout=20)
 			redirected = respone.geturl()
 			if redirected == url:
@@ -50,7 +52,8 @@ def generateUrl(hosts=None):
 		except urllib2.socket.error,e:
 			#print 'urllib2.socket.error',e,url
 			pass
-	print 'urls:\t',urls
+	# print 'urls:\t',urls
+	logger('urls:\t'+str(urls))
 	
 	return urls
 
@@ -86,16 +89,19 @@ def Audit(services):
 	if True:
 		try:
 			th = TheHarvester(None)
-			print 'domain=\t',domain
+			# print 'domain=\t',domain
+			logger('domain=\t'+domain)
 			tmp = th.getSubDomains(domain,'baidu',2)
-			print 'result=\t',tmp
+			# print 'result=\t',tmp
+			logger('result=\t'+str(tmp))
 			try:
 				for eachdomain in tmp:
 					socket.gethostbyname(eachdomain)
 					subdomains.append(eachdomain)
 			except:
 				pass
-			print 'subdomains=\t',subdomains
+			# print 'subdomains=\t',subdomains
+			
 		except:
 			pass
 	# step5: get subdomains by google
@@ -105,8 +111,11 @@ def Audit(services):
 	# 
 	
 	# step : combine subdomains
+	
 	tmp = list(set(subdomains))
 	subdomains = tmp
+
+	logger('subdomains=\t'+str(subdomains))
 
 	ret = subdomains
 	retinfo = {'level':'info','content':ret}

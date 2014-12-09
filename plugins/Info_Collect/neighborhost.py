@@ -22,11 +22,14 @@ def Assign(services):
 
 def Audit(services):
 	retinfo = {}
-	output = 'plugin run' + os.linesep
+	output = ''
+	# print 'logger=',logger
+	logger('plugin run')
 	neighborhosts = []
 	nbh = NeighborHost(services['ip'])
 	neighborhosts = nbh.getFromChinaZ()
-	print 'neighborhosts=\t',neighborhosts
+	# print 'neighborhosts=\t',neighborhosts
+	logger('neighborhosts=\t'+str(neighborhosts))
 	if neighborhosts and len(neighborhosts) != 0:
 		services['neighborhosts'] = neighborhosts
 		ret = neighborhosts

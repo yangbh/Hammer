@@ -35,7 +35,8 @@ def Audit(services):
 		elif 'public' in respone.headers.keys():
 			method = respone.headers('public')
 	except Exception,e:
-		print 'Exception:\t',e
+		# print 'Exception:\t',e
+		logger('Exception:\t'+str(e))
 
 	if method:
 		method = method.upper()
@@ -66,7 +67,8 @@ def Audit(services):
 
 			return (retinfo,output)
 	except Exception,e:
-		print 'Exception:\t',e
+		# print 'Exception:\t',e
+		logger('Exception:\t'+str(e))
 
 	return (retinfo,output)
 

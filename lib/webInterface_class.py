@@ -27,11 +27,11 @@ class WebInterface(object):
 			postdata = {'type':'start','token':self.token,'url':taskurl,'args':args}
 
 			r = requests.post(serverurl,data=postdata)
-			print r.status_code,r.text
+			# print r.status_code,r.text
 			if r.status_code == 200 and r.text != '':
 				# print r.request.headers
-				print r.request.body
-				print r.text
+				# print r.request.body
+				# print r.text
 				# self.startTime = json.loads(r.text)['startTime']
 				self.id = json.loads(r.text)['id']
 			else:

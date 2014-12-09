@@ -68,7 +68,8 @@ def tomcatcrack(url,username,passwd):
 			a = requests.get(tomurl,auth=(username,passwd))
 			
 			if a.status_code == 200:
-				print username+':'+passwd,'success'
+				# print username+':'+passwd,'success'
+				logger(username+':'+passwd+'success')
 				security_hole(username+':'+passwd)
 				return 'success'
 			else:
@@ -100,7 +101,8 @@ def Audit(services):
 					future = executor.submit(tomcatcrack,url,eachname,eachpwd,)
 					fs[future] = eachname+':'+eachpwd
 					# print eachname+':'+eachpwd +' '+str(f.result())
-			print time.clock()
+			# print time.clock()
+			logger(time.clock())
 
 			# 如何抓取到一个就优雅的退出？
 			# print len(fs)
@@ -125,11 +127,15 @@ def Audit(services):
 			# # print notdonefs
 			# print time.clock()
 		# 找到一个不立即停止，把所有子进程都跑完，最后返回，所花时间更长
-		print time.clock()
+		# print time.clock()
+		logger(time.clock())
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__': 
-	services={'url':'http://localhost:8180','webserver':'Tomcat','webserverversion':'5.5'}
+	url='http://localhost:8180'
+	if len(sys.argv) ==  2:
+		url = sys.argv[1]
+	services={'url':url,'webserver':'Tomcat','webserverversion':'5.5'}
 	pprint(Audit(services))
 	pprint(services)

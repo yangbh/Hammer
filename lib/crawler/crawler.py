@@ -36,8 +36,6 @@ from crawlerFile import CrawlerFile
 
 from dummy import BASEDIR
 
-
-
 from lib.common import genFilename
 
 from threading import Lock
@@ -99,8 +97,8 @@ class Crawler(object):
 		self.isCrawling = False				#标记爬虫是否开始执行任务
 
 		self.file = BASEDIR + '/cache/crawler/' + genFilename(self.url) + '.txt'
-		print self.file
-		print 'args.url=\t',args.url
+		# print self.file
+		# print 'args.url=\t',args.url
 
 		#################
 		#此句有问题
@@ -110,9 +108,10 @@ class Crawler(object):
 		self.lock = Lock()
 
 	def start(self):
-		print '\nStart Crawling\n'
+		# print '\nStart Crawling\n'
 		if not self._isDatabaseAvaliable():
-			print 'Error: Unable to open database file.\n'
+			# print 'Error: Unable to open database file.\n'
+			pass
 		else:
 			pass
 		if True:
@@ -133,8 +132,8 @@ class Crawler(object):
 					counter += 1
 				# self.threadPool.taskJoin()
 
-				print 'Depth %d Finish. Totally visited %d links. \n' % (
-					self.currentDepth, len(self.visitedHrefs))
+				# print 'Depth %d Finish. Totally visited %d links. \n' % (
+				# 	self.currentDepth, len(self.visitedHrefs))
 				# log.info('Depth %d Finish. Total visited Links: %d\n' % (
 				# 	self.currentDepth, len(self.visitedHrefs)))
 				self.currentDepth += 1
@@ -213,7 +212,7 @@ class Crawler(object):
 		try:
 			cf = CrawlerFile(url=self.url)
 			contentlist = self._getCrawlerPaths(self.url)
-			print 'contentlist=',contentlist
+			# print 'contentlist=',contentlist
 			cf.saveSection('Paths',contentlist)
 			# fp = open(self.file,'w')
 			# #filename = BASEDIR + '/cache/crawler/' + genFilename(self.url) + '.txt'

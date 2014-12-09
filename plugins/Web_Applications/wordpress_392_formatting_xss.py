@@ -12,7 +12,7 @@ info = {
 	'AUTHOR':'flsf,yangbh',
 	'TIME':'20141205',
 	'WEB':'http://www.beebeeto.com/pdb/poc-2014-0167/',
-	'DESCRIPTION':'http://www.darknet.org.uk/2014/11/critical-xss-flaw-affects-wordpress-3-9-2-earlier/ /wp-includes/formatting.php 中 wptexturize 函数在处理标签时过滤不严导致双引号重组绕过，最终导致 XSS 漏洞,可以获取 Cookie。'
+	'DESCRIPTION':'/wp-includes/formatting.php 中 wptexturize 函数在处理标签时过滤不严导致双引号重组绕过，最终导致 XSS 漏洞,可以获取 Cookie。'
 }
 
 def Assign(services):

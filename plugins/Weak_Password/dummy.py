@@ -20,6 +20,7 @@ if LIBDIR not in sys.path:
 from pprint import pprint
 
 from common import genFilename,security_note,security_info,security_warning,security_hole
+from common import logger
 
 from lib.ruleFile_class import RuleFile
 from lib.neighborHost_class import NeighborHost

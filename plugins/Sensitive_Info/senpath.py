@@ -28,12 +28,14 @@ http404page = ''
 
 def get404Page(url='404.html'):
 	try:
-		print url
+		# print url
+		logger('url='+url)
 		rq = requests.get(url,timeout=30)
 		http404page = rq.text
 		return http404page
 	except Exception,e:
-		print 'Exception',e
+		# print 'Exception',e
+		logger('Exception:\t'+str(e))
 		return None
 
 def getCrawlerPaths(url):
@@ -43,7 +45,8 @@ def getCrawlerPaths(url):
 		urls = cf.getSection('Paths')
 		return urls
 	except Exception,e:
-		print 'Exception:\t',e
+		# print 'Exception:\t',e
+		logger('Exception:\t'+str(e))
 		return [url]
 
 def getCrawlerFileExts(url):
@@ -53,7 +56,8 @@ def getCrawlerFileExts(url):
 		exts = cf.getSection('FileExtensions')
 		return exts
 	except Exception,e:
-		print 'Exception:\t',e
+		# print 'Exception:\t',e
+		logger('Exception:\t'+str(e))
 		return []
 
 def getCommonPaths(filename):
@@ -71,7 +75,8 @@ def getCommonPaths(filename):
 		fp.close()
 		return paths
 	except Exception,e:
-		print 'Exception:\t',e
+		# print 'Exception:\t',e
+		logger('Exception:\t'+str(e))
 		return []
 
 def generateUrls(url):
@@ -95,11 +100,13 @@ def generateUrls(url):
 				files.append('JSP.txt')
 				break
 		# files = list(set(files))
-		pprint(files)
+		# pprint(files)
+		logger('files=%s ' % str(files))
 		for eachfile in files:
 			paths += getCommonPaths(eachfile)
-		print len(paths)
-
+		# print len(paths)
+		logger('len(paths)=%d ' % len(paths))
+		
 		# wether nessary covering each path
 		toppaths = getCrawlerPaths(url)
 
@@ -123,7 +130,8 @@ def generateUrls(url):
 		return urls
 
 	except Exception,e:
-		print 'Exception:\t',e
+		# print 'Exception:\t',e
+		logger('Exception:\t'+str(e))
 		return []
 
 def httpcrack(url):
@@ -136,7 +144,8 @@ def httpcrack(url):
 			# 改用requests库
 			try:
 				rq = requests.get(url,allow_redirects=False,timeout=30)
-				print url,rq.status_code
+				# print url,rq.status_code
+				logger('%s %d' % (url,rq.status_code))
 				# print 'rq.text=',rq.text
 				# print 'http404page=',http404page
 
@@ -147,7 +156,8 @@ def httpcrack(url):
 				break
 			# 一些并发导致的异常
 			except Exception,e:
-				print 'Exception',url
+				# print 'Exception',url,e
+				logger('Exception:\t%s %s' % (url,str(e)))
 			# try:
 			# 	 httpcode = urllib2.urlopen(url).getcode()
 			# 	 if httpcode == 200:
@@ -189,7 +199,7 @@ def Audit(services):
 	
 	# first get http404 code page
 	http404page = get404Page(services['url']+'/404.html')
-	print 'http404page=',http404page
+	# print 'http404page=',http404page
 
 	urls = generateUrls(services['url'])
 	# pprint(urls)
@@ -233,9 +243,11 @@ def Audit(services):
 			try:
 				ret = future.result()
 			except Exception as exc:
-				print('%r generated an exception: %s' % (url, exc))
+				# print('%r generated an exception: %s' % (url, exc))
+				logger('%r generated an exception: %s' % (url, exc))
 			else:
-				print('%r returns: %s' % (url, str(ret)))
+				# print('%r returns: %s' % (url, str(ret)))
+				logger('%r returns: %s' % (url, str(ret)))
 		
 		# except (KeyboardInterrupt, SystemExit):
 		# 	print "Exiting..."

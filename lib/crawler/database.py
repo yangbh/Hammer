@@ -13,10 +13,10 @@ class Database(object):
 	def __init__(self, dbFile=':memory:'):
 		super(Database, self).__init__()
 		try:
-			print 'dbFile:\t',dbFile
+			# print 'dbFile:\t',dbFile
 			self.conn = None
 			# self.conn = sqlite3.connect(dbFile,isolation_level=None, check_same_thread = False) #让它自动commit，效率也有所提升. 多线程共用
-			print id(self.conn)
+			# print id(self.conn)
 			# self.conn.execute('''CREATE TABLE IF NOT EXISTS
 			# 				Webpage (id INTEGER PRIMARY KEY AUTOINCREMENT, 
 			# 				url TEXT, 

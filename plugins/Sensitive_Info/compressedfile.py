@@ -27,12 +27,14 @@ http404page = ''
 
 def get404Page(url='404.html'):
 	try:
-		print url
+		# print url
+		logger('url='+url)
 		rq = requests.get(url,timeout=30)
 		http404page = rq.text
 		return http404page
 	except Exception,e:
-		print 'Exception',e
+		# print 'Exception',e
+		logger('Exception:\t'+str(e))
 		return None
 
 def getCrawlerPaths(url):
@@ -42,7 +44,8 @@ def getCrawlerPaths(url):
 		urls = cf.getSection('Paths')
 		return urls
 	except Exception,e:
-		print 'Exception:\t',e
+		# print 'Exception:\t',e
+		logger('Exception:\t'+str(e))
 		return [url]
 
 def generateUrls(url):
@@ -84,7 +87,8 @@ def httpcrack(url):
 		# 改用requests库
 		try:
 			rq = requests.get(url,allow_redirects=False,timeout=30)
-			print url,rq.status_code
+			# print url,rq.status_code
+			logger('%s %d' % (url,rq.status_code))
 			if rq.status_code in [200,403] and rq.text != http404page:
 				# if '404' not in rq.text:
 				# 	pass
@@ -94,7 +98,7 @@ def httpcrack(url):
 			break
 		# 一些并发导致的异常
 		except Exception,e:
-			print 'Exception',e
+			logger('Exception:\t%s %s' % (url,str(e)))
 		# try:
 		# 	httpcode = urllib2.urlopen(url).getcode()
 		# 	if httpcode == 200:
@@ -176,9 +180,11 @@ def Audit(services):
 			try:
 				ret = future.result()
 			except Exception as exc:
-				print('%r generated an exception: %s' % (url, exc))
+				# print('%r generated an exception: %s' % (url, exc))
+				logger('%r generated an exception: %s' % (url, exc))
 			else:
-				print('%r returns: %s' % (url, str(ret)))
+				# print('%r returns: %s' % (url, str(ret)))
+				logger('%r returns: %s' % (url, str(ret)))
 		
 		# except (KeyboardInterrupt, SystemExit):
 		# 	print "Exiting..."

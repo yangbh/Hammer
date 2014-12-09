@@ -154,7 +154,7 @@ def Assign(services):
 
 def Audit(services):
 	retinfo = {}
-	output = 'plugin run' + os.linesep
+	output = ''
 	url = services['url']
 	hrefs = getCrawlerHrefs(url)
 	pprint(hrefs)

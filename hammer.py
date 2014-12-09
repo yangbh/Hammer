@@ -8,6 +8,7 @@ sys.path.append('./lib')
 # from scanner_class_mp import Scanner
 from scanner_class_basic import Scanner
 from plugin2sql import loadPlugins
+
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
@@ -31,13 +32,13 @@ def usage():
 	print "\t-s --server: your hammer web server host address, like www.hammer.org"
 	print "\t-t --token: token, find it in http://www.hammer.org/user.php"
 	print "\t-u --update-plugins: update new added plugins to web"
+	print "\t-v --verbose: increase verbosity level"
 	print "\t   --no-gather: do not use information gather module"
 	print "\t-h: help"
 	print "[Targets]"
 	print "\t-T --target: target, can be an ip address, an url or an iprange"
 	print "[Examples]"
 	print "\thammer.py -s www.hammer.org -t 3r75... -u plugins/Info_Collect/"
-	print "\thammer.py -s www.hammer.org -t 3r75... -T http://www.leesec.com/"
 	print "\thammer.py -s www.hammer.org -t 3r75... -T 192.168.1.1/24"
 	# print ''
 	sys.exit(0)
@@ -45,7 +46,7 @@ def usage():
 def main():
 	show()
 	try :
-		opts, args = getopt.getopt(sys.argv[1:], "hs:t:u:T:",['help','server=','token=','update-plugins=','target=','no-gather'])
+		opts, args = getopt.getopt(sys.argv[1:], "hvs:t:u:T:",['help','verbose=','server=','token=','update-plugins=','target=','no-gather'])
 	except getopt.GetoptError,e:
 		print 'getopt.GetoptError',e
 		usage()
@@ -54,10 +55,13 @@ def main():
 	_server = None
 	_token = None
 	_gather_flag = True
+	_vv = 'INFO'
 
 	for opt, arg in opts:
 		if opt in ('-h','--help'):
 			usage()
+		elif opt in ('-v'):
+			_vv = 'DEBUG'
 		elif opt in ('--no-gather'):
 			_gather_flag = False
 		elif opt in ('-s','--server'):
@@ -82,7 +86,7 @@ def main():
 			loadPlugins(_pluginpath,_server,_token)
 
 		elif '_target' in dir():
-			sn = Scanner(_server,_token,_target)
+			sn = Scanner(_server,_token,_target,_vv)
 			sn.initInfo()
 			if _gather_flag:
 				sn.infoGather()

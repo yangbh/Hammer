@@ -37,7 +37,8 @@ def Audit(services):
 			output = ip + ':' + str(port)+'/'+str(dbs)
 			security_hole(ip+':'+str(port)+'/'+str(dbs))
 		except pymongo.errors.OperationFailure,e:
-			print 'Exception',e
+			# print 'Exception',e
+			logger('Exception:\t'+str(e))
 			# pass
 	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------

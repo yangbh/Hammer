@@ -121,7 +121,8 @@ def getCrawlerHrefs(url):
 		urls = cf.getSection('Hrefs')
 		return urls
 	except Exception,e:
-		print 'Exception:\t',e
+		# print 'Exception:\t',e
+		logger('Exception:\t'+str(e))
 		return [url]
 
 def getCrawlerFileExts(url):
@@ -131,7 +132,8 @@ def getCrawlerFileExts(url):
 		exts = cf.getSection('FileExtensions')
 		return exts
 	except Exception,e:
-		print 'Exception:\t',e
+		# print 'Exception:\t',e
+		logger('Exception:\t'+str(e))
 		return []
 
 def getOneUrlByExts(url,ext='.do,.action,.jsp,.jspx'):
@@ -222,6 +224,8 @@ def fuzzAction(url):
 	if fileName:
 		print 'fileName=',fileName
 		print 'prefixSuffixList=',prefixSuffixList
+		logger('fileName=\t'+fileName)
+		logger('prefixSuffixList=\t'+str(prefixSuffixList))
 		for prefix, suffix in prefixSuffixList:
 			payload = r"%s%s%s" %(prefix, payload3, suffix)
 			payload = urlencode(payload)
@@ -318,13 +322,16 @@ def Assign(services):
 
 def Audit(services):
 	urls = getOneUrlByExts(url)
-	print urls
+	# print urls
+	logger(str(urls))
 	for url in urls:
-		print '[*] Checking url: "%s"' %url
+		# print '[*] Checking url: "%s"' %url
+		logger('Checking url: "%s"' %url)
 		# fuzz action
 		result,payload,method = fuzzAction(url)
 		if result:
-			print '[+] Fuzz action find struts Vulnerability with method %s' %method
+			# print '[+] Fuzz action find struts Vulnerability with method %s' %method
+			logger('Fuzz action find struts Vulnerability with method %s' %method)
 			# return result,payload,method
 			return
 
@@ -335,13 +342,15 @@ def Audit(services):
 		#fuzz parameter
 		result,payload,method = fuzzParam(url)
 		if result:
-			print '[+] Fuzz param find struts Vulnerability with method %s' %method
+			# print '[+] Fuzz param find struts Vulnerability with method %s' %method
+			logger('Fuzz param find struts Vulnerability with method %s' %method)
 			# return result,payload,method
 			return
 		#fuzz value poc
 		result,payload,method = fuzzParamValue(url)
 		if result:
-			print '[+] Fuzz param value find struts Vulnerability with method %s' %method
+			# print '[+] Fuzz param value find struts Vulnerability with method %s' %method
+			logger('Fuzz param value find struts Vulnerability with method %s' %method)
 			# return result,payload,method
 			return
 # ----------------------------------------------------------------------------------------------------

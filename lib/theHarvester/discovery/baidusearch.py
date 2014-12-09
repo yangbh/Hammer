@@ -32,7 +32,7 @@ class search_baidu:
 	def process(self):
 		while self.counter <= self.limit:
 			self.do_search()
-			print "\tSearching "+ str(self.counter) + " results..."
+			# print "\tSearching "+ str(self.counter) + " results..."
 			self.counter+=100		
 	def get_emails(self):
 		rawres=myparser.parser(self.totalresults,self.word)

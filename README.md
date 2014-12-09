@@ -22,13 +22,13 @@ Usage: hammer.py [Options] [Targets]
 	-s --server: your hammer web server host address, like www.hammer.org
 	-t --token: token, find it in http://www.hammer.org/user.php
 	-u --update-plugins: update new added plugins to web
+	-v --verbose: increase verbosity level
 	   --no-gather: do not use information gather module
 	-h: help
 [Targets]
 	-T --target: target, can be an ip address, an url or an iprange
 [Examples]
 	hammer.py -s www.hammer.org -t 3r75... -u plugins/Info_Collect/
-	hammer.py -s www.hammer.org -t 3r75... -T http://www.leesec.com/
 	hammer.py -s www.hammer.org -t 3r75... -T 192.168.1.1/24
 ```
 
@@ -43,9 +43,9 @@ Install
 2. 配置web，修改web目录下config配置文件
 3. 将plugins目录下所有插件内容导入web数据库
 	1)登录web，在user.php中获取token，执行更新插件:
-	python hammer.py -s www.hammer.org -t yourtokenhere -U plugins/
+	python hammer.py -s www.hammer.org -t yourtokenhere -u plugins/
 	2) 以后若添加插件，可以-U指定单独.py插件，也可以指定目录
-	python hammer.py -s www.hammer.org -t yourtokenhere -U yourpluginfilepath
+	python hammer.py -s www.hammer.org -t yourtokenhere -u yourpluginfilepath
 4. 运行hammer.py进行扫描
 	python hammer.py -s www.hammer.org -t yourtokenhere -T yourtargethere
 ```

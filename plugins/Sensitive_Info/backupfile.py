@@ -27,12 +27,14 @@ http404page = ''
 
 def get404Page(url='404.html'):
 	try:
-		print url
+		# print url
+		logger('url='+url)
 		rq = requests.get(url,timeout=30)
 		http404page = rq.text
 		return http404page
 	except Exception,e:
-		print 'Exception',e
+		# print 'Exception',e
+		logger('Exception:\t'+str(e))
 		return None
 
 def getCrawlerHrefs(url):
@@ -42,7 +44,8 @@ def getCrawlerHrefs(url):
 		urls = cf.getSection('Hrefs')
 		return urls
 	except Exception,e:
-		print 'Exception:\t',e
+		# print 'Exception:\t',e
+		logger('Exception:\t'+str(e))
 		return [url]
 
 def getCrawlerFiles(url):
@@ -63,7 +66,8 @@ def getCrawlerFiles(url):
 				files.append(linkfile[::-1])
 		return files
 	except Exception,e:
-		print 'Exception:\t',e
+		# print 'Exception:\t',e
+		logger('Exception:\t'+str(e))
 		return []
 
 def getDict(filename):
@@ -82,7 +86,8 @@ def getDict(filename):
 		fp.close()
 		return ret
 	except Exception,e:
-		print 'Exception:\t',e
+		# print 'Exception:\t',e
+		logger('Exception:\t'+str(e))
 		return []
 
 def generateUrls(url):
@@ -93,7 +98,8 @@ def generateUrls(url):
 	dicts = getDict(dictfile)
 	#print 'dicts=\t',dicts
 	files = getCrawlerFiles(url)
-	print 'files=\t',files
+	# print 'files=\t',files
+	logger('files=:\t'+str(files))
 	for eachfile in files:
 		for eachdict in dicts:
 			urls.append(eachfile+eachdict)
@@ -112,7 +118,8 @@ def httpcrack(url):
 		# 改用requests库
 		try:
 			rq = requests.get(url,allow_redirects=False,timeout=30)
-			print url,rq.status_code
+			# print url,rq.status_code
+			logger('%s %d' % (url,rq.status_code))
 			if rq.status_code in [200,403] and rq.text != http404page:
 				printinfo = url + '\t code:' + str(rq.status_code) + os.linesep
 				security_warning(url + '\t code:' + str(rq.status_code))
@@ -120,7 +127,8 @@ def httpcrack(url):
 			break
 		# 一些并发导致的异常
 		except Exception,e:
-			print 'Exception',e
+			# print 'Exception',e
+			logger('Exception:\t%s %s' % (url,str(e)))
 		# try:
 		# 	 httpcode = urllib2.urlopen(url).getcode()
 		# 	 if httpcode == 200:
@@ -158,8 +166,8 @@ def Audit(services):
 	output = 'plugin run' + os.linesep
 	# first get http404 code page
 	http404page = get404Page(services['url']+'/404.html')
-	print 'http404page=',http404page
-
+	# print 'http404page=',http404page
+	# logger('http404page='+str(http404page))
 	urls = generateUrls(services['url'])
 	# pprint(urls)
 
@@ -205,9 +213,11 @@ def Audit(services):
 			try:
 				ret = future.result()
 			except Exception as exc:
-				print('%r generated an exception: %s' % (url, exc))
+				# print('%r generated an exception: %s' % (url, exc))
+				logger('%r generated an exception: %s' % (url, exc))
 			else:
-				print('%r returns: %s' % (url, str(ret)))
+				# print('%r returns: %s' % (url, str(ret)))
+				logger('%r returns: %s' % (url, str(ret)))
 		
 		# except (KeyboardInterrupt, SystemExit):
 		# 	print "Exiting..."

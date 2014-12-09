@@ -21,7 +21,8 @@ def generateUrl(ip=None,ports=None):
 	for eachport in ports.keys():
 		if ports[eachport]['name'] == 'http':
 			httpports.append(eachport)
-	print 'httpports:\t',httpports
+	# print 'httpports:\t',httpports
+	logger('httpports:\t'+str(httpports))
 
 	# url redict  hasn't been considered
 	urls = []
@@ -33,11 +34,13 @@ def generateUrl(ip=None,ports=None):
 			tmpurls.append(url)
 			url = 'https://' + ip + ':' + str(eachport)
 			tmpurls.append(url)
-	print 'tmpurls:\t',tmpurls
+	# print 'tmpurls:\t',tmpurls
+	logger('tmpurls:\t'+str(tmpurls))
 
 	for url in tmpurls:
 		try:
-			print 'url=',url
+			# print 'url=',url
+			logger('url=%s ' % url)
 			respone = urllib2.urlopen(url,timeout=10)
 			redirected = respone.geturl()
 			if redirected == url:
@@ -55,7 +58,8 @@ def generateUrl(ip=None,ports=None):
 		except urllib2.socket.error,e:
 			#print 'urllib2.socket.error',e,url
 			pass
-	print 'urls:\t',urls
+	# print 'urls:\t',urls
+	logger('urls:\t'+str(urls))
 
 	return urls
 
@@ -69,6 +73,9 @@ def Audit(services):
 	# print globals()
 	retinfo = {}
 	output = 'plugin run' + os.linesep
+	# print 'logger=',logger
+	# logger('you are success')
+	# logger.debug('logger test plugin run')
 	ip = services['ip']
 	np = NmapScanner(ip)
 	sc = np.scanPorts()
@@ -107,7 +114,7 @@ def Audit(services):
 	# 	output += 'IndexError: ' + str(e) + os.linesep
 	except KeyError,e:
 		print 'KeyError:',e
-		output += 'KeyError: ' + str(e) + os.linesep
+		# output += 'KeyError: ' + str(e) + os.linesep
 
 	return (retinfo,output)
 
