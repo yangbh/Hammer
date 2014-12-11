@@ -32,22 +32,23 @@ class PluginLoader(object):
 		# output file
 		outputpath = outputpath.replace('://','_')
 		outputpath = outputpath.replace('/','')
-
 		self.target = ''
-		if services.has_key('ip'):
-			self.target = services['ip']
-			self.outputfile = BASEDIR + '/output/' + outputpath + '/' + self.target
-		elif services.has_key('url'):
-			self.target = services['url']
-			tmpurl = self.target.replace('://','_')
-			tmpurl = tmpurl.replace(':','_')
-			tmpurl = tmpurl.replace('/','')
-			self.outputfile = BASEDIR + '/output/' + outputpath + '/' + tmpurl
-		elif services.has_key('host'):
-			self.target = services['host']
-			self.outputfile = BASEDIR + '/output/' + outputpath + '/' + self.target
-		else:
-			self.outputfile = ''
+		if services:
+			if services.has_key('ip'):
+				self.target = services['ip']
+				self.outputfile = BASEDIR + '/output/' + outputpath + '/' + self.target
+			elif services.has_key('url'):
+				self.target = services['url']
+				tmpurl = self.target.replace('://','_')
+				tmpurl = tmpurl.replace(':','_')
+				tmpurl = tmpurl.replace('/','')
+				self.outputfile = BASEDIR + '/output/' + outputpath + '/' + tmpurl
+			elif services.has_key('host'):
+				self.target = services['host']
+				self.outputfile = BASEDIR + '/output/' + outputpath + '/' + self.target
+			else:
+				self.outputfile = ''
+		# init sub process in globalVar
 
 	def _saveRunningInfo(self,info='',isinit=False,isret=False):
 		''' '''
@@ -108,11 +109,11 @@ class PluginLoader(object):
 	def _initSubProcess(self):
 		'''
 		初始化子进程在globalVar中的全局变量，包括scan_task_dict
+
 		'''# sub porcess information
 		pid = os.getpid()
 		# parent process information
 		ppid = os.getppid()
-		# print 'pid=\t',os.getpid()
 		tmpdict = {}
 		tmpdict['pid'] = pid
 		tmpdict['ppid'] = ppid
@@ -160,7 +161,7 @@ class PluginLoader(object):
 		return info
 
 	def loadPlugins(self, path=None):
-		self._initSubProcess()
+		
 		#print '>>>loading plugins'
 		
 		if path == None:
@@ -179,13 +180,14 @@ class PluginLoader(object):
 		self._saveRunningInfo(os.linesep+str(self.plugindict)+os.linesep*2)
 
 	def runEachPlugin(self, pluginfilepath, services=None):
+		self._initSubProcess()
 		try:
 			# print '>>>running plugin:',pluginfilepath
 			self._saveRunningInfo(os.linesep + '>>>running plugin:' + pluginfilepath + os.linesep)
 			globalVar.mainlogger.info('[*][*][-] running plugin:'+pluginfilepath)
+			
 			# init globalVar
 			plugininfo = self._getPluginInfo(pluginfilepath)
-			# pprint(plugininfo)
 			pluginname = plugininfo['NAME']
 			# globalVar.plugin_now_lock.acquire()
 			globalVar.plugin_now = pluginname
@@ -207,25 +209,19 @@ class PluginLoader(object):
 				importcmd = 'global services,logger' + os.linesep
 				importcmd += 'from ' + modulepath + ' import Assign'
 				# globalVar.mainlogger.debug('importcmd='+importcmd)
-				# print 'importcmd=',importcmd
 				exec(importcmd)
-				# print 'load Assign success'
 				globalVar.mainlogger.debug('load Assign success')
 				self._saveRunningInfo('load Assign success'+os.linesep)
 			except Exception,e:
-				# print 'Exception: Import Assign Failed\t',e
 				globalVar.mainlogger.debug('Exception: Import Assign Failed\t:'+str(e))
 			# 导入Audit函数 以及 info变量
 			try:
 				importcmd = 'global services' + os.linesep
 				importcmd += 'from ' + modulepath + ' import info,Audit'
-				# print 'importcmd=',importcmd
 				exec(importcmd)
-				# print 'load info and Audit success'
 				globalVar.mainlogger.debug('load info and Audit success')
 				self._saveRunningInfo('load info and Audit success'+os.linesep)
 			except Exception,e:
-				# print 'Exception: Import info and Audit Failed\t',e
 				globalVar.mainlogger.debug('Exception: Import info and Audit Failed\t:'+str(e))
 			# print 'in running plugin'
 			# print 'plugin pid=\t',os.getpid()
@@ -237,24 +233,19 @@ class PluginLoader(object):
 				retflag = False
 				retflag = Assign(services)
 
-			# print 'retflag=',retflag
 			globalVar.mainlogger.debug('retflag='+str(retflag))
 
 			if retflag and locals().has_key('Audit'):
-				# MAudit = copy.copy(Audit)
-				#print '\tPlugin function Audit loaded'
 				ret, output = ({},'')
 				try:
 					Audit(services)
 					# ret,output = Audit(services)
 				except Exception,e:
-					# print 'Audit Function Exception:\t',e
 					globalVar.mainlogger.error('Audit Function Exception:\t'+str(e))
 
 				# services info
 				if self.services != services:
 					self.services = services
-					#print 'services changed:\t', services
 					globalVar.mainlogger.warning('services changed to:\t' + str(services))
 					self._saveRunningInfo('services changed to:\t' + str(services) + os.linesep)
 				
@@ -271,9 +262,53 @@ class PluginLoader(object):
 
 		# 这里不能一定要用 所有的 Exception, 防止插件出现的各种bug
 		except Exception,e:
-			# print 'Run Plugin Exception:\t',e
 			globalVar.mainlogger.error('Run Plugin Exception:\t:'+str(e))
+
+	def runAudit(self,pluginfilepath,services=None):
+		self._initSubProcess()
+		try:
+			globalVar.mainlogger.info('[*][*][-] running plugin:'+pluginfilepath)
+			# init globalVar
+			plugininfo = self._getPluginInfo(pluginfilepath)
+			# pprint(plugininfo)
+			pluginname = plugininfo['NAME']
+			# globalVar.plugin_now_lock.acquire()
+			globalVar.plugin_now = pluginname
+			# print id(globalVar)
+			# pprint(globalVar.plugin_now)
+			# globalVar.plugin_now_lock.release()
+
+			if services == None:
+				services = dict(self.services)
+
+			modulepath = pluginfilepath.replace(BASEDIR+'/plugins/','')
+			modulepath = modulepath.replace('.py','')
+			modulepath = modulepath.replace('.','')
+			modulepath = modulepath.replace('/','.')
+			# print modulepath
+			logger = globalVar.mainlogger
+			# 导入Audit函数 以及 info变量
+			try:
+				importcmd = 'global services' + os.linesep
+				importcmd += 'from ' + modulepath + ' import info,Audit'
+				# print 'importcmd=',importcmd
+				exec(importcmd)
+				globalVar.mainlogger.debug('load info and Audit success')
+			except Exception,e:
+				globalVar.mainlogger.debug('Exception: Import info and Audit Failed\t:'+str(e))
+
+			if locals().has_key('Audit'):
+				try:
+					Audit(services)
+				except Exception,e:
+					globalVar.mainlogger.error('Audit Function Exception:\t'+str(e))
+
+		except Exception,e:
+			globalVar.mainlogger.error('Run Plugin Exception:\t:'+str(e))
+
 	def runPlugins(self, services=None):
+		self._initSubProcess()
+
 		if services == None:
 			services = self.services
 		# find auxiliary path and 

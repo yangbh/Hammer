@@ -69,11 +69,7 @@ def Assign(services):
 	return False
 
 def Audit(services):
-	# print locals()
-	# print globals()
-	retinfo = {}
-	output = 'plugin run' + os.linesep
-	# print 'logger=',logger
+	logger('services=%s' % services)
 	# logger('you are success')
 	# logger.debug('logger test plugin run')
 	ip = services['ip']
@@ -93,35 +89,30 @@ def Audit(services):
 			for eachport in sc[sc.keys()[0]]['udp']:
 				services['ports'].append(eachport)
 
-		#print 'services:\t',services
-		#output += 'services:\t' + str(services) + os.linesep
-		retinfo = {'level':'info','content':str(services['ports'])}
-		# print 'calling secruity_note-----------------'
+		logger('services:%s' %services)
 		if services.has_key('noSubprocess') and services['noSubprocess'] == True:
 			pass
 		else:
 			security_note(str(services['ports']))
 
 			# add sub task
-			urls = generateUrl(ip,services['port_detail'])
-			for url in urls:
-				add_scan_task(url)
-
-		#print services
+			if services.has_key('mode') and services['mode']=='nogather':
+				pass
+			else:
+				urls = generateUrl(ip,services['port_detail'])
+				for url in urls:
+					add_scan_task(url)
 
 	# except IndexError,e:
-	# 	print 'IndexError:',e
-	# 	output += 'IndexError: ' + str(e) + os.linesep
 	except KeyError,e:
-		print 'KeyError:',e
-		# output += 'KeyError: ' + str(e) + os.linesep
-
-	return (retinfo,output)
-
+		logger('KeyError:%s' % str(e))
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	services={'ip':'87.230.29.167'}
+	ip='172.16.3.5'
+	if len(sys.argv) ==  2:
+		url = sys.argv[1]
+	services={'ip':ip}
 	print Audit(services)
 	pprint(services)

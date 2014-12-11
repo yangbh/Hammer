@@ -28,20 +28,21 @@ from dummy import *
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
-def procFunc(pluginheader):
+def procFunc(pluginheader,pluginfilepath):
 	try:
 		if type(pluginheader) == PluginLoader:
 			pl = pluginheader
-			pl.loadPlugins()
-			pl.runPlugins()
+			globalVar.mainlogger.info('pluginfilepath=%s' % pluginfilepath)
+			globalVar.mainlogger.info('service=%s' % str(pl.services))
+			pl.runAudit(pluginfilepath)
 			globalVar.mainlogger.debug('returnning pl')			
-			# return pl
+
 			return pl.services
 		else:
-			print 'pl is not a pluginLoader_class.PluginLoader class'
+			globalVar.mainlogger.error('pl is not a pluginLoader_class.PluginLoader class')
 			return None
 	except (KeyboardInterrupt, SystemExit):
-		print "Exiting..."
+		globalVar.mainlogger.info('Exiting...')
 		return None
 # ----------------------------------------------------------------------------------------------------
 #
@@ -61,15 +62,17 @@ class MyPool(multiprocessing.pool.Pool):
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
-class Scanner(object):
+class PluginMultiRunner(object):
 	"""docstring for Scanner"""
-	def __init__(self,server=None,token=None,target=None,threads=None,loglever='INFO'):
-		super(Scanner, self).__init__()
+	def __init__(self,server=None,token=None,target=None,pluginfilepath=None,pluginargs=None,threads=None,loglever='INFO'):
+		super(PluginMultiRunner, self).__init__()
 		self.server = server
 		self.token = token
 		self.target = target
+		self.pluginfilepath = BASEDIR +'/' +pluginfilepath
+		self.pluginargs = pluginargs
 		if threads and type(threads) == int:
-			self.threads = threads
+			self.threads = int(threads)
 		else:
 			self.threads = multiprocessing.cpu_count()
 
@@ -116,11 +119,11 @@ class Scanner(object):
 		globalVar.mainlogger.addHandler(ch)
 
 		globalVar.mainlogger.info('[*] Start an new scan')
-		globalVar.mainlogger.info('\tserver\t=%s' % server)
-		globalVar.mainlogger.info('\ttoken\t=%s' % token)
-		globalVar.mainlogger.info('\ttarget\t=%s' % target)
-		globalVar.mainlogger.info('\tthreads\t=%d' % self.threads)
-
+		globalVar.mainlogger.info('\tserver  =%s' % server)
+		globalVar.mainlogger.info('\ttoken    =%s' % token)
+		globalVar.mainlogger.info('\ttarget  =%s' % target)
+		globalVar.mainlogger.info('\tthreads=%d' % self.threads)
+	
 	def _getServiceType(self,target):
 		m = re.search('(http[s]?)://([^:^/]+):?([^/]*)/?',target)
 		if m:
@@ -160,11 +163,9 @@ class Scanner(object):
 		globalVar.scan_task_dict_lock.release()
 
 	def _saveResultToWeb(self):
-		# print '>>>saving scan result to server'
 		globalVar.mainlogger.info('Saving scan result to server')
 		if self.web_interface == None:
 			globalVar.mainlogger.error('\tserver not exists')
-			# print'server not exists'
 			return False
 		else:
 			self.web_interface.task_end()
@@ -172,70 +173,47 @@ class Scanner(object):
 	def initInfo(self,target=None):
 		try:
 			#	Step 1
-			# print '>>>Step1: init starting info'
 			globalVar.mainlogger.info('[*][*] Step1: init starting info')
-			self.services = []
+			
 			if target==None:
 				target = self.target
+			
 			targets = []
-			if target:
-				# ip range type
+			# file type target
+			if os.path.isfile(target):
+				for eachLine in f:
+					eachLine = eachLine.replace('\r','')
+					eachLine = eachLine.replace('\n','')
+					targets.append(eachLine)
+			
+			# ip range type
+			else:
 				m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(\/\d{1,2})?$',target)
 				if m:
 					ipnet = list(ipaddress.ip_network(unicode(target)).hosts())
 					for eachipad in ipnet:
 						targets.append(eachipad.compressed)
 				else:
-					# one ip
-					m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$',target)
-					if m:
-						targets.append(target)
+					targets.append(target)
+		
+			argdict = {}
+			if self.pluginargs:
+				pluginargs = self.pluginargs.split(';')
+				for eacharg in pluginargs:
+					if '=' in eacharg:
+						exec(eacharg)
+						eacharg = eacharg.split('=')
+						argdict[eacharg[0]] = eval(eacharg[0])
+				globalVar.mainlogger.debug('argdict=%s' % str(argdict))
 
-					else:
-						# url type
-						m = re.match('(http[s]?)://([^:^/]+):?([^/]*)/?',target)
-						if m:
-							http_type = m.group(1)
-							# print m.group(2)
-							n = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(\/\d{1,2})?$',m.group(2))
-							# ip
-							if n:
-								# print 'is an ip type url'
-								ip = m.group(2)
-								if target[-1] == '/':
-									target = target[:-1]
-								targets.append(ip)
-								targets.append(target)
-							else:
-								host = m.group(2)
-								ports = m.group(3)
-								# print host
-								ip = socket.gethostbyname(host)
-								domain = GetFirstLevelDomain(host)
-								# print 'ip=',ip
-								if target[-1] == '/':
-									target = target[:-1]
-								targets.append(ip)
-								targets.append(target)
-								targets.append(domain)
-						else:
-							# host type
-							domain = GetFirstLevelDomain(target)
-							targets.append(domain)
-
-
-			globalVar.target_lock.acquire()
-			globalVar.undone_targets += targets
-			globalVar.target_lock.release()
-
-			for each_target in globalVar.undone_targets:
-				service = {}
+			for each_target in targets:
+				service = {'mode':'nogather'}
 				service_type = self._getServiceType(each_target)
-				# print service_type
 				service[service_type] = each_target
+				if len(argdict):
+					service.update(argdict)
 				self.services.append(service)
 
-			# pprint(self.services)
 			globalVar.mainlogger.info('Targets:')
 			for service in self.services:
 				globalVar.mainlogger.info('\t'+str(service))
@@ -244,148 +222,34 @@ class Scanner(object):
 			self._initGlobalVar()
 		except IndexError,e:
 		# except Exception,e:
-			# print 'Exception:',e
-			globalVar.mainlogger.error('Exception:'+str(e))
-
-	def infoGather(self,depth=1):
-		try:
-			#	Step 2
-			# print '>>>Step2: gathing info'
-			globalVar.mainlogger.info('[*][*] Step2: gathing info')
-			
-			self.services = []
-			for i in range(depth):
-				# print '>>>',i,'<<<'
-				# print globalVar.done_targets
-				# print 'id(globalVar.undone_targets)=\t',id(globalVar.undone_targets)
-				# print 'globalVar.undone_targets=',globalVar.undone_targets
-				
-				if globalVar.undone_targets:
-					# Step1: 
-					services = []
-					pls = []
-					# print globalVar.undone_targets
-					tmpundone = copy.deepcopy(globalVar.undone_targets)
-					for each_target in tmpundone:
-						# print tmpundone
-						# print each_target
-						service = {}
-						service_type = self._getServiceType(each_target)
-						# print service_type
-						service[service_type] = each_target
-						services.append(service)
-
-						globalVar.target_lock.acquire()
-						globalVar.undone_targets.remove(each_target)
-						globalVar.done_targets.append(each_target)
-						globalVar.target_lock.release()
-
-					# pprint(services)
-					# sys.exit()
-					for each_service in services:
-						pl = PluginLoader(BASEDIR+'/plugins/Info_Collect',each_service,'_'+self.target)
-						pls.append(pl)
-
-					# globalVar.target_lock.acquire()
-					# globalVar.done_targets += globalVar.undone_targets
-					# globalVar.undone_targets = []
-					# globalVar.target_lock.release()
-
-					# Step2:
-					results = []
-					# 改用map_async的方式
-					# proPool = multiprocessing.Pool(10)
-					proPool = MyPool(self.threads)
-					p = proPool.map_async(procFunc,pls)
-					proPool.close()
-					try:
-						proPool.join()
-					except KeyboardInterrupt,e:
-						print "Caught KeyboardInterrupt, terminating workers"
-
-					results = p.get()
-
-					# newpls = []
-					# for res in results:
-					# 	newpls.append(res)
-					# self.pls = self.pls + newpls
-
-					for service in results:
-						service['alreadyrun'] = True
-						self.services.append(service)
-
-			# for pl in self.pls:
-			# 	service = pl.services
-			# 	service['alreadyrun'] = True
-			# 	self.services.append(service)
-			# self.pls = []
-
-			for each_target in globalVar.undone_targets:
-				service = {}
-				service_type = self._getServiceType(each_target)
-				# print service_type
-				service[service_type] = each_target
-				self.services.append(service)
-
-			# pprint(self.services)
-			globalVar.mainlogger.info('Targets:')
-			for service in self.services:
-				globalVar.mainlogger.info('\t'+str(service))
-
-		except IndexError,e:
-		# except Exception,e:
 			globalVar.mainlogger.error('Exception:'+str(e))
 
 	def scan(self):
 		''' '''
 		try:
-			#	Step 3
-			# print '>>>Step3: run each sub task'
 			globalVar.mainlogger.info('[*][*] Step3: run each sub task')
 			
-			self.pls = []
+			proPool = MyPool(self.threads)
+
 			for each_service in self.services:
 				pl = PluginLoader(None,each_service,self.target)
-				self.pls.append(pl)
-
-			results = []
+				proPool.apply_async(procFunc,(pl,self.pluginfilepath))
 
 			# 改用map_async的方式
 			# proPool = multiprocessing.Pool(10)
-			proPool = MyPool(self.threads)
-			p = proPool.map_async(procFunc,self.pls)
+			# proPool = MyPool(multiprocessing.cpu_count())
+			# p = proPool.map_async(procFunc,self.pls)
 			proPool.close()
 			try:
 				proPool.join()
 			except KeyboardInterrupt,e:
-				# print "Caught KeyboardInterrupt, terminating workers"
-				# while True:
-				# print '---------->>hahahaha main thread caught ctrl+c'
 				globalVar.mainlogger.error('Caught KeyboardInterrupt, terminating workers')
 
-			# print '>>>>>>>>>>>>>>>>>>All Done<<<<<<<<<<<<<<<<'s
 			globalVar.mainlogger.info('[*] All Done')
-			# # 改用map_async的方式
-			# proPool = MyPool(10)
-			# p = proPool.map_async(procFunc,self.pls)
-			# try:
-			# 	results = p.get()
-			# except KeyboardInterrupt,e:
-			# 	# proPool.terminate()
-			# 	print "Caught KeyboardInterrupt, terminating workers"
-			# proPool.terminate()
-
-			# newpls = []
-			# for res in results:
-			# 	newpls.append(res)
-			# self.pls = newpls
-
-			# self._saveResultToFile()
 			self._saveResultToWeb()
 
 		except IndexError,e:
 		# except Exception,e:
-			# print 'Exception',e
 			globalVar.mainlogger.error('Exception:'+str(e))
 
 # ----------------------------------------------------------------------------------------------------
@@ -397,10 +261,6 @@ if __name__=='__main__':
 	token = 'dqc8mcv6ukaso3fsj1qvujss06'
 
 	target = 'http://www.leesec.com'
-	sn = Scanner(server,token,target)
+	sn = PluginMultiRunner(_server,_token,_target,_plugin,_plugin_arg)
 	sn.initInfo()
-	sn.infoGather()
 	sn.scan()
-	# sn.startScan()
-	# print ">>>scan result:"
-	#print sn.result

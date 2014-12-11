@@ -16,20 +16,25 @@ Basic usage
    ░  ░░ ░  ░   ▒   ░      ░   ░      ░      ░     ░░   ░ 
    ░  ░  ░      ░  ░       ░          ░      ░  ░   ░     
 	
-Usage: hammer.py [Options] [Targets]
+Usage: hammer.py [Auth] [Options] [Targets]
 
-[Options]
+[Auth]
 	-s --server: your hammer web server host address, like www.hammer.org
 	-t --token: token, find it in http://www.hammer.org/user.php
+[Options]
 	-u --update-plugins: update new added plugins to web
 	-v --verbose: increase verbosity level
-	   --no-gather: do not use information gather module
-	-h: help
+	   --threads: max number of process, default cpu number
 [Targets]
 	-T --target: target, can be an ip address, an url or an iprange
+	-p --plugin: run a plugin type scan
+	   --plugin-arg: plugin argus
+	   --no-gather: do not use information gather module
+	-h: help
 [Examples]
 	hammer.py -s www.hammer.org -t 3r75... -u plugins/Info_Collect/
 	hammer.py -s www.hammer.org -t 3r75... -T 192.168.1.1/24
+	hammer.py -s www.hammer.org -t 3r75... -p plugins/System/iisshort.py -T vulnweb.com
 ```
 
 Install

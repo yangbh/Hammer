@@ -108,7 +108,7 @@ def Assign(services):
 def Audit(services):
 	retinfo = None
 	output = ''
-
+	print 'yeyes'
 	if services.has_key('HTTPServer') and services['HTTPServer'].lower().find('iis') == -1:
 		return (retinfo,output)
 	output += 'plugin run' + os.linesep

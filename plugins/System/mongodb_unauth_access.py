@@ -29,7 +29,7 @@ def Audit(services):
 		port = 28017
 	if port:
 		try:
-			connection = pymongo.MongoClient(ip,port)
+			connection = pymongo.MongoClient(ip,port,socketTimeoutMS=3000)
 			# connection.api.authenticate("root","1234")
 			# db = connection.admin
 			# db.system.users.find_one()
@@ -37,7 +37,6 @@ def Audit(services):
 			output = ip + ':' + str(port)+'/'+str(dbs)
 			security_hole(ip+':'+str(port)+'/'+str(dbs))
 		except pymongo.errors.OperationFailure,e:
-			# print 'Exception',e
 			logger('Exception:\t'+str(e))
 			# pass
 	return (retinfo,output)
