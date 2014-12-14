@@ -50,6 +50,9 @@ class PluginLoader(object):
 				self.outputfile = ''
 		# init sub process in globalVar
 
+		globalVar.mainlogger.info('\tSub Scan Start:\t'+self.target)
+
+
 	def _saveRunningInfo(self,info='',isinit=False,isret=False):
 		''' '''
 		if self.outputfile == '':
@@ -140,9 +143,7 @@ class PluginLoader(object):
 		# ch = logging.StreamHandler()  
 		# ch.setFormatter(formatter)
 		# self.logger.addHandler(ch)
-
-		globalVar.mainlogger.info('\tSub Scan Start:\t'+self.target)
-
+		
 	def _getPluginInfo(self,pluginfilepath):
 		# print '>>>running plugin:',pluginfilepath
 		modulepath = pluginfilepath.replace(BASEDIR+'/plugins/','')
@@ -180,7 +181,7 @@ class PluginLoader(object):
 		self._saveRunningInfo(os.linesep+str(self.plugindict)+os.linesep*2)
 
 	def runEachPlugin(self, pluginfilepath, services=None):
-		self._initSubProcess()
+		# self._initSubProcess()
 		try:
 			# print '>>>running plugin:',pluginfilepath
 			self._saveRunningInfo(os.linesep + '>>>running plugin:' + pluginfilepath + os.linesep)

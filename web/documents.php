@@ -15,16 +15,19 @@ require_once('common.php');
 		<title>Hammer</title>
 		<!-- Bootstrap core CSS -->
 		<link href="css/bootstrap.min.css" rel="stylesheet">
+		
 		<!-- Custom styles for this template -->
 		<!-- <link href="css/dashboard.css" rel="stylesheet"> -->
 
-		<link href="css/responsive-nav.css" rel="stylesheet">
+		<!-- <link href="css/responsive-nav.css" rel="stylesheet"> -->
 		
 		<!-- JQuery -->
 		<script src="js/jquery.min.js"></script>
 
+		<script src="js/bootstrap.min.js"></script>
+
 		<!-- a<script src="js/responsive-nav.js"></script> -->
-		
+
 		<script type="text/javascript">
 		$(document).ready(function(){
 		    $("#myNav").affix({
@@ -107,8 +110,8 @@ EOF;
 			<div class="row row-offcanvas row-offcanvas-right">
 
 				<div class="col-sm-3 col-md-2" id="myScrollspy">
-					<ul class="nav nav-tabs nav-stacked" id="myNav">
-						<li><a href="#about">关于</a></li>
+					<ul class="nav nav-tabs nav-stacked" id="myNav" style="margin: 0px;width: 80px;">
+						<li><a href="#">关于</a></li>
 						<li><a href="#run">运行</a></li>
 						<li><a href="#plugin">插件</a></li>
 						<li><a href="#framework">框架</a></li>
@@ -380,9 +383,7 @@ def Audit(services):
 
 		<!-- Bootstrap core JavaScript
 		================================================== -->
-		<!-- Placed at the end of the document so the pages load faster -->
-		<script src="js/bootstrap.min.js"></script>
-		
+		<!-- Placed at the end of the document so the pages load faster -->		
 		<script src="js/jquery.pin.min.js"></script>
 		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
 		<script src="js/ie10-viewport-bug-workaround.js"></script>

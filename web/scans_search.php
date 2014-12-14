@@ -2,10 +2,11 @@
 require_once('common.php');
 
 //
-function search_scan($level,$keyword=''){
+function search_scan($level,$keyword='',$scanid=0){
 	// $pKeyword = check_sql($keyword);
 	$pLevel = $level;
 	$pKeyword = $keyword;
+	$pId = $scanid;
 	if ($userid = get_userid()) {
 		// echo $userid . '<br>';
 	}
@@ -18,10 +19,13 @@ function search_scan($level,$keyword=''){
 	if (is_int($pLevel) and $pLevel>0 and $pLevel<5) {
 		$query .= " AND Scan.Level=$pLevel";
 	}
-
 	if ($pKeyword !='') {
 		$query .= " AND Scan.Url LIKE '%$pKeyword%'";
 	}
+	if (is_int($pId) and $pId>0) {
+		$query .= " AND Scan.ID=$pId";
+	}
+
 	// echo $query.'<br>';
 
 	$ret = array('data' => array(), );
@@ -37,32 +41,6 @@ function search_scan($level,$keyword=''){
 	}
 	return $ret;
 }
-//
-function search_vuln($scanID){
-	$pScanID = $scanID;
-	if ($userid = get_userid()) {
-		// echo $userid . '<br>';
-	}
-	else{
-		die();
-	}
-	$query = "SELECT Vuln.IP_URL,Plugin.Name,Vuln.Vuln_Info,Vuln.Level FROM Plugin,Scan,Vuln WHERE Vuln.Scan_ID=Scan.ID AND Vuln.Plugin_ID=Plugin.ID AND Scan.ID=$scanID AND Scan.User_ID='$userid' ORDER BY Vuln.IP_URL,Vuln.Level";
-	// echo $query.'<br>';
-
-	$ret = array();
-	$result = mysql_query($query);
-	while ($row = mysql_fetch_row($result)){
-		// var_dump($row);
-		foreach ($row as $key => $value){
-			// echo $key.' => '.$value;
-			$row[$key] = check_xss($value);
-		}
-		$ipurl = $row[0];
-		$ret[$ipurl][]=array_slice($row,1);
-	}
-	// var_dump($ret);
-	return $ret;
-}
 ?>
 <?php
 //	check login first
@@ -74,13 +52,6 @@ $keyword = check_sql(trim($_REQUEST['keyword']));
 // echo $keyword . '<br>';
 $level = (int)($_REQUEST['level']);
 $scanID = (int)($_REQUEST['scanid']);
-if ($scanID) {
-	$data = search_vuln($scanID);
-	echo json_encode($data);
-}
-else{
-	$data=search_scan($level,$keyword);
-	echo json_encode($data);
-}
-
+$data=search_scan($level,$keyword,$scanID);
+echo json_encode($data);
 ?>

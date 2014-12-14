@@ -18,6 +18,14 @@ if (!already_login()) {
 		<link rel="icon" href="images/favicon.ico">
 
 		<title>Hammer</title>
+		<!-- Documentation extras -->
+		<link href="css/docs.min.css" rel="stylesheet">
+		<style type="text/css">
+			a span{
+				color: #555;
+				text-decoration: none;
+			}
+		</style>
 		<!-- Bootstrap core CSS -->
 		<!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
 		<!-- jquery -->
@@ -56,23 +64,82 @@ if (!already_login()) {
 			// datatime
 			$('#datetimepicker').datetimepicker();
 
-
 			//  <a> links in tables
 
 			var scanID= document.location.hash.substr(1);
-			console.log('scanID='+scanID)
+			// console.log('scanID='+scanID)
 			// alert(scanID);
-			$.get("scans_search.php",{scanid: scanID},function(data){
-				$('#plugins').hide('slow');
-				$('#code').show('slow');
-				// $('#plugin_code').html(data);
+			//	scan_title 扫描结果总结界面
+			var number =0;
+			$.get('scans_search.php',{scanid: scanID},function(data){
+				var json = jQuery.parseJSON(data);
+				// console.log(json.data)
+				var target = json.data[0][1];
+				var startTime = parseInt(json.data[0][2]);
+				var endTime = parseInt(json.data[0][3]);
+				var level = json.data[0][4]
+				console.log(level)
+				
+				function formatTime(startTime,endTime){
+					if (!endTime) {
+							return '';
+					};
+					time = endTime - startTime;
+					var hour = parseInt(time/3600);
+					var min = parseInt(time/60)%60;
+					var sec = time%60;
+					var ret = '';
+					if(hour){
+							ret+=hour+'h,'+min+'m,'+sec+'s';
+					}
+					else{
+								if (min) {
+										ret+=min+'m,'+sec+'s';
+								}
+								else{
+										ret+=sec+'s';
+								}
+					}
+					return ret;
+				}
+				// console.log('target='+target);
+				$("#scan_title .panel-heading h3 span:first").text(target);
+				// status
+				var h = $("#scan_title .panel-body span:eq(0)");
+				switch(level){
+					case '1':
+						h.text('INFO');
+						h.addClass("label-success");
+						break;
+					case '2':
+						h.text('LOW');
+						h.addClass("label-info");
+						break;
+					case '3':
+						h.text('MEDIEUM');
+						h.addClass("label-warning");
+						break;
+					case '4':
+						h.text('HIGH');
+						h.addClass("label-danger");
+						break;
+				}
+				// costTime
+				$("#scan_title .panel-body span:eq(1)").text(formatTime(startTime,endTime));
+				// startTime
+				var d = new Date();
+				d.setTime(startTime*1000);
+				$("#scan_title .panel-body span:eq(2)").text(d.Format("yyyy-MM-dd hh:mm:ss"));
+			});
+
+			//	scan_results 扫描结果界面
+			$.get("vulns_search.php",{scanid: scanID},function(data){
 				$('#scan_results').empty();
-				$('#scan_title').empty();
-				//
+				// $('#scan_title').empty();
 				var json = jQuery.parseJSON(data);
 				$.each(json,function(i,n){
 					var ipurl = i;
-					var html="<div><blockquote><h3>"+ipurl+"</h3></blockquote></div>"
+					var html="<div><div class=\"bs-callout bs-callout-default\" style=\"margin-bottom: 20px;margin-top: 20px;padding-top: 10px;padding-bottom: 10px;\"><h3 style=\"margin:0;\">"+ipurl+"</h3></div></div>"
 					var extflag = true;
 					$('#scan_results h3').each(function(){
 						if ($(this).text()==i) {
@@ -85,6 +152,10 @@ if (!already_login()) {
 					};
 
 					$.each(n,function(i2,n2){
+						//	漏洞数加一
+						number += 1;
+						$("#scan_title .panel-heading h3 span:last").text(number+' issues');
+
 						$('#scan_results h3').each(function(){
 							if ($(this).text()==i) {
 								var plugin = n2[0];
@@ -133,6 +204,9 @@ if (!already_login()) {
 					});
 				});
 			});
+
+			//	修改scan_title内容
+			
 		});
 		</script>
 	</head>
@@ -144,11 +218,34 @@ if (!already_login()) {
 			<div class="row" id="code" hidden="true">
 			<div class="container" >
 				<h1>
-					<a class="glyphicon glyphicon-circle-arrow-left" id="plugin_goback" href="javascript:history.back()"></a>&nbsp;
-					<small>Scan Results</small>
+					<a href="index.php">
+						<!-- <small><span class="glyphicon glyphicon-home"></span></small> -->
+						<span class="glyphicon glyphicon-home"></span>
+					</a>
+					<a href="javascript:history.back()">
+						<span class="glyphicon glyphicon-circle-arrow-left"></span>
+					</a>
+					&nbsp;Scan Logs
+					<!-- <a class="glyphicon glyphicon-circle-arrow-left" id="plugin_goback" href="javascript:history.back()"></a>&nbsp; -->
 				</h1>
 				<!-- <pre class="python" id="plugin_code"></pre> -->
-				<div class="panel" id="scan_title">
+				<div class="panel panel-default" id="scan_title" style="margin-bottom: 0px;">
+					<div class="panel-heading">
+						<h3 style="margin:0;">
+							<span>http://www.anhuinews.com</span>
+							<span class="label label-info">113 Issus</span>
+						</h3>
+					</div>
+					<div class="panel-body">
+						<div class="ng-binding">
+							Status: <span class="label"></span>
+							<!-- Plugins: <span class="label label-info">87</span>
+							Sub-Domain: <span class="label label-info">true</span>
+							Deep Port scan: <span class="label label-info">true</span> -->
+							Duration: <span class="label label-default"></span>
+							Date: <span class="label label-default"></span>
+						</div>
+					</div>
 				</div>
 				<div class="panel" id="scan_results">
 				</div>
@@ -162,7 +259,7 @@ if (!already_login()) {
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 		<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-
+		
 		<!-- DataTables -->
 		<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.css">
 		<script type="text/javascript" charset="utf8" src="js/jquery.dataTables.js"></script>

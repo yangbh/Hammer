@@ -76,6 +76,8 @@ class PluginMultiRunner(object):
 		else:
 			self.threads = multiprocessing.cpu_count()
 
+		self.args = {'server':self.server,'target':self.target,'loglevel':self.loglevel,'threads':self.threads}
+
 		# web接口
 		self.web_interface = None
 		if server and token:

@@ -7,7 +7,7 @@ function search_plugin($type=0,$keyword=''){
 	// print $pType.$pKeyword;
 	$pType = $type;
 	$pKeyword = $keyword;
-	$query = "SELECT Name,Author,Time,Description FROM Plugin WHERE Name LIKE '%$pKeyword%'";
+	$query = "SELECT ID,Name,Author,Time,Description FROM Plugin WHERE Name LIKE '%$pKeyword%'";
 	// print $query;
 	switch ($pType) {
 		case 0:
@@ -49,7 +49,7 @@ function search_plugin($type=0,$keyword=''){
 	return $ret;
 }
 
-function get_code($name){
+function get_code($name='',$id=1){
 	// $pName = check_sql($name);
 	$query = "SELECT Code FROM Plugin WHERE Name='$name'";
 	// print($query.'<br>');

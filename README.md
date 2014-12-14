@@ -34,7 +34,7 @@ Usage: hammer.py [Auth] [Options] [Targets]
 [Examples]
 	hammer.py -s www.hammer.org -t 3r75... -u plugins/Info_Collect/
 	hammer.py -s www.hammer.org -t 3r75... -T 192.168.1.1/24
-	hammer.py -s www.hammer.org -t 3r75... -p plugins/System/iisshort.py -T vulnweb.com
+	hammer.py -s www.hammer.org -t 3r75... -p plugins/System/iisshort.py -T target
 ```
 
 Install

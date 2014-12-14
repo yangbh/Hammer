@@ -19,7 +19,13 @@ if (!already_login()) {
 
 		<title>Hammer</title>
 		<!-- Bootstrap core CSS -->
-		<!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<style type="text/css">
+			a span{
+				color: #030303;
+				text-decoration: none;
+			}
+		</style>
 		<!-- jquery -->
 		<!-- <script type="text/javascript" charset="utf8" src="http://code.jquery.com/jquery-1.10.2.min.js"></script> -->
 		<script src="js/jquery.min.js"></script>
@@ -57,7 +63,7 @@ if (!already_login()) {
 			$('#datetimepicker').datetimepicker();
 
 			//  plugin table
-			$('#plugins_table').DataTable({
+			$('#scans_table').DataTable({
 				// "ajax": "./datatable.json",
 				"ajax": "./scans_search.php",
 				// "paging":   false,
@@ -77,7 +83,7 @@ if (!already_login()) {
 						"targets": [1],
 						"render": function ( data, type, full, meta ) {
 								// return "<a class=\"plugin\" href='search.php?name="+encodeURI(data)+"'>"+data+"</a>";
-								return "<a class=\"plugin\" href=\""+"result.php#"+full[0]+"\">"+data+"</a>";
+								return "<a class=\"plugin\" href=\""+"vulns.php#"+full[0]+"\">"+data+"</a>";
 						}
 					},
 					{
@@ -149,7 +155,7 @@ if (!already_login()) {
 			$('#search').click(function() {
 				/* Act on the event */
 				var ajax_url = "./scans_search.php?level="+$('#level').val()+"&keyword="+$('#keyword').val();
-				$('#plugins_table').DataTable().ajax.url(ajax_url).load();
+				$('#scans_table').DataTable().ajax.url(ajax_url).load();
 			});
 
 		});
@@ -157,7 +163,7 @@ if (!already_login()) {
 	</head>
 
 	<body>
-		<div class="navbar navbar-inverse navbar-default" role="navigation" style="border-radius: 0px;">
+		<div class="navbar navbar-inverse navbar-default" role="navigation" style="border-radius: 0px;margin: 0px;">
 			<div class="container">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -222,7 +228,12 @@ EOF;
 		<div class="container">
 			<div class="row" id="plugins">
 				<div class="container" >
-						<h2 class="page-header">Scans</h2>
+						<h2 class="page-header">
+							<!-- <span class="glyphicon glyphicon-th"></span> -->
+							Scans&nbsp;
+							<a href="#"><span class="glyphicon glyphicon-plus"></span></a>
+							<a href="#"><span class="glyphicon glyphicon-search"></span></a>
+						</h2>
 						<div class="form-inline">
 <!-- 							<div class="form-group">
 								<input type="text" class="form-control" value="2012-05-15" id="datetimepicker" data-date-format="yyyy-mm-dd">
@@ -242,15 +253,15 @@ EOF;
 							<button id="search" class="btn btn-default">Search</button>
 						</div>
 					<div class="table-responsive">
-						<table id="plugins_table" class="table table-striped">
+						<table id="scans_table" class="table table-striped">
 								<thead>
 										<tr>
 												<th>ID</th>
-												<th>URL/IP</th>
-												<th>StartTime</th>
-												<th>CostTime</th>
-												<th>Level</th>
-												<th>Arguments</th>
+												<th style="width: 25%">URL/IP</th>
+												<th style="width: 15%">StartTime</th>
+												<th style="width: 5%">CostTime</th>
+												<th style="width: 5%">Level</th>
+												<th style="width: 50%">Arguments</th>
 												<th>User_Name</th>
 										</tr>
 								</thead>

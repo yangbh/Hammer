@@ -15,7 +15,19 @@ require_once('common.php');
 		<title>Hammer</title>
 		<!-- Bootstrap core CSS -->
 		<link href="css/bootstrap.min.css" rel="stylesheet">
-		
+		<style type="text/css">
+			/*.navbar-inverse .navbar-nav>li>a{
+				font-size: 15px;
+				color: #ffffff;
+			}
+			.navbar-inverse .navbar-nav > .active > a, .navbar-inverse .navbar-nav > .active > a:hover, .navbar-inverse .navbar-nav > .active > a:focus{
+				background-color: #D6572A;
+			}*/
+			a span{
+				color: #030303;
+				text-decoration: none;
+			}
+		</style>
 		<!-- jquery -->
 		<!-- <script type="text/javascript" charset="utf8" src="http://code.jquery.com/jquery-1.10.2.min.js"></script> -->
 		<script src="js/jquery.min.js"></script>
@@ -37,33 +49,40 @@ require_once('common.php');
 				// "info":     false,
 				"filter":   false,
 				// "ordering": false,
-				"order":    [[ 2, "desc" ]],
-				"columnDefs": [ {
-					"targets": 0,
+				"order":    [[ 3, "desc" ]],
+				"columnDefs": [ 
+					{
+						"targets": 0,
+						"visible": false,
+						"searchable": false
+					},{
+					"targets": 1,
 					"render": function ( data, type, full, meta ) {
 						// return "<a class=\"plugin\" href='search.php?name="+encodeURI(data)+"'>"+data+"</a>";
-						return "<a class=\"plugin\" href=#>"+data+"</a>";
+						// $(this:parent).parent.text();
+						// console.log(full);
+						return "<a class=\"plugin\" href=\"code.php#"+full[0]+"\">"+data+"</a>";
 					}
 				} ]
 			});
 
 			//  <a> links in tables
-			$('#plugins_table').DataTable().on('draw.dt', function () {
-				$('.plugin').bind("click",function() {
-					var name= $(this).text();
-					$.get("plugins_search.php",{name: name},function(data){
-						$('#plugins').hide('slow');
-						$('#code').show('slow');
-						$('#plugin_name').html(name);
-						$('#plugin_code').html(data);
-					});
-				});
-			});
+			// $('#plugins_table').DataTable().on('draw.dt', function () {
+			// 	$('.plugin').bind("click",function() {
+			// 		var name= $(this).text();
+			// 		$.get("plugins_search.php",{name: name},function(data){
+			// 			$('#plugins').hide('slow');
+			// 			$('#code').show('slow');
+			// 			$('#plugin_name').html(name);
+			// 			$('#plugin_code').html(data);
+			// 		});
+			// 	});
+			// });
 
-			$('#plugin_goback').click(function(){
-				$('#plugins').show('slow');
-				$('#code').hide('slow');
-			});
+			// $('#plugin_goback').click(function(){
+			// 	$('#plugins').show('slow');
+			// 	$('#code').hide('slow');
+			// });
 
 			//  search button click
 			$('#search').click(function() {
@@ -77,7 +96,7 @@ require_once('common.php');
 	</head>
 
 	<body>
-		<div class="navbar navbar-inverse navbar-default" role="navigation" style="border-radius: 0px;">
+		<div class="navbar navbar-inverse navbar-default" role="navigation" style="border-radius: 0px;margin: 0px;">
 			<div class="container">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -142,7 +161,11 @@ EOF;
 		<div class="container">
 			<div class="row" id="plugins">
 				<div class="container" >
-					<h2 class="page-header">Plugins</h2>
+					<h2 class="page-header">
+						Plugins&nbsp;
+						<a href="#"><span class="glyphicon glyphicon-plus"></span></a>
+						<a href="#"><span class="glyphicon glyphicon-search"></span></a>
+					</h2>
 					<div class="form-inline">
 						<div class="btn-group">
 							<select class="form-control" name="type" id="type">
@@ -165,6 +188,7 @@ EOF;
 						<table id="plugins_table" class="table table-striped">
 							<thead>
 								<tr>
+									<th>ID</th>
 									<th style="width: 30%">Name</th>
 									<th style="width: 10%">Author</th>
 									<th style="width: 10%">Time</th>
@@ -175,12 +199,12 @@ EOF;
 					</div>
 				</div>
 			</div>
-			<div class="row" id="code" hidden="true">
+			<!-- <div class="row" id="code" hidden="true">
 			<div class="container" >
 				<h1><a class="glyphicon glyphicon-circle-arrow-left" id="plugin_goback"></a>&nbsp;<small id="plugin_name"></small></h1>
 				<pre class="python" id="plugin_code"></pre>
 			</div>
-			</div>
+			</div> -->
 			<hr>
 			<footer>
 				<p>© Company 2014</p>

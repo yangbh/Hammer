@@ -107,8 +107,9 @@ EOF;
 			<div class="row row-offcanvas row-offcanvas-right">
 
 				<div class="col-xs-2 col-sm-2 col-md-2" id="myScrollspy">
-					<ul class="nav nav-tabs nav-stacked" id="myNav">
-						<li><a href="#1.3">1.3</a></li>
+					<ul class="nav nav-tabs nav-stacked" id="myNav" style="width: 80px;border:0 px;">
+
+						<li><a href="#">1.3</a></li>
 						<li><a href="#1.2">1.2</a></li>
 						<li><a href="#1.1">1.1</a></li>
 						<li><a href="#1.0">1.0</a></li>

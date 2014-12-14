@@ -41,6 +41,7 @@ def usage():
 	print "\t-p --plugin: run a plugin type scan"
 	print "\t   --plugin-arg: plugin argus"
 	print "\t   --no-gather: do not use information gather module"
+	print "\t   --gather-depth: information gather depth"
 	print "\t-h: help"
 	print "[Examples]"
 	print "\thammer.py -s www.hammer.org -t 3r75... -u plugins/Info_Collect/"
@@ -51,7 +52,7 @@ def usage():
 def main():
 	show()
 	try :
-		opts, args = getopt.getopt(sys.argv[1:], "hvs:t:u:T:p:",['help','verbose=','server=','token=','update-plugins=','target=','plugin=','plugin-arg=','no-gather','threads='])
+		opts, args = getopt.getopt(sys.argv[1:], "hvs:t:u:T:p:",['help','verbose=','server=','token=','update-plugins=','target=','plugin=','plugin-arg=','no-gather','gather-depth=','threads='])
 	except getopt.GetoptError,e:
 		print 'getopt.GetoptError',e
 		usage()
@@ -61,6 +62,7 @@ def main():
 	_server = None
 	_token = None
 	_gather_flag = True
+	_gather_depth = 1
 	_vv = 'INFO'
 	_plugin_arg=None
 	_threads = None
@@ -72,6 +74,8 @@ def main():
 			_vv = 'DEBUG'
 		elif opt in ('--no-gather'):
 			_gather_flag = False
+		elif opt in ('--no-gather'):
+			_gather_depth = int(arg)
 		elif opt in ('-s','--server'):
 			_server = arg
 		elif opt in ('-t','--token'):
@@ -109,7 +113,7 @@ def main():
 				sn = Scanner(server=_server,token=_token,target=_target,threads=_threads,loglever=_vv)
 				sn.initInfo()
 				if _gather_flag:
-					sn.infoGather()
+					sn.infoGather(depth=_gather_depth)
 				sn.scan()
 
 		else:

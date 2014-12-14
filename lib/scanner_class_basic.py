@@ -63,7 +63,7 @@ class MyPool(multiprocessing.pool.Pool):
 # ----------------------------------------------------------------------------------------------------
 class Scanner(object):
 	"""docstring for Scanner"""
-	def __init__(self,server=None,token=None,target=None,threads=None,loglever='INFO'):
+	def __init__(self,server=None,token=None,target=None,threads=None,loglever='INFO',gatherdepth=1):
 		super(Scanner, self).__init__()
 		self.server = server
 		self.token = token
@@ -72,6 +72,9 @@ class Scanner(object):
 			self.threads = threads
 		else:
 			self.threads = multiprocessing.cpu_count()
+		self.gatherdepth = gatherdepth
+		self.loglevel = loglever
+		self.args = {'loglevel':self.loglevel,'threads':self.threads,'gatherdepth':self.gatherdepth}
 
 		# web接口
 		self.web_interface = None
@@ -142,7 +145,7 @@ class Scanner(object):
 			return False
 		#	save Scan table at first
 		# print 'self.target\t',self.target
-		self.web_interface.task_start(self.target,self.target)
+		self.web_interface.task_start(self.target,str(self.args))
 			
 	def _initGlobalVar(self):
 		# process information
