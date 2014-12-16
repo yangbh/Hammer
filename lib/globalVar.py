@@ -29,6 +29,9 @@ scan_task_dict = {}
 scan_task_dict_lock = multiprocessing.Lock()
 
 
+depth_now = 0
+
+
 #	for each sub scan task
 
 # plugin_now just like

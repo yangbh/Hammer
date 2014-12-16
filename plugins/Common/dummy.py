@@ -29,3 +29,4 @@ from common import logger
 # from lib.whatWeb_class import WhatWeb
 # from lib.spider.domain import GetFirstLevelDomain
 from lib.crawler.crawlerFile import CrawlerFile
+from lib.dsss_class import MultiDSSS

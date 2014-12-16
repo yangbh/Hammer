@@ -50,7 +50,7 @@ class PluginLoader(object):
 				self.outputfile = ''
 		# init sub process in globalVar
 
-		globalVar.mainlogger.info('\tSub Scan Start:\t'+self.target)
+		# globalVar.mainlogger.info('\tSub Scan Start:\t'+self.target)
 
 
 	def _saveRunningInfo(self,info='',isinit=False,isret=False):
@@ -122,16 +122,12 @@ class PluginLoader(object):
 		tmpdict['ppid'] = ppid
 		tmpdict['target'] = self.services
 		try:
-			# only sub process scan will invovied in scan_task_dict
-			if self.services.has_key('noSubprocess') and self.services['noSubprocess'] == True:
-				pass
-			else:
-				# globalVar.scan_task_dict_lock.acquire()
-				# print 'in pluginLoader porcess pid=\t',os.getpid()
-				# print 'id(globalVar)=\t',id(globalVar)
-				globalVar.scan_task_dict['subtargets'] = tmpdict
-				# pprint(globalVar.scan_task_dict)
-				# globalVar.scan_task_dict_lock.release()
+			# globalVar.scan_task_dict_lock.acquire()
+			# print 'in pluginLoader porcess pid=\t',os.getpid()
+			# print 'id(globalVar)=\t',id(globalVar)
+			globalVar.scan_task_dict['subtargets'] = tmpdict
+			# pprint(globalVar.scan_task_dict)
+			# globalVar.scan_task_dict_lock.release()
 		except Exception,e:
 			# print 'Exception',e
 			globalVar.mainlogger.error('Exception:'+str(e))

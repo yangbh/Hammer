@@ -303,6 +303,7 @@ services = {
 	
 	# 不常用		
 	'alreadyrun'		# 是否已经作为信息收集模块运行过
+	'nogather'			# 是否需要收集，例如－p模式下是不需要收集的，默认为True
 
 	# 弃用
 	'noSubprocess': True,	# 是否是子进程

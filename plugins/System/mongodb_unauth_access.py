@@ -44,6 +44,9 @@ def Audit(services):
 #	untest yet
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	services = {'ip':'10.183.0.51','ports':[27017]}
+	ip ='www.eguan.cn'
+	if len(sys.argv) ==  2:
+		ip = sys.argv[1]
+	services = {'ip':ip,'ports':[27017]}
 	pprint(Audit(services))
 	pprint(services)

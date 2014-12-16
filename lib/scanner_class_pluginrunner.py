@@ -209,7 +209,7 @@ class PluginMultiRunner(object):
 				globalVar.mainlogger.debug('argdict=%s' % str(argdict))
 
 			for each_target in targets:
-				service = {'mode':'nogather'}
+				service = {'nogather':'True'}
 				service_type = self._getServiceType(each_target)
 				service[service_type] = each_target
 				if len(argdict):

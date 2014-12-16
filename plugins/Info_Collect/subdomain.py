@@ -128,7 +128,7 @@ def Audit(services):
 	services['subdomains'] = subdomains
 
 	# add sub scan task
-	if services.has_key('noSubprocess') and services['noSubprocess'] == True:
+	if services.has_key('nogather') and services['nogather'] == True:
 		pass
 	else:
 		urls = generateUrl(subdomains)
@@ -143,6 +143,6 @@ if __name__=='__main__':
 	host = 'kangbtall.com'
 	if len(sys.argv) ==  2:
 		host = sys.argv[1]
-	services = {'host':host,'noSubprocess':True}
+	services = {'host':host,'nogather':True}
 	pprint(Audit(services))
 	pprint(services)

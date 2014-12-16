@@ -90,7 +90,7 @@ def Audit(services):
 				services['ports'].append(eachport)
 
 		logger('services:%s' %services)
-		if services.has_key('noSubprocess') and services['noSubprocess'] == True:
+		if services.has_key('nogather') and services['nogather'] == True:
 			pass
 		else:
 			security_note(str(services['ports']))

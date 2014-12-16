@@ -32,6 +32,7 @@ def procFunc(pluginheader):
 	try:
 		if type(pluginheader) == PluginLoader:
 			pl = pluginheader
+			globalVar.mainlogger.info('\tSub Scan Start:\t'+pl.target)
 			pl.loadPlugins()
 			pl.runPlugins()
 			globalVar.mainlogger.debug('returnning pl')			
@@ -183,7 +184,7 @@ class Scanner(object):
 			targets = []
 			if target:
 				# ip range type
-				m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(\/\d{1,2})?$',target)
+				m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$',target)
 				if m:
 					ipnet = list(ipaddress.ip_network(unicode(target)).hosts())
 					for eachipad in ipnet:
@@ -262,7 +263,10 @@ class Scanner(object):
 				# print globalVar.done_targets
 				# print 'id(globalVar.undone_targets)=\t',id(globalVar.undone_targets)
 				# print 'globalVar.undone_targets=',globalVar.undone_targets
-				
+
+				# 				
+				globalVar.depth_now += globalVar.depth_now + 1
+
 				if globalVar.undone_targets:
 					# Step1: 
 					services = []
@@ -275,6 +279,8 @@ class Scanner(object):
 						service = {}
 						service_type = self._getServiceType(each_target)
 						# print service_type
+						if globalVar.depth_now > self.gatherdepth:
+							service['nogather'] = True
 						service[service_type] = each_target
 						services.append(service)
 
@@ -328,6 +334,7 @@ class Scanner(object):
 				service_type = self._getServiceType(each_target)
 				# print service_type
 				service[service_type] = each_target
+				service['nogather'] = True
 				self.services.append(service)
 
 			# pprint(self.services)

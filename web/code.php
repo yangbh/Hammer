@@ -118,7 +118,11 @@ if (!already_login()) {
 				$("#code h3 span:first").text(name);
 				$('#plugin_code').html(code);
 				prettyPrint();
-				$("#description").text(web+'\r\n'+description);
+				var webhtml = '';
+				if(web!=''){
+					webhtml = "<a href=\""+web+"\">"+web+"</a>";
+				}
+				$("#description").html(webhtml+'<br>'+description);
 				// var d = new Date();
 				// d.setTime(time*1000);
 				// $("#author").text(d.Format("yyyy-MM-dd hh:mm:ss")+' by '+author);

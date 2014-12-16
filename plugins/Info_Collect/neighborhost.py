@@ -36,7 +36,10 @@ def Audit(services):
 		retinfo = {'level':'info','content':ret}
 		for each_neighbor in neighborhosts:
 			security_note(each_neighbor)
-			add_scan_task(each_neighbor)
+			if services.has_key('nogather') and services['nogather'] == True:
+				pass
+			else:
+				add_scan_task(each_neighbor)
 
 	return (retinfo,output)
 

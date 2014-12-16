@@ -61,7 +61,7 @@ def main():
 	_url = None
 	_server = None
 	_token = None
-	_gather_flag = True
+	# _gather_flag = True
 	_gather_depth = 1
 	_vv = 'INFO'
 	_plugin_arg=None
@@ -73,8 +73,9 @@ def main():
 		elif opt in ('-v'):
 			_vv = 'DEBUG'
 		elif opt in ('--no-gather'):
-			_gather_flag = False
-		elif opt in ('--no-gather'):
+			# _gather_flag = False
+			_gather_depth = 0
+		elif opt in ('--gather-depth'):
 			_gather_depth = int(arg)
 		elif opt in ('-s','--server'):
 			_server = arg
@@ -112,8 +113,7 @@ def main():
 			else:
 				sn = Scanner(server=_server,token=_token,target=_target,threads=_threads,loglever=_vv)
 				sn.initInfo()
-				if _gather_flag:
-					sn.infoGather(depth=_gather_depth)
+				sn.infoGather(depth=_gather_depth)
 				sn.scan()
 
 		else:
