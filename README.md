@@ -19,21 +19,22 @@ Basic usage
 Usage: hammer.py [Auth] [Options] [Targets]
 
 [Auth]
-	-s --server: your hammer web server host address, like www.hammer.org
-	-t --token: token, find it in http://www.hammer.org/user.php
+	-s --server: web server地址，为域名或ip
+	-t --token: token，在用户－设置界面可用找到并更新
 [Options]
-	-u --update-plugins: update new added plugins to web
-	-v --verbose: increase verbosity level
-	   --threads: max number of process, default cpu number
+	-u --update-plugins: 更新本地插件至web，可用制定本地插件目录
+	-v --verbose: 输出内容更加详细，默认输出内容为info，－v则为debug
+	   --threads: 进程数量，默认为cpu核数
+	-h : 输出帮助信息
 [Targets]
-	-T --target: target, can be an ip address, an url or an iprange
-	-p --plugin: run a plugin type scan
-	   --plugin-arg: plugin argus
-	   --no-gather: do not use information gather module
-	-h: help
+	-T --target: 目标，可以为ip、host、url或ip范围,当使用－p模式时还可以是文件
+	   --no-gather: 不使用信息收集模块，也可以用下面的--gather-depth=0实现
+	   --gather-depth: 信息收集深度，默认为1
+	-p --plugin: 单独跑一个插件
+	   --plugin-arg: 插件参数，格式为"port=20;name='hammer';"
 [Examples]
 	hammer.py -s www.hammer.org -t 3r75... -u plugins/Info_Collect/
-	hammer.py -s www.hammer.org -t 3r75... -T 192.168.1.1/24
+	hammer.py -s www.hammer.org -t 3r75... -T http://testphp.vulnweb.com
 	hammer.py -s www.hammer.org -t 3r75... -p plugins/System/iisshort.py -T target
 ```
 

@@ -28,13 +28,40 @@ require_once('common.php');
 
 		<!-- a<script src="js/responsive-nav.js"></script> -->
 
+		<!-- google code prettify -->
+		<link href="js/prettify.css" type="text/css" rel="stylesheet" />
+		<script type="text/javascript" src="js/prettify.js"></script>
+		<style type="text/css">
+			pre {
+				display: block;
+				padding: 9.5px;
+				margin: 0 0 10px;
+				font-size: 13px;
+				line-height: 20px;
+				word-break: break-all;
+				word-wrap: break-word;
+				white-space: pre;
+				white-space: pre-wrap;
+				background-color: #f5f5f5;
+				border: 1px solid #ccc;
+				border: 1px solid rgba(0, 0, 0, 0.15);
+				-webkit-border-radius: 4px;
+				   -moz-border-radius: 4px;
+						border-radius: 4px;
+			}
+			li.L0, li.L1, li.L2, li.L3,li.L5, li.L6, li.L7, li.L8{
+				list-style-type: decimal !important
+			}
+		</style>
+
 		<script type="text/javascript">
 		$(document).ready(function(){
-		    $("#myNav").affix({
-		        offset: { 
-		            top: 100
-		     	}
-		    });
+			prettyPrint();
+			$("#myNav").affix({
+				offset: { 
+					top: 100
+				}
+			});
 		});
 		</script>
 
@@ -50,8 +77,12 @@ require_once('common.php');
 						<span class="icon-bar">2</span>
 						<span class="icon-bar">3</span>
 					</button>
-<!-- 					<img src="images/favicon.ico" class="img-circle"> -->
-					<a class="navbar-brand" href="#"><strong>Hammer</strong></a>
+					<a class="navbar-brand" href="#" style="padding: 5px;">
+						<img src="images/logo.ico" class="" style="width: 40px;height: 40px;">
+					</a>
+					<a class="navbar-brand" href="#">
+						<strong>Hammer</strong>
+					</a>
 				</div>
 				<div class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
@@ -128,7 +159,7 @@ EOF;
 					<hr>
 					<h2 id="run">运行</h2>
 						<p></p>
-						<pre>
+						<pre class="prettyprint linenums Lang-python">
 	 ██░ ██  ▄▄▄       ███▄ ▄███▓ ███▄ ▄███▓▓█████  ██▀███  
 	▓██░ ██▒▒████▄    ▓██▒▀█▀ ██▒▓██▒▀█▀ ██▒▓█   ▀ ▓██ ▒ ██▒
 	▒██▀▀██░▒██  ▀█▄  ▓██    ▓██░▓██    ▓██░▒███   ▓██ ░▄█ ▒
@@ -139,77 +170,125 @@ EOF;
 	 ░  ░░ ░  ░   ▒   ░      ░   ░      ░      ░     ░░   ░ 
 	 ░  ░  ░      ░  ░       ░          ░      ░  ░   ░     
 	
-Usage: hammer.py [Options] [Targets]
+Usage: hammer.py [Auth] [Options] [Targets]
 
-[Options]
+[Auth]
 	-s --server: your hammer web server host address, like www.hammer.org
 	-t --token: token, find it in http://www.hammer.org/user.php
-	-U --update-plugins: update new added plugins to web
+[Options]
+	-u --update-plugins: update new added plugins to web
+	-v --verbose: increase verbosity level
+	   --threads: max number of process, default cpu number
 	-h: help
 [Targets]
 	-T --target: target, can be an ip address, an url or an iprange
+	   --no-gather: do not use information gather module
+	   --gather-depth: information gather depth, default 1
+	-p --plugin: run a plugin type scan
+	   --plugin-arg: plugin argus
 [Examples]
-	hammer.py -s www.hammer.org -t 3r75... -U plugins/Info_Collect/
-	hammer.py -s www.hammer.org -t 3r75... -t http://www.leesec.com/
-	hammer.py -s www.hammer.org -t 3r75... -t 192.168.1.1/24
+	hammer.py -s www.hammer.org -t 3r75... -u plugins/Info_Collect/
+	hammer.py -s www.hammer.org -t 3r75... -T 192.168.1.1/24
+	hammer.py -s www.hammer.org -t 3r75... -p plugins/System/iisshort.py -T target
+						</pre>
+						<h3>1. 两种运行模式————自收集扫描和范围扫描</h3>
+						<pre class="prettyprint linenums Lang-python">
+1. 一种是常规的类似yascanner的扫描，扫描目标为一个ip、host、url
+hammer.py -s www.hammer.org -t 3r75... -T www.leesec.com
+2. 另一种是批量扫描，可以是ip范围，也可以－T 从本地文件载入目标host、url等
+hammer.py -s www.hammer.org -t 3r75... -p plugins/System/iisshort.py -T 192.168.1.0/24
+注：使用ip范围时，因为ipaddress库的解析规则，192.168.1.1/24会被认为不合法，而192.168.1.0/24正确，因为需要确保rang 区间内开始时都应该为0，如下
+	192.168.1.4/30	正确，而区间30为后两位，4末尾为100，所以ok
+	192.168.1.1/30	错误，1末尾为001，不为00
+	192.168.1.2/31	正确
+						</pre>
+						<h3>2. 详细参数解释</h3>
+						<pre class="prettyprint linenums Lang-python">
+[Auth]
+	-s --server: web server地址，为域名或ip
+	-t --token: token，在用户－设置界面可用找到并更新
+[Options]
+	-u --update-plugins: 更新本地插件至web，可用指定本地插件目录
+	-v --verbose: 输出内容更加详细，默认输出内容为info，－v则为debug
+	   --threads: 进程数量，默认为cpu核数
+[Targets]
+	-T --target: 目标，可以为ip、host、url或ip范围,当使用－p模式时还可以是文件
+	   --no-gather: 不使用信息收集模块，也可以用下面的--gather-depth=0实现
+	   --gather-depth: 信息收集深度，默认为1
+	-p --plugin: 单独跑一个插件
+	   --plugin-arg: 插件参数，格式为"port=20;name='hammer';"
 						</pre>
 					<hr>
 					<h2 id="plugin">插件</h2>
 					<p>下面是一个典型的Hammer插件，功能为扫描robots.txt文件存在与否:</p>
-					<pre>
+					<pre class="prettyprint linenums Lang-python">
 #!/usr/bin/python2.7
 #coding:utf-8
 
-import os
-import urllib2
-from dummy import *	＃ 漏洞提交接口在 dummy.py 内
+import requests
+# 导入hammer模块各种库
+from dummy import *
 
-# info是插件信息
+# 插件信息
 info = {
 	'NAME':'Robots.txt Sensitive Information',
 	'AUTHOR':'yangbh',
 	'TIME':'20140707',
-	'WEB':''
+	'WEB':'',
+	'DESCRIPTION':'robots.txt文件扫描',
 }
 
-＃ Audit是被调用的接口函数
-def Audit(services):
-	# services是一个全局变量，dict类型，详见下文
+# 任务分配函数Assign
+def Assign(services):
 	if services.has_key('url'):
-		url = services['url']
-		if url[-1]!='/':
-			url += '/'
-		url = url + 'robots.txt'
-		
-		respone = urllib2.urlopen(url)
-		redirected = respone.geturl()
-		if redirected == url:
-			ret = respone.read()
-			if 'Disallow: ' in ret:
-				security_note(url)	# 漏洞提交接口
+		return True
+	return False
+
+# 漏洞检测函数Audit
+def Audit(services):
+	url = services['url']+ '/robots.txt'
+	rq = requests.get(url,allow_redirects=False,timeout=30)
+	if rq.status_code == 200 and 'Disallow: ' in rq.text:
+		# 漏洞反馈函数security
+		security_note(url) 
+		# 调试输出函数logger,默认等级为debug
+		logger('Find %srobots.txt' % url)
 # ----------------------------------------------------------------------------------------------------
-#	插件也可以单独运行调试，如下
+#
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	services = {'url':'http://www.eguan.cn'}
-	pprint(Audit(services))
+	services = {'url':'http://www.leesec.com'}
+	pprint(services)
 					</pre>
-					<h3>1. 变量info</h3>
-					<p>一个标准的info变量，如下：</p>
-					<pre>
+					<h3>1. 插件信息info</h3>
+					<p>一个标准的插件信息info变量，如下：</p>
+					<pre class="prettyprint linenums Lang-python">
 info = {
 	'NAME':'Robots.txt Sensitive Information',	# 插件名称，必须唯一
 	'AUTHOR':'yangbh',		# 插件作者，不能为空
 	'TIME':'20140707',		# 插件编写时间，不能为空
 	'WEB':'http://',		# 漏洞参考
-	'Description':'',		# 漏洞描述
+	'DESCRIPTION':'robots.txt文件扫描',		# 漏洞描述
 	'Version':'0.1'			# 插件版本号
 }
 					</pre>
-					<h3>2. 全局变量services</h3>
+					<h3>2. 插件类型</h3>
+					<p>Hammer的插件总共分为以下七种类型，请将相应的插件放在对应的目录下。</p>
+					<pre class="prettyprint linenums Lang-python">
+Info Collect	# 信息收集类插件，目录：plugins/Info_Collect, 注意这类的插件最先运行!
+
+Common		# 普通类插件，目录：plugins/Common
+Sensitive Info	# 敏感信息类插件，目录：plugins/Sensitive_Info
+System		# 系统类插件，目录：plugins/System
+Web Applications	# WEB应用类插件，目录：plugins/Web_Applications
+Weak Password	# 弱口令类插件，目录：plugins/Weak_Password
+Others		# 其它类型插件，目录：plugins/Others
+					</pre>
+					<p>请一定注意Info_Collect类插件，这类插件最先运行，将一些信息收集类的插件放在这个目录（如会改动services全局变量的插件），其它的插件的运行顺序未知，这点会在以后优化。</p>
+					<h3>3. 全局变量services</h3>
 					<p>services是一个全局变量，dict类型，内含信息收集阶段运行的信息.</p>
 					<p>键以及其含义：</p>
-					<pre>
+					<pre class="prettyprint linenums Lang-python">
 services = {
 	# 常用的
 	'ip':'127.0.0.1',	# 被扫描的ip地址
@@ -231,74 +310,136 @@ services = {
 }
 					</pre>
 					<p>services变量很开放，是全局变量，意味着你可以在你的插件中修改它的值，或者增加你所需要的键，但是修改的时候请慎重！插件的调用的实现方式请参考pluginLoader_class.py</p>
-					
-					<h3>3. 漏洞反馈接口</h3>
+					<h3>4. 插件接口函数Assign/Audit</h3>
+					<p></p>
+					<pre class="prettyprint linenums Lang-python">
+# 任务分配函数Assign
+# 	函数功能：进行任务分配，决定是满足进入Audit条件
+# 	参数：	为前面讲一节的service变量，和yascanner略有区别
+# 	返回值：	为True or False
+def Assign(services):
+	if services.has_key('url'):
+		return True
+	return False
+
+# 漏洞检测函数Audit
+# 	函数功能：进行漏洞检测，判断是否存在漏洞
+# 	参数：	同上，前面讲一节的service变量，和yascanner有区别
+# 	返回值：	已取消(之前版本有return (ret,output)，其中ret为扫描返回结果，output为调试输出内容，引入web接口和调试接口logger之后废除)
+def Audit(services):
+	url = services['url']+ '/robots.txt'
+	rq = requests.get(url,allow_redirects=False,timeout=30)
+	if rq.status_code == 200 and 'Disallow: ' in rq.text:
+		# 漏洞反馈函数security
+		security_note(url) 
+		# 调试输出函数logger,默认等级为
+		logger('Find %srobots.txt' % url)
+					</pre>
+					<h3>5. 漏洞反馈接口security_info等</h3>
 					<p>漏洞反馈可以通过以下四个函数实现，参数都是字符串型</p>
-					<pre>
+					<pre class="prettyprint linenums Lang-python">
 security_note(vulninfo) 	# information level
 security_info(vulninfo) 	# low level 
 security_warning(vulninfo) 	# mideum level
 security_hole(vulninfo) 	# high level
 					</pre>
 					<p>请自己参考漏洞危害酌情选择对应的接口函数。</p>
+					<h3>6. 调试输出接口logger</h3>
+					<pre class="prettyprint linenums Lang-python">
+logger(debuginfo) # debuginfo为string类型，输出插件运行信息，单独运行参见时为print函数，整体运行时为logging.debug函数
+					</pre>
+					<h3>7. 添加子扫描任务接口add_scan_task</h3>
 					<p>除此之外还有一个添加子扫描任务模块</p>
-					<pre>
+					<pre class="prettyprint linenums Lang-python">
 add_scan_task(target) 		# target可以为url\ip\host之一
 					</pre>
-					<p>注意这个函数只能作为信息收集模块内使用，即放在Infor_Collect目录下，可以参考subdomain.py插件。</p>
-					<h3>4. 插件类型</h3>
-					<p>插件总共有以下七种类型，请将相应的插件放在对应的目录下。</p>
-					<pre>
-Info Collect	# 信息收集类插件，目录：plugins/Info_Collect, 注意这类的插件最先运行!
+					<p>注意：这个函数只能作为信息收集模块内使用，即放在Infor_Collect目录下，可以参考subdomain.py插件。</p>
+					<h3>8. Hammer框架之dummy.py</h3>
+					<p>dummy.py是仿照yascanner的，是统一导入hammer框架的一些类库，结构有些牛头马面不成样子，在每个目录都得放一个，目前暂未有好的方法解决，留待后期吧</p>
+					<pre class="prettyprint linenums Lang-python">
+#!/usr/bin/python2.7
+#coding:utf-8
 
-Common		# 普通类插件，目录：plugins/Common
-Sensitive Info	# 敏感信息类插件，目录：plugins/Sensitive_Info
-System		# 系统类插件，目录：plugins/System
-Web Applications	# WEB应用类插件，目录：plugins/Web_Applications
-Weak Password	# 弱口令类插件，目录：plugins/Weak_Password
-Others		# 其它类型插件，目录：plugins/Others
+import os
+import sys
+
+# BASEDIR 为hammer的工作目录
+BASEDIR = os.path.realpath(__file__).replace('/plugins/Sensitive_Info/dummy.pyc','')
+BASEDIR = BASEDIR.replace('/plugins/Sensitive_Info/dummy.py','')
+
+from pprint import pprint
+＃ 在 common 模块导入漏洞反馈函数、调试输出接口等函数
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# very important
+# here it is common, not lib.common, because of python import strategies
+from common import genFilename,security_note,security_info,security_warning,security_hole,add_scan_task
+from common import logger
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+＃ 其它的一些类及函数
+from lib.ruleFile_class import RuleFile
+# from lib.nmap_class import NmapScanner
+# from lib.neighborHost_class import NeighborHost
+# from lib.knock_class import SubDomain
+# from lib.theHarvester_class import TheHarvester
+# from lib.whatWeb_class import WhatWeb
+from lib.spider.domain import GetFirstLevelDomain
+from lib.crawler.crawlerFile import CrawlerFile
 					</pre>
-					<p>请一定注意Info_Collect类插件，这类插件最先运行，将一些信息收集类的插件放在这个目录（如会改动services全局变量的插件），其它的插件的运行顺序未知，这点会在以后优化。</p>
 					<hr>
 					<h2 id="framework">框架</h2>
 					<h3>1. 插件调用的实现</h3>
 					<p>插件调用类在lib/pluginLoader_class.py，实现步骤为：</p>
-					<p>1).导入插件的Audit函数</p>
-					<p>2).运行Audit函数</p>
-					<p>3).保存Audit返回结果，包括</p>
+					<p>1).导入插件的Assign函数，若存在，则运行并判断返回值，Ture则继续运行，否则退出</p>
+					<p>2).导入插件的Audit函数，运行，反馈扫描结果，输出调试信息</p>
 					<p></p>
-					<pre>
-importcmd = 'global services' + os.linesep
-importcmd += 'from ' + modulepath + ' import Audit,info'
+					<pre class="prettyprint linenums Lang-python">
+# 尝试导入Assign函数
+try:
+	importcmd = 'global services' + os.linesep
+	importcmd += 'from ' + modulepath + ' import Assign'
+	# globalVar.mainlogger.debug('importcmd='+importcmd)
+	exec(importcmd)
+	globalVar.mainlogger.debug('load Assign success')
+	self._saveRunningInfo('load Assign success'+os.linesep)
+except Exception,e:
+	globalVar.mainlogger.debug('Exception: Import Assign Failed\t:'+str(e))
+# 尝试导入Audit函数 以及 info变量
+try:
+	importcmd = 'global services' + os.linesep
+	importcmd += 'from ' + modulepath + ' import info,Audit'
+	exec(importcmd)
+	globalVar.mainlogger.debug('load info and Audit success')
+	self._saveRunningInfo('load info and Audit success'+os.linesep)
+except Exception,e:
+	globalVar.mainlogger.debug('Exception: Import info and Audit Failed\t:'+str(e))
 
-exec(importcmd)
+＃ 获得Assign函数结果
+retflag = True
+if locals().has_key('Assign'):
+	retflag = False
+	retflag = Assign(services)
 
-if locals().has_key('Audit'):
-	ret, output = ({},'')
+if retflag and locals().has_key('Audit'):
+	＃ 运行Audit扫描函数
 	try:
-		ret,output = Audit(services)
-	except:
-		pass
-	# outputinfo
-	if output != '' and output != None:
-		self.output += output
+		Audit(services)
+		# ret,output = Audit(services)
+	except Exception,e:
+		globalVar.mainlogger.error('Audit Function Exception:\t'+str(e))
+
 	# services info
 	if self.services != services:
 		self.services = services
-		#print 'services changed:\t', services
-		self.output += 'services changed to:\t' + str(services) + os.linesep
-	# return info
-	if ret and ret != {}:
-		ret['type'] = info['NAME']
-		print 'ret=\t',ret
-		self.retinfo.append(ret)
+		globalVar.mainlogger.warning('services changed to:\t' + str(services))
+		self._saveRunningInfo('services changed to:\t' + str(services) + os.linesep)
 					</pre>
-					<p>其中的output是plugin中的输出结果，仅作显示；ret是反馈结果，现在已经弃用，可以忽略；services前文提到过，修改的原理就再此，修改时请慎重！</p>
+					<p>services前文提到过，修改的原理就再此，修改时请慎重！</p>
 					<h3>2. whatweb识别cms</h3>
 					<p>本工具中的cms识别采用的是whatweb，有一个whatweb类，在lib/whatWeb_class.py。</p>
 					<p>考虑到原生的whatweb的插件众多，影响扫描效率，所以在lib/whatweb目录下是一个经过插件简化的whatweb。PS：注意kali下whatweb会自动包含/usr/local/share/whatweb目录下的插件，所以也注释了下whatweb的几行代码，有空再找出来细说。</p>
 					<p>Hammer的whatweb插件位于Info_Collect目录下，仍需补充完善，结构如下：</p>
-					<pre>
+					<pre class="prettyprint linenums Lang-python">
 def Audit(services):
 	retinfo = {}
 	output = ''
@@ -338,8 +479,8 @@ def Audit(services):
 					<h3>3. ruleFile类</h3>
 					<p>ruleFile类是一个通用密码生成类，根据一些密码规则，生成对应的密码或路径。该类在lib/ruleFile_class.py中。暴力破解和路径猜解都会用到该类，这里提出来。</p>
 					<p>生成规则如下（参考lib/db/passwd_gen.rule）：</p>
-					<pre>
-# password 	# '#'号是注视符
+					<pre class="prettyprint linenums Lang-python">
+# password 	# '#'号是注释符
 
 %username%		# %username%是待替换的，可以自定义该字段，%com%是通用的，具体参考ruleFile类，有空细讲
 %username%1
@@ -353,7 +494,7 @@ def Audit(services):
 					<hr>
 					<h2 id="questions">问题</h2>
 					<h4>1. Windows, Linux or Mac?</h4>
-					<p>For now, suggest run hammer on linux or mac.</p>
+					<p>目前建议在Kali Linux 或者Mac 上运行</p>
 					<h4>2. 中文版什么时候出？</h4>
 					<p>这不就是么。。。</p>
 					<h4>3. 自己写的插件怎么提交？</h4>

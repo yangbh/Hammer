@@ -105,8 +105,12 @@ require_once('common.php');
 						<span class="icon-bar">2</span>
 						<span class="icon-bar">3</span>
 					</button>
-<!-- 				<img src="images/favicon.ico" class="img-circle"> -->
-					<a class="navbar-brand" href="#"><strong>Hammer</strong></a>
+					<a class="navbar-brand" href="#" style="padding: 5px;">
+						<img src="images/logo.ico" class="" style="width: 40px;height: 40px;">
+					</a>
+					<a class="navbar-brand" href="#">
+						<strong>Hammer</strong>
+					</a>
 				</div>
 				<div class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">

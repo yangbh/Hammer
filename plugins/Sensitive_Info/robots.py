@@ -1,10 +1,11 @@
 #!/usr/bin/python2.7
 #coding:utf-8
 
-import os
-import urllib2
+import requests
+# 导入hammer模块各种库
 from dummy import *
 
+# 插件信息
 info = {
 	'NAME':'Robots.txt Sensitive Information',
 	'AUTHOR':'yangbh',
@@ -15,49 +16,25 @@ info = {
 	'RUNLEVEL':2
 }
 
+# 任务分配函数Assign
 def Assign(services):
 	if services.has_key('url'):
 		return True
 	return False
 
+# 漏洞检测函数Audit
 def Audit(services):
-	retinfo = {}
-	output = 'plugin run' + os.linesep
-	try:
-		url = services['url']
-		if url[-1]!='/':
-			url += '/'
-		url = url + 'robots.txt'
-		#print url
-		output += url + os.linesep
-		
-		respone = urllib2.urlopen(url)
-		redirected = respone.geturl()
-		if redirected == url:
-			ret = respone.read()
-			if 'Disallow: ' in ret:
-				retinfo = {'level':'info','content':ret}
-				security_note(url)
-				return (retinfo,output)
-
-	except urllib2.URLError,e:
-		#print 'urllib2.URLError: ',e
-		output += 'urllib2.URLError: ' + str(e) + os.linesep
-	except urllib2.HTTPError,e:
-		#print 'urllib2.HTTPError: ',e
-		output += 'urllib2.HTTPError: ' + str(e) + os.linesep
-	except TypeError, e:
-		#print 'TypeError: ',e
-		output += 'TypeError: ' + str(e) + os.linesep
-
-	# else:
-	# 	output += 'plugin does not run' + os.linesep
-
-	return (retinfo,output)	
+	url = services['url']+ '/robots.txt'
+	rq = requests.get(url,allow_redirects=False,timeout=30)
+	if rq.status_code == 200 and 'Disallow: ' in rq.text:
+		# 漏洞反馈函数security
+		security_note(url) 
+		# 调试输出函数logger,默认等级为
+		logger('Find %srobots.txt' % url)
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	services = {'url':'http://www.leesec.com'}
-	pprint(Audit(services))
+	Audit(services)
 	pprint(services)

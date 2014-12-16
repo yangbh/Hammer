@@ -204,10 +204,10 @@ class PluginLoader(object):
 			modulepath = modulepath.replace('.','')
 			modulepath = modulepath.replace('/','.')
 			# print modulepath
-			logger = globalVar.mainlogger
+			# logger = globalVar.mainlogger
 			# 如果有Assign函数，则导入
 			try:
-				importcmd = 'global services,logger' + os.linesep
+				importcmd = 'global services' + os.linesep
 				importcmd += 'from ' + modulepath + ' import Assign'
 				# globalVar.mainlogger.debug('importcmd='+importcmd)
 				exec(importcmd)
@@ -287,7 +287,7 @@ class PluginLoader(object):
 			modulepath = modulepath.replace('.','')
 			modulepath = modulepath.replace('/','.')
 			# print modulepath
-			logger = globalVar.mainlogger
+			# logger = globalVar.mainlogger
 			# 导入Audit函数 以及 info变量
 			try:
 				importcmd = 'global services' + os.linesep
