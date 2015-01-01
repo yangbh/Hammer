@@ -101,29 +101,25 @@ def Audit(services):
 	output = 'plugin run' + os.linesep
 	
 	host = services['ip']
-	if 443 in services['ports']:
-		port = 443
-	else:
-		return(None,output)
-	try:
-		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		s.connect((host, port))
-		s.send(hello)
-		while True:
-			typ, ver, pay = recvmsg(s)
-			if typ == None:
-				return(None,output)
-			# Look for server hello done message.
-			if typ == 22 and ord(pay[0]) == 0x0E:
-				break
-		s.send(hb)
-		if hit_hb(s):
-			retinfo = {'level':'high','content':host}
-			security_hole(host)
-		s.close()
-
-	except:
-		pass
+	for port in services['ports']:
+		try:
+			s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			s.connect((host, port))
+			s.send(hello)
+			while True:
+				typ, ver, pay = recvmsg(s)
+				if typ == None:
+					return(None,output)
+				# Look for server hello done message.
+				if typ == 22 and ord(pay[0]) == 0x0E:
+					break
+			s.send(hb)
+			if hit_hb(s):
+				retinfo = {'level':'high','content':host}
+				security_hole(host)
+			s.close()
+		except:
+			pass
 
 	return(retinfo,output)
 # ----------------------------------------------------------------------------------------------------
@@ -133,6 +129,6 @@ if __name__ == '__main__':
 	host ='www.eguan.cn'
 	if len(sys.argv) ==  2:
 		host = sys.argv[1]
-	services = {'ip':host,'ports':[443,80]}
+	services = {'ip':host,'ports':[993,995]}
 	pprint(Audit(services))
 	pprint(services)

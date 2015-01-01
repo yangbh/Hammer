@@ -140,7 +140,7 @@ EOF;
 
 			<div class="row row-offcanvas row-offcanvas-right">
 
-				<div class="col-sm-3 col-md-2" id="myScrollspy">
+				<div class="col-xs-2 col-sm-2 col-md-2" id="myScrollspy">
 					<ul class="nav nav-tabs nav-stacked" id="myNav" style="margin: 0px;width: 80px;">
 						<li><a href="#">关于</a></li>
 						<li><a href="#run">运行</a></li>
@@ -151,7 +151,7 @@ EOF;
 					</ul>
 				</div>
 
-				<div class="col-xs-12 col-sm-9 col-md-10" role="main" class="main">
+				<div class="col-xs-10 col-sm-10 col-md-10" role="main" class="main">
 
 					<h2 id="about">关于</h2>
 						<p>Hammer 不只是一款网络扫描器，更是一个扫描框架，Hammer类似开源的yascanner（当然，目前功能还远不如yascanner，yascanner是我的偶像），与yascanner类似，它偏向于WEB漏洞的收集与检测，不太具有攻击性.</p>
@@ -195,12 +195,9 @@ Usage: hammer.py [Auth] [Options] [Targets]
 						<pre class="prettyprint linenums Lang-python">
 1. 一种是常规的类似yascanner的扫描，扫描目标为一个ip、host、url
 hammer.py -s www.hammer.org -t 3r75... -T www.leesec.com
+
 2. 另一种是批量扫描，可以是ip范围，也可以－T 从本地文件载入目标host、url等
 hammer.py -s www.hammer.org -t 3r75... -p plugins/System/iisshort.py -T 192.168.1.0/24
-注：使用ip范围时，因为ipaddress库的解析规则，192.168.1.1/24会被认为不合法，而192.168.1.0/24正确，因为需要确保rang 区间内开始时都应该为0，如下
-	192.168.1.4/30	正确，而区间30为后两位，4末尾为100，所以ok
-	192.168.1.1/30	错误，1末尾为001，不为00
-	192.168.1.2/31	正确
 						</pre>
 						<h3>2. 详细参数解释</h3>
 						<pre class="prettyprint linenums Lang-python">
@@ -369,7 +366,7 @@ BASEDIR = os.path.realpath(__file__).replace('/plugins/Sensitive_Info/dummy.pyc'
 BASEDIR = BASEDIR.replace('/plugins/Sensitive_Info/dummy.py','')
 
 from pprint import pprint
-＃ 在 common 模块导入漏洞反馈函数、调试输出接口等函数
+# 在 common 模块导入漏洞反馈函数、调试输出接口等函数
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # very important
 # here it is common, not lib.common, because of python import strategies
@@ -377,7 +374,7 @@ from common import genFilename,security_note,security_info,security_warning,secu
 from common import logger
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-＃ 其它的一些类及函数
+# 其它的一些类及函数
 from lib.ruleFile_class import RuleFile
 # from lib.nmap_class import NmapScanner
 # from lib.neighborHost_class import NeighborHost
@@ -415,14 +412,14 @@ try:
 except Exception,e:
 	globalVar.mainlogger.debug('Exception: Import info and Audit Failed\t:'+str(e))
 
-＃ 获得Assign函数结果
+# 获得Assign函数结果
 retflag = True
 if locals().has_key('Assign'):
 	retflag = False
 	retflag = Assign(services)
 
 if retflag and locals().has_key('Audit'):
-	＃ 运行Audit扫描函数
+	# 运行Audit扫描函数
 	try:
 		Audit(services)
 		# ret,output = Audit(services)

@@ -10,6 +10,7 @@ import socket
 import multiprocessing
 import multiprocessing.pool
 import ipaddress
+import netaddr
 import logging
 
 import globalVar
@@ -75,8 +76,8 @@ class PluginMultiRunner(object):
 			self.threads = int(threads)
 		else:
 			self.threads = multiprocessing.cpu_count()
-
-		self.args = {'server':self.server,'target':self.target,'loglevel':self.loglevel,'threads':self.threads}
+		self.loglevel = loglever
+		self.args = {'loglevel':self.loglevel,'threads':self.threads}
 
 		# web接口
 		self.web_interface = None
@@ -122,9 +123,9 @@ class PluginMultiRunner(object):
 
 		globalVar.mainlogger.info('[*] Start an new scan')
 		globalVar.mainlogger.info('\tserver  =%s' % server)
-		globalVar.mainlogger.info('\ttoken    =%s' % token)
+		globalVar.mainlogger.info('\ttoken   =%s' % token)
 		globalVar.mainlogger.info('\ttarget  =%s' % target)
-		globalVar.mainlogger.info('\tthreads=%d' % self.threads)
+		globalVar.mainlogger.info('\tthreads =%d' % self.threads)
 	
 	def _getServiceType(self,target):
 		m = re.search('(http[s]?)://([^:^/]+):?([^/]*)/?',target)
@@ -147,7 +148,7 @@ class PluginMultiRunner(object):
 			return False
 		#	save Scan table at first
 		# print 'self.target\t',self.target
-		self.web_interface.task_start(self.target,self.target)
+		self.web_interface.task_start(self.target,str(self.args))
 			
 	def _initGlobalVar(self):
 		# process information
@@ -192,9 +193,15 @@ class PluginMultiRunner(object):
 			else:
 				m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(\/\d{1,2})?$',target)
 				if m:
-					ipnet = list(ipaddress.ip_network(unicode(target)).hosts())
-					for eachipad in ipnet:
-						targets.append(eachipad.compressed)
+					# 弃用ipaddress库，因为ip range解析问题
+					# 
+					# ipnet = list(ipaddress.ip_network(unicode(target)).hosts())
+					# for eachipad in ipnet:
+					# 	targets.append(eachipad.compressed)
+
+					ipnet = list(netaddr.IPNetwork(target))
+					for eachip in ipnet:
+						targets.append(eachip.format())
 				else:
 					targets.append(target)
 		

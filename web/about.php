@@ -111,7 +111,7 @@ EOF;
 			<div class="row row-offcanvas row-offcanvas-right">
 
 				<div class="col-xs-2 col-sm-2 col-md-2" id="myScrollspy">
-					<ul class="nav nav-tabs nav-stacked" id="myNav" style="width: 80px;border:0 px;">
+					<ul class="nav nav-tabs nav-stacked" id="myNav" style="width: 50px;border:0 px;">
 
 						<li><a href="#">1.3</a></li>
 						<li><a href="#1.2">1.2</a></li>
@@ -122,7 +122,14 @@ EOF;
 
 				<div class="col-xs-10 col-sm-10 col-md-10" role="main" class="main">
 					<h2 id="1.3">1.3</h2>
-					<h3>1.3.0.141204_Beta</h3>
+					<h3>1.3.2.141216_Beta</h3>
+						<p><strong>改进：</strong></p>
+						<p>a).引入单个插件的批量模式，-p pluginpath</p>
+						<p>b).引入logger接口，完善输出日志</p>
+						<p>c).弃用本地结果保存与输出功能</p>
+						<p>d).一些bug修复</p>
+					<hr>
+					<h3>1.3.1.141204_Beta</h3>
 						<p><strong>改进：</strong></p>
 						<p>a).一些bug修复</p>
 						<p>b).引入yascanner的assign接口</p>

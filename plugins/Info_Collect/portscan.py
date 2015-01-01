@@ -90,11 +90,10 @@ def Audit(services):
 				services['ports'].append(eachport)
 
 		logger('services:%s' %services)
+		security_note(str(services['ports']))
 		if services.has_key('nogather') and services['nogather'] == True:
 			pass
 		else:
-			security_note(str(services['ports']))
-
 			# add sub task
 			if services.has_key('mode') and services['mode']=='nogather':
 				pass

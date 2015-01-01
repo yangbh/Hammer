@@ -61,8 +61,8 @@ Required software:
 ```
 python2.7
 ruby
-dig
-whatweb
+# dig
+# whatweb
 ```
 
 Required python plugins:
@@ -73,12 +73,14 @@ argparse 	# for input handling
 sqlite3		# for local database
 MySQLdb
 beautifulsoup4	# for crawler
-ipaddress	# for handling input ip
+#ipaddress	# for handling input ip
+netaddr		# for handling input ip range
 ＃ used in plugins
 python-nmap	# for nmap scanning
-httplib		# for http request
+dnspython	# for dns zone transfer
+#httplib		# for http request
 urllib
-urllib2
+#urllib2
 requests
 paramiko	# for ssh cracker
 pymongo		# for mongodb

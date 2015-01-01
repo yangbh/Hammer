@@ -233,7 +233,7 @@ if (!already_login()) {
 					<div class="panel-heading">
 						<h3 style="margin:0;">
 							<span>http://www.anhuinews.com</span>
-							<span class="label label-info">113 Issus</span>
+							<span class="label label-info">0 Issus</span>
 						</h3>
 					</div>
 					<div class="panel-body">

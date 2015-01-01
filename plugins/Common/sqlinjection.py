@@ -23,7 +23,7 @@ def getCrawlerHrefs(url):
 		return [url]
 
 def Assign(services):
-	if services.has_key('url'):
+	if services.has_key('url') and not services.has_key('cms'):
 		return True
 	return False
 

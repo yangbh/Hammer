@@ -6,7 +6,7 @@ import requests
 from dummy import *
 
 info = {
-	'NAME':'IIS PUT Vulnerability',
+	'NAME':'IIS Method Scanner',
 	'AUTHOR':'yangbh',
 	'TIME':'20140731',
 	'WEB':'',
@@ -43,9 +43,10 @@ def Audit(services):
 		level = 'low'
 		if method.find('PUT') != -1 or method.find('MOVE') != -1:
 			level = 'medium'
-		retinfo = {'level':'info','content':method}
-		output += 'HTTP Methods found:\t' + method
-		security_info(method)
+		if 'PUT' in method:
+			security_warning(method)
+		else:
+			security_note(method)
 
 		return (retinfo,output)
 
@@ -63,7 +64,11 @@ def Audit(services):
 		if method != '':
 			retinfo = {'level':'medium','content':method}
 			output += 'HTTP Methods found:\t' + method
-			security_info(method)
+			
+			if 'PUT' in method:
+				security_warning(method)
+			else:
+				security_note(method)
 
 			return (retinfo,output)
 	except Exception,e:

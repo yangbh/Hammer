@@ -10,6 +10,7 @@ import socket
 import multiprocessing
 import multiprocessing.pool
 import ipaddress
+import netaddr
 import logging
 
 import globalVar
@@ -186,9 +187,14 @@ class Scanner(object):
 				# ip range type
 				m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$',target)
 				if m:
-					ipnet = list(ipaddress.ip_network(unicode(target)).hosts())
-					for eachipad in ipnet:
-						targets.append(eachipad.compressed)
+					ipnet = list(netaddr.IPNetwork(target))
+					for eachip in ipnet:
+						targets.append(eachip.format())
+						
+					# ipnet = list(ipaddress.ip_network(unicode(target)).hosts())
+					# for eachipad in ipnet:
+					# 	targets.append(eachipad.compressed)
+
 				else:
 					# one ip
 					m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$',target)
@@ -251,7 +257,9 @@ class Scanner(object):
 			# print 'Exception:',e
 			globalVar.mainlogger.error('Exception:'+str(e))
 
-	def infoGather(self,depth=1):
+	def infoGather(self,depth=None):
+		if depth == None:
+			depth = self.gatherdepth
 		try:
 			#	Step 2
 			# print '>>>Step2: gathing info'

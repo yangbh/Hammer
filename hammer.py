@@ -111,7 +111,7 @@ def main():
 				sn.initInfo()
 				sn.scan()
 			else:
-				sn = Scanner(server=_server,token=_token,target=_target,threads=_threads,loglever=_vv)
+				sn = Scanner(server=_server,token=_token,target=_target,threads=_threads,loglever=_vv,gatherdepth=_gather_depth)
 				sn.initInfo()
 				sn.infoGather(depth=_gather_depth)
 				sn.scan()

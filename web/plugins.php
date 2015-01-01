@@ -196,7 +196,7 @@ EOF;
 									<th style="width: 30%">Name</th>
 									<th style="width: 10%">Author</th>
 									<th style="width: 10%">Time</th>
-									<th style="width: 50%">Description</th>
+									<th style="width: 50%;overflow:hidden;">Description</th>
 								</tr>
 							</thead>
 						</table>

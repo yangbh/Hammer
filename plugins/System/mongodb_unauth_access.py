@@ -18,9 +18,6 @@ def Assign(services):
 	return False
 
 def Audit(services):
-	retinfo = None
-	output = ''
-	
 	port = None
 	ip = services['ip']
 	if 27017 in services['ports']:
@@ -34,12 +31,12 @@ def Audit(services):
 			# db = connection.admin
 			# db.system.users.find_one()
 			dbs = connection.database_names()
-			output = ip + ':' + str(port)+'/'+str(dbs)
 			security_hole(ip+':'+str(port)+'/'+str(dbs))
+			logger(ip + ':' + str(port)+'/'+str(dbs))
 		except pymongo.errors.OperationFailure,e:
 			logger('Exception:\t'+str(e))
 			# pass
-	return (retinfo,output)
+
 # ----------------------------------------------------------------------------------------------------
 #	untest yet
 # ----------------------------------------------------------------------------------------------------
@@ -48,5 +45,5 @@ if __name__=='__main__':
 	if len(sys.argv) ==  2:
 		ip = sys.argv[1]
 	services = {'ip':ip,'ports':[27017]}
-	pprint(Audit(services))
+	Audit(services)
 	pprint(services)
