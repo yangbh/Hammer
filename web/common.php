@@ -5,7 +5,7 @@ require_once('config.php');
 session_set_cookie_params(2*3600);
 session_start();
 
-ini_set('display_errors','Off');
+ini_set('display_errors','off');
 // error_reporting(E_ALL);
 // error_reporting(E_ERROR);
 $con = mysql_connect($DB_HOST.':'.$DB_PORT,$DB_USER,$DB_PWD,$DB_NAME);

@@ -17,6 +17,7 @@ import globalVar
 # from globalVar import mainlogger
 
 from pprint import pprint
+from common import genFilename
 from pluginLoader_class import PluginLoader
 from spider.domain import GetFirstLevelDomain
 from webInterface_class import WebInterface
@@ -65,7 +66,7 @@ class MyPool(multiprocessing.pool.Pool):
 # ----------------------------------------------------------------------------------------------------
 class Scanner(object):
 	"""docstring for Scanner"""
-	def __init__(self,server=None,token=None,target=None,threads=None,loglever='INFO',gatherdepth=1):
+	def __init__(self,server=None,token=None,target=None,threads=None,loglevel='INFO',gatherdepth=1):
 		super(Scanner, self).__init__()
 		self.server = server
 		self.token = token
@@ -75,7 +76,7 @@ class Scanner(object):
 		else:
 			self.threads = multiprocessing.cpu_count()
 		self.gatherdepth = gatherdepth
-		self.loglevel = loglever
+		self.loglevel = loglevel
 		self.args = {'loglevel':self.loglevel,'threads':self.threads,'gatherdepth':self.gatherdepth}
 
 		# web接口
@@ -90,41 +91,57 @@ class Scanner(object):
 		
 		self.pls = []
 
-		# log 模块
-		globalVar.mainlogger = logging.getLogger('main')
-		if loglever == 'DEBUG':
-			globalVar.mainlogger.setLevel(logging.DEBUG)
-		else:
-			globalVar.mainlogger.setLevel(logging.INFO)
+		self.loghandler = []
 
-		# 定义handler的输出格式formatter    
-		# formatter = logging.Formatter('%(asctime)s - %(name)s - [%(levelname)s] - %(message)s')  
-		formatter1 = logging.Formatter('[%(process)d] - [%(levelname)s] - %(message)s')  
-		formatter2 = logging.Formatter('%(message)s')  
-		# 创建一个handler，用于写入日志文件  
-		filepath = BASEDIR+'/output/scan.log'
-		if os.path.isfile(filepath):
-			os.remove(filepath)
-		fh = logging.FileHandler(filepath,'a')    
-		# 再创建一个handler，用于输出到控制台
-		ch = logging.StreamHandler()  
+		# log 模块,确保赋值一次
+		if globalVar.mainlogger is None:
+			globalVar.mainlogger = logging.getLogger('main')
+			if loglevel == 'DEBUG':
+				globalVar.mainlogger.setLevel(logging.DEBUG)
+			else:
+				globalVar.mainlogger.setLevel(logging.INFO)
 
-		fi = logging.Filter('main')
+			#	logging handler
+			formatter = logging.Formatter('[%(process)d] - [%(levelname)s] - %(message)s')  
+			# 创建一个handler，用于写入日志文件  
+			filepath = BASEDIR+'/output/log/' + genFilename(self.target) + '.log'
+			if os.path.isfile(filepath):
+				os.remove(filepath)
+			fh = logging.FileHandler(filepath,'a')    
+			# 再创建一个handler，用于输出到控制台
+			ch = logging.StreamHandler()  
+			
+			fi = logging.Filter('main')
 
-		fh.addFilter(fi)
-		ch.addFilter(fi)
+			fh.addFilter(fi)
+			ch.addFilter(fi)
 
-		fh.setFormatter(formatter1)
-		ch.setFormatter(formatter1)
+			fh.setFormatter(formatter)
+			ch.setFormatter(formatter)
 
-		globalVar.mainlogger.addHandler(fh)
-		globalVar.mainlogger.addHandler(ch)
+			self.loghandler.append(ch)
+			self.loghandler.append(fh)
 
-		globalVar.mainlogger.info('[*] Start an new scan')
+			self._initLogging()
+
+		globalVar.mainlogger.info('[*] Start a new scan')
 		globalVar.mainlogger.info('\tserver\t=%s' % server)
 		globalVar.mainlogger.info('\ttoken\t=%s' % token)
 		globalVar.mainlogger.info('\ttarget\t=%s' % target)
 		globalVar.mainlogger.info('\tthreads\t=%d' % self.threads)
+
+	def _initLogging(self):
+		globalVar.mainlogger.info('before test')
+		for handler in self.loghandler:
+			globalVar.mainlogger.addHandler(handler)
+		globalVar.mainlogger.info('after test')
+	
+	def _removeLogging(self):
+		globalVar.mainlogger.info('before test')
+		for handler in self.loghandler:
+			globalVar.mainlogger.removeHandler(handler)
+		globalVar.mainlogger.info('after test')
+		globalVar.mainlogger = None
 
 	def _getServiceType(self,target):
 		m = re.search('(http[s]?)://([^:^/]+):?([^/]*)/?',target)
@@ -405,6 +422,9 @@ class Scanner(object):
 		# except Exception,e:
 			# print 'Exception',e
 			globalVar.mainlogger.error('Exception:'+str(e))
+
+		finally:
+			self._removeLogging()
 
 # ----------------------------------------------------------------------------------------------------
 #

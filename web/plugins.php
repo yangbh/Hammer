@@ -131,12 +131,16 @@ echo <<<EOF
 							</a>
 						 	<ul class="dropdown-menu" role="meun">
 								<li role="presentation">
-									<a href="user.php"><i class="glyphicon glyphicon-cog"></i> 设置</a>
+									<a href="task.php"><i class="glyphicon glyphicon-tasks"></i> Tasks</a>
 								</li>
 								<li role="presentation">
+									<a href="dist.php"><i class="glyphicon glyphicon-tower"></i> Workers</a>
 								</li>
 								<li role="presentation">
-									<a href="logout.php"><i class="glyphicon glyphicon-off"></i> 退出</a>
+									<a href="user.php"><i class="glyphicon glyphicon-cog"></i> Setting</a>
+								</li>
+								<li role="presentation">
+									<a href="logout.php"><i class="glyphicon glyphicon-off"></i> Logout</a>
 								</li>
 						  	</ul>
 						</li>
@@ -174,10 +178,10 @@ EOF;
 						<div class="btn-group">
 							<select class="form-control" name="type" id="type">
 								<option value="0">All Category</option>
+								<option value="4">Info Collect</option>
 								<option value="1">Common</option>
 								<option value="2">Sensitive Info</option>
 								<option value="3">System</option>
-								<option value="4">Info Collect</option>
 								<option value="5">Web Applications</option>
 								<option value="6">Weak Password</option>
 								<option value="7">Others</option>
@@ -228,7 +232,7 @@ EOF;
 
 
 		<!-- DataTables -->
-		<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.css">
+		<link rel="stylesheet" type="text/css" href="css/jquery.dataTables.css">
 		<script type="text/javascript" charset="utf8" src="js/jquery.dataTables.js"></script>
 
 	</body>

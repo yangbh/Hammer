@@ -7,6 +7,10 @@ from dummy import BASEDIR
 
 manager = multiprocessing.Manager()
 
+# 	tasks
+done_tasks = manager.list()
+undone_tasks = manager.list()
+
 #	targets
 target_lock = multiprocessing.Lock()
 # done_targets = []
@@ -42,30 +46,37 @@ plugin_now_lock = multiprocessing.Lock()
 
 
 # logger
+# 每import globalVar 一次，就会执行一次，因此限制只执行一次
 # Set up a specific logger with our desired output level
 mainlogger = None
-# mainlogger = logging.getLogger('main')
-# mainlogger.setLevel(logging.DEBUG)
-# # 定义handler的输出格式formatter    
-# # formatter = logging.Formatter('%(asctime)s - %(name)s - [%(levelname)s] - %(message)s')  
-# formatter = logging.Formatter('[%(process)d] - [%(levelname)s] - %(message)s')  
+# print dir()
+# print locals()
+# print globals()
+# # print globalVar.mainlogger
+# if 'mainlogger' not in dir():
+# 	print '------------1------------'
+# 	mainlogger = logging.getLogger('main')
+# 	mainlogger.setLevel(logging.INFO)
+# 	# 定义handler的输出格式formatter    
+# 	# formatter = logging.Formatter('%(asctime)s - %(name)s - [%(levelname)s] - %(message)s')  
+# 	formatter = logging.Formatter('[%(name)s] - [%(process)d] - [%(levelname)s] - %(message)s')  
 
-# # 创建一个handler，用于写入日志文件    
-# fh = logging.FileHandler(BASEDIR+'/output/scan.log','a')    
-# # 再创建一个handler，用于输出到控制台    
-# ch = logging.StreamHandler()  
+# 	# # 创建一个handler，用于写入日志文件    
+# 	# fh = logging.FileHandler(BASEDIR+'/output/scan.log','a')    
+# 	# # 再创建一个handler，用于输出到控制台    
+# 	ch = logging.StreamHandler()  
 
-# fi = logging.Filter('root')
+# 	fi = logging.Filter('main')
 
-# fh.addFilter(fi)
-# ch.addFilter(fi)
+# 	# fh.addFilter(fi)
+# 	ch.addFilter(fi)
 
-# fh.setFormatter(formatter)
-# ch.setFormatter(formatter)
+# 	# fh.setFormatter(formatter)
+# 	ch.setFormatter(formatter)
 
-# mainlogger.addHandler(fh)
-# mainlogger.addHandler(ch)
+# 	# mainlogger.addHandler(fh)
+# 	mainlogger.addHandler(ch)
 
-# mainlogger.info('Hello World')
-# print 'hello world'
-pluginlogger = None
+# 	# mainlogger.info('Hello World')
+# 	# print 'hello world'
+logger = None

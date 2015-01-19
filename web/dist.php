@@ -22,7 +22,7 @@ if (!already_login()) {
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<style type="text/css">
 			a span{
-				color: #030303;
+				color: #555;
 				text-decoration: none;
 			}
 		</style>
@@ -65,7 +65,7 @@ if (!already_login()) {
 			//  plugin table
 			$('#scans_table').DataTable({
 				// "ajax": "./datatable.json",
-				"ajax": "./scans_search.php",
+				"ajax": "./dist_search.php",
 				// "paging":   false,
 				"lengthChange": false, //改变每页显示数据数量
 				"pageLength": 15,
@@ -75,20 +75,13 @@ if (!already_login()) {
 				"order":    [2, "desc" ],
 				"columnDefs": [
 					{
-						"targets": [ 0 ],
+						"targets": [0,6],
 						"visible": false,
 						"searchable": false
 					},
 					{
-						"targets": [1],
+						"targets":[4],
 						"render": function ( data, type, full, meta ) {
-								// return "<a class=\"plugin\" href='search.php?name="+encodeURI(data)+"'>"+data+"</a>";
-								return "<a class=\"plugin\" href=\""+"vulns.php#"+full[0]+"\">"+data+"</a>";
-						}
-					},
-					{
-						"targets":[2],
-						 "render": function ( data, type, full, meta ) {
 								var d = new Date();
 								d.setTime(parseInt(data)*1000);
 								// alert(d.toString());
@@ -96,53 +89,17 @@ if (!already_login()) {
 						}
 					},
 					{
-						"targets":[3],
-						"render": function ( data, type, full, meta ) {
-							var startTime = parseInt(full[2]);
-							var endTime = parseInt(data);
-							if (!endTime) {
-									return '';
-							};
-							time = endTime - startTime;
-							var hour = parseInt(time/3600);
-							var min = parseInt(time/60)%60;
-							var sec = time%60;
-							var ret = '';
-							if(hour){
-									ret+=hour+'h,'+min+'m,'+sec+'s';
-							}
-							else{
-										if (min) {
-												ret+=min+'m,'+sec+'s';
-										}
-										else{
-												ret+=sec+'s';
-										}
-							}
-							return ret;
-						},
-					},
-					{
-						"targets":[4],
+						"targets":[5],
 						 "render": function ( data, type, full, meta ) {
 								switch(data){
+									case '0':
+										return 'offline';
 									case '1':
-										return 'info';
-									case '2':
-										return 'low';
-									case '3':
-										return 'medium';
-									case '4':
-										return 'high';
+										return 'online';
 									default:
 										return data;
 								}
 						}
-					},
-					{
-						"targets": [ 6 ],
-						"visible": false,
-						"searchable": false
 					},
 				 ]
 			});
@@ -154,7 +111,7 @@ if (!already_login()) {
 			//  search button click
 			$('#search').click(function() {
 				/* Act on the event */
-				var ajax_url = "./scans_search.php?level="+$('#level').val()+"&keyword="+$('#keyword').val();
+				var ajax_url = "./dist_search.php?level="+$('#level').val()+"&keyword="+$('#keyword').val();
 				$('#scans_table').DataTable().ajax.url(ajax_url).load();
 			});
 
@@ -163,116 +120,53 @@ if (!already_login()) {
 	</head>
 
 	<body>
-		<div class="navbar navbar-inverse navbar-default" role="navigation" style="border-radius: 0px;margin: 0px;">
-			<div class="container">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar">1</span>
-						<span class="icon-bar">2</span>
-						<span class="icon-bar">3</span>
-					</button>
-					<a class="navbar-brand" href="#" style="padding: 5px;">
-						<img src="images/logo.ico" class="" style="width: 40px;height: 40px;">
-					</a>
-					<a class="navbar-brand" href="#">
-						<strong>Hammer</strong>
-					</a>
-				</div>
-				<div class="navbar-collapse collapse">
-					<ul class="nav navbar-nav">
-						<li><a href="index.php">Home</a></li>
-						<?php if (already_login()) {echo '<li class="active"><a href="scans.php">Scans</a></li>';}?>
-						<li><a href="plugins.php">Plugins</a></li>
-						<li><a href="documents.php">Documents</a></li>
-						<li><a href="about.php">About</a></li>
-					</ul>
-<?php
-if (already_login()) {
-	$username = $_SESSION['user'];
-echo <<<EOF
-					<ul class ="nav navbar-nav navbar-right">
-						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								<i class="glyphicon glyphicon-user"></i> $username<b class="caret"></b>
-							</a>
-						 	<ul class="dropdown-menu" role="meun">
-								<li role="presentation">
-									<a href="task.php"><i class="glyphicon glyphicon-tasks"></i> Tasks</a>
-								</li>
-								<li role="presentation">
-									<a href="dist.php"><i class="glyphicon glyphicon-tower"></i> Workers</a>
-								</li>
-								<li role="presentation">
-									<a href="user.php"><i class="glyphicon glyphicon-cog"></i> Setting</a>
-								</li>
-								<li role="presentation">
-									<a href="logout.php"><i class="glyphicon glyphicon-off"></i> Logout</a>
-								</li>
-						  	</ul>
-						</li>
-					</ul>
-EOF;
-}
-else{
-echo <<<EOF
-					<form class="navbar-form navbar-right" role="form" action="login.php" method="post">
-						<div class="form-group">
-							<input type="text" placeholder="Name" class="form-control" name="username" id="username">
-						</div>
-						<div class="form-group">
-							<input type="password" placeholder="Password" class="form-control" name="password" id="password">
-						</div>
-						<button type="submit" class="btn btn-success">Sign in</button>
-					</form>
-EOF;
-}
-?>
-				</div><!--/.navbar-collapse -->
-			</div>
-		</div>
-
 		<!-- Main jumbotron for a primary marketing message or call to action -->
 		<div class="container">
 			<div class="row" id="plugins">
 				<div class="container" >
-						<h2 class="page-header">
-							<!-- <span class="glyphicon glyphicon-th"></span> -->
-							Scans&nbsp;
-							<a href="task_create.php"><span class="glyphicon glyphicon-plus"></span></a>
-							<a href="#"><span class="glyphicon glyphicon-search"></span></a>
-						</h2>
+					<h1>
+						<a href="index.php">
+							<!-- <small><span class="glyphicon glyphicon-home"></span></small> -->
+							<span class="glyphicon glyphicon-home"></span>
+						</a>
+						<a href="javascript:history.back()">
+							<span class="glyphicon glyphicon-circle-arrow-left"></span>
+						</a>
+						&nbsp;Dispatchers
+						<!-- <a class="glyphicon glyphicon-circle-arrow-left" id="plugin_goback" href="javascript:history.back()"></a>&nbsp; -->
+					</h1>
 						<div class="form-inline">
 <!-- 							<div class="form-group">
 								<input type="text" class="form-control" value="2012-05-15" id="datetimepicker" data-date-format="yyyy-mm-dd">
 							</div> -->
 							<div class="btn-group">
 								<select class="form-control" name="level" id="level">
-									<option value="0">All Level</option>
-									<option value="1">Informational</option>
-									<option value="2">Low</option>
-									<option value="3">Medium</option>
-									<option value="4">High</option>
+									<option value="0">All Status</option>
+									<option value="1">Online</option>
+									<option value="2">Offline</option>
 								</select>
 							</div>
 							<div class="form-group">
-								<input type="text" class="form-control" id="keyword" placeholder="Keyword" name="keyword">
+								<input type="text" class="form-control" id="mac" placeholder="MAC Address" name="mac">
+							</div>
+							<div class="form-group">
+								<input type="text" class="form-control" id="os" placeholder="Operation System" name="os">
 							</div>
 							<button id="search" class="btn btn-default">Search</button>
 						</div>
 					<div class="table-responsive">
 						<table id="scans_table" class="table table-striped">
-								<thead>
-										<tr>
-												<th>ID</th>
-												<th style="width: 25%">URL/IP</th>
-												<th style="width: 15%">StartTime</th>
-												<th style="width: 5%">CostTime</th>
-												<th style="width: 5%">Level</th>
-												<th style="width: 50%">Arguments</th>
-												<th>User_Name</th>
-										</tr>
-								</thead>
+							<thead>
+								<tr>
+									<th>ID</th>
+									<th>OS</th>
+									<th>MAC</th>
+									<th>IP</th>
+									<th>End_Time</th>
+									<th>Status</th>
+									<th>User_Name</th>
+								</tr>
+							</thead>
 						</table>
 					</div>
 				</div>

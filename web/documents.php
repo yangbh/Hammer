@@ -102,15 +102,18 @@ echo <<<EOF
 								<i class="glyphicon glyphicon-user"></i> $username<b class="caret"></b>
 							</a>
 							<ul class="dropdown-menu">
-								<li>
-									<a href="user.php"><i class="glyphicon glyphicon-cog"></i> 设置</a>
+								<li role="presentation">
+									<a href="task.php"><i class="glyphicon glyphicon-tasks"></i> Tasks</a>
 								</li>
-								<li>
+								<li role="presentation">
+									<a href="dist.php"><i class="glyphicon glyphicon-tower"></i> Workers</a>
 								</li>
-								<li>
-									<a href="logout.php"><i class="glyphicon glyphicon-off"></i> 退出</a>
+								<li role="presentation">
+									<a href="user.php"><i class="glyphicon glyphicon-cog"></i> Setting</a>
 								</li>
-								</ul>
+								<li role="presentation">
+									<a href="logout.php"><i class="glyphicon glyphicon-off"></i> Logout</a>
+								</li>
 						</li>
 					</ul>
 EOF;
@@ -195,9 +198,12 @@ Usage: hammer.py [Auth] [Options] [Targets]
 						<pre class="prettyprint linenums Lang-python">
 1. 一种是常规的类似yascanner的扫描，扫描目标为一个ip、host、url
 hammer.py -s www.hammer.org -t 3r75... -T www.leesec.com
+例如：	python hammer.py -s www.hammer.org -t 4aSJWhngmZdhAvkCGt6ODVhHTQ1R4Jzz -T 73.50.49.151
 
 2. 另一种是批量扫描，可以是ip范围，也可以－T 从本地文件载入目标host、url等
 hammer.py -s www.hammer.org -t 3r75... -p plugins/System/iisshort.py -T 192.168.1.0/24
+例如：	python hammer.py -s www.hammer.org -t 4aSJWhngmZdhAvkCGt6ODVhHTQ1R4Jzz -p plugins/Info_Collect/portscan.py -T 73.50.49.151
+	python hammer.py -s www.hammer.org -t 4aSJWhngmZdhAvkCGt6ODVhHTQ1R4Jzz -p plugins/System/mongodb_unauth_access.py --plugin-arg "ports=[27017]" -T 73.50.49.151／30
 						</pre>
 						<h3>2. 详细参数解释</h3>
 						<pre class="prettyprint linenums Lang-python">
@@ -300,7 +306,7 @@ services = {
 	
 	# 不常用		
 	'alreadyrun'		# 是否已经作为信息收集模块运行过
-	'nogather'			# 是否需要收集，例如－p模式下是不需要收集的，默认为True
+	'nogather'			# 是否需要收集，例如－p模式默认为True，不需要收集信息
 
 	# 弃用
 	'noSubprocess': True,	# 是否是子进程

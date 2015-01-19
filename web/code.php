@@ -120,9 +120,13 @@ if (!already_login()) {
 				prettyPrint();
 				var webhtml = '';
 				if(web!=''){
-					webhtml = "<a href=\""+web+"\">"+web+"</a>";
+					webhtml = '';
+					urls = web.split(',');
+					for (var i = 0; i < urls.length; i++) {
+					 	webhtml += "<a href=\""+urls[i]+"\">"+urls[i]+"</a><br>";
+					}; 
 				}
-				$("#description").html(webhtml+'<br>'+description);
+				$("#description").html(webhtml+description);
 				// var d = new Date();
 				// d.setTime(time*1000);
 				// $("#author").text(d.Format("yyyy-MM-dd hh:mm:ss")+' by '+author);

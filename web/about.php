@@ -72,15 +72,18 @@ echo <<<EOF
 								<i class="glyphicon glyphicon-user"></i> $username<b class="caret"></b>
 							</a>
 							<ul class="dropdown-menu">
-								<li>
-									<a href="user.php"><i class="glyphicon glyphicon-cog"></i> 设置</a>
+								<li role="presentation">
+									<a href="task.php"><i class="glyphicon glyphicon-tasks"></i> Tasks</a>
 								</li>
-								<li>
+								<li role="presentation">
+									<a href="dist.php"><i class="glyphicon glyphicon-tower"></i> Workers</a>
 								</li>
-								<li>
-									<a href="logout.php"><i class="glyphicon glyphicon-off"></i> 退出</a>
+								<li role="presentation">
+									<a href="user.php"><i class="glyphicon glyphicon-cog"></i> Setting</a>
 								</li>
-								</ul>
+								<li role="presentation">
+									<a href="logout.php"><i class="glyphicon glyphicon-off"></i> Logout</a>
+								</li>
 						</li>
 					</ul>
 EOF;
@@ -112,8 +115,8 @@ EOF;
 
 				<div class="col-xs-2 col-sm-2 col-md-2" id="myScrollspy">
 					<ul class="nav nav-tabs nav-stacked" id="myNav" style="width: 50px;border:0 px;">
-
-						<li><a href="#">1.3</a></li>
+						<li><a href="#">1.4</a></li>
+						<li><a href="#1.2">1.3</a></li>
 						<li><a href="#1.2">1.2</a></li>
 						<li><a href="#1.1">1.1</a></li>
 						<li><a href="#1.0">1.0</a></li>
@@ -121,6 +124,17 @@ EOF;
 				</div>
 
 				<div class="col-xs-10 col-sm-10 col-md-10" role="main" class="main">
+					<h2 id="1.4">1.4</h2>
+					<h3>1.4.0.150118_Beta</h3>
+						<p><strong>改进：</strong></p>
+						<p>a).初步尝试web管理模式</p>
+						<p>b).优化安装，采用requirement.txt管理python依赖库</p>
+						<p><strong>待完善：</strong></p>
+						<p>a).更加细致web管理的参数，可指定插件参数</p>
+						<p>b).更加细致的任务分配（现在以每个scan为单位，以后可以考虑以target或者plugin为单位）</p>
+						<p>c).console控制，类似mst</p>
+						<p>d).增加配置管理，例如全局参数与每个插件参数的统一管理</p>
+					<hr>
 					<h2 id="1.3">1.3</h2>
 					<h3>1.3.2.141216_Beta</h3>
 						<p><strong>改进：</strong></p>
@@ -172,7 +186,7 @@ EOF;
 						<!-- <p>c).</p> -->
 					<hr>  
 					<h2 id="1.1">1.1</h2>
-					<h3>1.1.0.140918_lpha</h3>
+					<h3>1.1.0.140918_Alpha</h3>
 						<p>
 							第一个发布的功能版本
 						</p>

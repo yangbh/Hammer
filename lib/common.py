@@ -184,8 +184,9 @@ def security_hole(vulnInfo):
 		return
 	except KeyError,e:
 		print 'KeyError',e
+
 def add_scan_task(target):
-	''' 添加一个扫描任务'''
+	''' 添加一个扫描任务的Target'''
 	# print globals()
 	# print 'in add_scan_task'
 	# print 'plugin pid=\t',os.getpid()
@@ -197,6 +198,15 @@ def add_scan_task(target):
 	# globalVar.target_lock.release()
 	# print 'globalVar.undone_targets=',globalVar.undone_targets
 	logger('Adding a target: %s' % target)
+
+def add_task(task):
+	'''
+	添加一个扫描任务，单位为task
+	task目前可以为basic type scan、plugin type scan
+	'''
+	globalVar.undone_tasks.append(task)
+	logger('Adding a task:%s' % task)
+
 # ----------------------------------------------------------------------------------------------------
 # 	logging 接口
 # ----------------------------------------------------------------------------------------------------

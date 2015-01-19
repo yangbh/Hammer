@@ -25,7 +25,7 @@ def getPwds(neighborhosts):
 
 	commonpwd = []
 	# pwdfile = BASEDIR+'/lib/db/password_small.dict'
-	pwdfile = BASEDIR+'/lib/db/tomcat_pwd.dict'
+	pwdfile = BASEDIR+'/lib/db/tomcat_user.dict'
 
 	fp = open(pwdfile,'r')
 	for eachline in fp:

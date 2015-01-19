@@ -18,28 +18,161 @@ require_once('common.php');
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 
 		<style type="text/css">
-			.hammer-header-logo {
-			  width: 30px;
-			  height: 30px;
-			  vertical-align: top;
-			  margin-right: 5px;
+		.navbar {
+			margin-bottom: 0px;
+		}
+		.banner {
+			position: relative;
+			width: 100%;
+			overflow: auto;
+
+			font-size: 18px;
+			line-height: 24px;
+			text-align: center;
+
+			color: rgba(255,255,255,.6);
+			text-shadow: 0 0 1px rgba(0,0,0,.05), 0 1px 2px rgba(0,0,0,.3);
+
+			background: #5b4d3d;
+			box-shadow: 0 1px 2px rgba(0,0,0,.25);
+
+		}
+			.banner ul {
+				list-style: none;
+				width: 300%;
+				padding-left: 0px;
 			}
+			.banner ul li {
+				display: block;
+				float: left;
+				width: 33%;
+				min-height: 350px;
+
+				-o-background-size: 100% 100%;
+				-ms-background-size: 100% 100%;
+				-moz-background-size: 100% 100%;
+				-webkit-background-size: 100% 100%;
+				background-size: 100% 100%;
+
+				box-shadow: inset 0 -3px 6px rgba(0,0,0,.1);
+			}
+
+			.banner .inner {
+				padding: 80px 0 60px;
+			}
+
+			.banner h1, .banner h2 {
+				font-size: 30px;
+				line-height: 35px;
+
+				color: #fff;
+			}
+
+			.banner .btn {
+				display: inline-block;
+				margin: 25px 0 0;
+				padding: 9px 22px 7px;
+				clear: both;
+
+				color: #fff;
+				font-size: 12px;
+				font-weight: bold;
+				text-transform: uppercase;
+				text-decoration: none;
+
+				border: 2px solid rgba(255,255,255,.4);
+				border-radius: 5px;
+			}
+				.banner .btn:hover {
+					background: rgba(255,255,255,.05);
+				}
+				.banner .btn:active {
+					-webkit-filter: drop-shadow(0 -1px 2px rgba(0,0,0,.5));
+					-moz-filter: drop-shadow(0 -1px 2px rgba(0,0,0,.5));
+					-ms-filter: drop-shadow(0 -1px 2px rgba(0,0,0,.5));
+					-o-filter: drop-shadow(0 -1px 2px rgba(0,0,0,.5));
+					filter: drop-shadow(0 -1px 2px rgba(0,0,0,.5));
+				}
+
+			.banner .btn, .banner .dot {
+				-webkit-filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
+				-moz-filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
+				-ms-filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
+				-o-filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
+				filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
+			}
+
+			.banner .dots {
+				position: absolute;
+				left: 0;
+				right: 0;
+				bottom: 20px;
+				padding-left: 0px;
+			}
+				.banner .dots li {
+					display: inline-block;
+					width: 10px;
+					height: 10px;
+					margin: 0 4px;
+
+					text-indent: -999em;
+
+					border: 2px solid #fff;
+					border-radius: 6px;
+
+					cursor: pointer;
+					opacity: .4;
+
+					-webkit-transition: background .5s, opacity .5s;
+					-moz-transition: background .5s, opacity .5s;
+					transition: background .5s, opacity .5s;
+				}
+					.banner .dots li.active {
+						background: #fff;
+						opacity: 1;
+					}
+
+			.banner .arrows {
+				position: absolute;
+				bottom: 20px;
+				right: 20px;
+				color: #fff;
+			}
+				.banner .arrow {
+					display: inline;
+					padding-left: 10px;
+					cursor: pointer;
+				}
 		</style>
 
 		
 		<script src="js/jquery.min.js"></script>
 		<!-- <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script> -->
+		
+		<script src="js/unslider.min.js"></script>
 
 		<script type="text/javascript">
-			// $("#username").change(function(){
-			// 	alert($("#username").value);
-			// });
+			$(document).ready(function(){
+				$(function() {
+					// $('.banner').unslider();
+					if(window.chrome) {
+						$('.banner li').css('background-size', '100% 100%');
+					}
+					$('.banner').unslider({
+						speed: 500,               //  The speed to animate each slide (in milliseconds)
+						delay: 3000,              //  The delay between slide animations (in milliseconds)
+						complete: function() {},  //  A function that gets called after every slide animation
+						keys: true,               //  Enable keyboard (left, right) arrow shortcuts
+						dots: true,               //  Display dot navigation
+						fluid: false              //  Support responsive design. May break non-responsive designs
+					});
+				})
+			});
 		</script>
 
 	</head>
 
 	<body>
-
 		<div class="navbar navbar-inverse navbar-default" role="navigation" style="border-radius: 0px;">
 			<div class="container">
 				<div class="navbar-header">
@@ -75,12 +208,16 @@ echo <<<EOF
 							</a>
 							<ul class="dropdown-menu" role="meun">
 								<li role="presentation">
-									<a href="user.php"><i class="glyphicon glyphicon-cog"></i> 设置</a>
+									<a href="task.php"><i class="glyphicon glyphicon-tasks"></i> Tasks</a>
 								</li>
 								<li role="presentation">
+									<a href="dist.php"><i class="glyphicon glyphicon-tower"></i> Workers</a>
 								</li>
 								<li role="presentation">
-									<a href="logout.php"><i class="glyphicon glyphicon-off"></i> 退出</a>
+									<a href="user.php"><i class="glyphicon glyphicon-cog"></i> Setting</a>
+								</li>
+								<li role="presentation">
+									<a href="logout.php"><i class="glyphicon glyphicon-off"></i> Logout</a>
 								</li>
 							</ul>
 						</li>
@@ -103,12 +240,48 @@ EOF;
 
 
 		<!-- Main jumbotron for a primary marketing message or call to action -->
-		<div class="jumbotron">
+<!-- 		<div class="jumbotron">
 			<div class="container">
 				<h1>What's Hammer?</h1>
 				<p>Hammer is a web vulnnerability scanner, but more of a vulnerability scan framework. It supports plug-in extensions, you can design your own hammer, that is your hacking tool. Hammer is open source, and i hope you can share yours! </p>
 				<p><a class="btn btn-primary btn-lg" role="button" href="https://www.github.com/yangbh/Hammer">Design Your Hammer &raquo;</a></p>
 			</div>
+		</div> -->
+
+		<div class="banner">
+			<ul>
+				<li style="background-image: url('images/sunset.jpg');">
+					<div class="inner">
+						<h1>Hammer -- a web vulnnerability scanner.</h1>
+						<p>Hammer漏洞扫描框架，你值得拥有。</p>
+						<a class="btn" href="https://github.com/yangbh/Hammer">下载</a>
+					</div>
+				</li>
+
+				<li style="background-image: url('images/wood.jpg');">
+					<div class="inner">
+						<h1>Hammer -- a web vulnnerability scanner.</h1>
+						<p>Hammer漏洞扫描框架，你值得拥有。</p>
+						<a class="btn" href="https://github.com/yangbh/Hammer">下载</a>
+					</div>
+				</li>
+
+				<li style="background-image: url('images/subway.jpg');">
+					<div class="inner">
+						<h1>Hammer -- a web vulnnerability scanner.</h1>
+						<p>Hammer漏洞扫描框架，你值得拥有。</p>
+						<a class="btn" href="https://github.com/yangbh/Hammer">下载</a>
+					</div>
+				</li>
+
+				<li style="background-image: url('images/shop.jpg');">
+					<div class="inner">
+						<h1>Hammer -- a web vulnnerability scanner.</h1>
+						<p>Hammer漏洞扫描框架，你值得拥有。</p>
+						<a class="btn" href="https://github.com/yangbh/Hammer">下载</a>
+					</div>
+				</li>
+			</ul>
 		</div>
 
 		<div class="container">

@@ -65,7 +65,7 @@ class MyPool(multiprocessing.pool.Pool):
 # ----------------------------------------------------------------------------------------------------
 class PluginMultiRunner(object):
 	"""docstring for Scanner"""
-	def __init__(self,server=None,token=None,target=None,pluginfilepath=None,pluginargs=None,threads=None,loglever='INFO'):
+	def __init__(self,server=None,token=None,target=None,pluginfilepath=None,pluginargs=None,threads=None,loglevel='INFO'):
 		super(PluginMultiRunner, self).__init__()
 		self.server = server
 		self.token = token
@@ -76,7 +76,7 @@ class PluginMultiRunner(object):
 			self.threads = int(threads)
 		else:
 			self.threads = multiprocessing.cpu_count()
-		self.loglevel = loglever
+		self.loglevel = loglevel
 		self.args = {'loglevel':self.loglevel,'threads':self.threads}
 
 		# web接口
@@ -93,7 +93,7 @@ class PluginMultiRunner(object):
 
 		# log 模块
 		globalVar.mainlogger = logging.getLogger('main')
-		if loglever == 'DEBUG':
+		if loglevel == 'DEBUG':
 			globalVar.mainlogger.setLevel(logging.DEBUG)
 		else:
 			globalVar.mainlogger.setLevel(logging.INFO)
