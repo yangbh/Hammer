@@ -14,7 +14,9 @@ info = {
 	'VERSION':'1.0',
 	'RUNLEVEL':0
 }
-
+opts = [
+	['ip','61.164.42.190','target ip'],
+]
 def generateUrl(ip=None,ports=None):
 	''''''
 	httpports = []

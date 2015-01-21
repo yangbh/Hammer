@@ -18,6 +18,10 @@ info = {
 	'WEB':'https://www.yascanner.com/#!/p/1/s/4/',
 	'DESCRIPTION':'Sensitive file or directory such as: /admin, /conf, /backup /db'
 }
+opts = [
+	['ip','221.123.140.66','target ip'],
+	['ports',[993,995],'target ip\'s ports']
+]
 
 def h2bin(x):
 	return x.replace(' ', '').replace('\n', '').decode('hex')

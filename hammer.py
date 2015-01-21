@@ -9,6 +9,8 @@ sys.path.append('./lib')
 from scanner_class_basic import Scanner
 from scanner_class_pluginrunner import PluginMultiRunner
 from listener_class import Listener
+from consoler_class import Consoler
+from consoleUser_class import WebUser
 from plugin2sql import loadPlugins
 
 # ----------------------------------------------------------------------------------------------------
@@ -50,13 +52,14 @@ def usage():
 	print "[Examples]"
 	print "\thammer.py -s www.hammer.org -t 3r75... -u plugins/Info_Collect/"
 	print "\thammer.py -s www.hammer.org -t 3r75... -T http://testphp.vulnweb.com"
-	print "\thammer.py -s www.hammer.org -t 3r75... -p plugins/System/iisshort.py -T vulnweb.com"
+	print "\thammer.py -s www.hammer.org -t 3r75... -p plugins/System/dnszone.py -T vulnweb.com"
+	print "\thammer.py -s www.hammer.org -t 3r75... -l"
 	sys.exit(0)
 
 def main():
-	show()
+
 	try :
-		opts, args = getopt.getopt(sys.argv[1:], "hvls:t:u:T:p:",['help','verbose=','server=','token=','update-plugins=','target=','plugin=','plugin-arg=','no-gather','gather-depth=','threads=','listen'])
+		opts, args = getopt.getopt(sys.argv[1:], "hvlcs:t:u:T:p:",['help','verbose=','server=','token=','update-plugins=','target=','plugin=','plugin-arg=','no-gather','gather-depth=','threads=','listen','console'])
 	except getopt.GetoptError,e:
 		print 'getopt.GetoptError',e
 		usage()
@@ -67,6 +70,7 @@ def main():
 	_token = None
 	# _gather_flag = True
 	_listen = False
+	_console = False
 	_gather_depth = 1
 	_vv = 'INFO'
 	_plugin_arg=None
@@ -101,10 +105,22 @@ def main():
 			_target = arg
 		elif opt in ('-l','--listen'):
 			_listen = True
+		elif opt in ('-c','--console'):
+			_console = True
 		else:
 			pass
 
-	if _server and _token:
+	user = WebUser()
+	if user.server and user.token:
+		_server = user.server
+		_token = user.token
+
+	if _console:
+		cn = Consoler()
+		cn.run()
+
+	elif _server and _token:
+		show()
 		if '_pluginpath' in dir():
 			# print '_pluginpath=',_pluginpath
 			# print '_server=',_server
@@ -123,12 +139,10 @@ def main():
 				sn.infoGather(depth=_gather_depth)
 				sn.scan()
 
-		elif '_listen':
+		elif _listen:
 			li = Listener(server=_server, token=_token, loglevel=_vv)
 			li.run()
 		
-		else:
-			usage()
 	else:
 		usage()
 # ----------------------------------------------------------------------------------------------------

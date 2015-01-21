@@ -68,7 +68,7 @@ def getPluginInfo():
 
 def vuln_add(scanid=None,subtarget=None,pluginname=None,vulnlevel=None,vulninfo=None,server=None,token=None):
 	try:
-		serverurl = 'http://' + server +'/scans_add.php'
+		serverurl = 'http://' + server +'/vulns_add.php'
 		# cookies = {'TOKEN':token}
 		retinfo = {}
 		retinfo['scanid'] = scanid
@@ -77,7 +77,7 @@ def vuln_add(scanid=None,subtarget=None,pluginname=None,vulnlevel=None,vulninfo=
 		retinfo['vulnlevel'] = vulnlevel
 		retinfo['vulninfo'] = vulninfo
 		
-		postdata = {'type':'vuln','token':token,'retinfo':json.dumps(retinfo)}
+		postdata = {'type':'add','token':token,'retinfo':json.dumps(retinfo)}
 		# pprint(postdata)
 
 		r = requests.post(serverurl,data=postdata)
@@ -116,7 +116,7 @@ def security_note(vulnInfo):
 		# pprint(plugininfo)
 		pluginName = plugininfo['pluginname']
 		# print scanID,server,token,subTarget,pluginName,vulnInfo
-		logger('%d %s %s %s %s %s' % (scanID,server,token,subTarget,pluginName,vulnInfo))
+		logger('%d %s %s %s %s %s' % (scanID,server,token,subTarget,pluginName,vulnInfo),'WARNING')
 		vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='info',vulninfo=vulnInfo,server=server,token=token)
 		return
 	except KeyError,e:
@@ -142,7 +142,7 @@ def security_info(vulnInfo):
 		# pprint(plugininfo)
 		pluginName = plugininfo['pluginname']
 		# print scanID,server,token,subTarget,pluginName,vulnInfo
-		logger('%d %s %s %s %s %s' % (scanID,server,token,subTarget,pluginName,vulnInfo))
+		logger('%d %s %s %s %s %s' % (scanID,server,token,subTarget,pluginName,vulnInfo),'WARNING')
 		vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='low',vulninfo=vulnInfo,server=server,token=token)
 		return
 	except KeyError,e:
@@ -160,7 +160,7 @@ def security_warning(vulnInfo):
 		plugininfo = getPluginInfo()
 		pluginName = plugininfo['pluginname']
 		# print scanID,server,token,subTarget,pluginName,vulnInfo
-		logger('%d %s %s %s %s %s' % (scanID,server,token,subTarget,pluginName,vulnInfo))
+		logger('%d %s %s %s %s %s' % (scanID,server,token,subTarget,pluginName,vulnInfo),'WARNING')
 		vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='medium',vulninfo=vulnInfo,server=server,token=token)
 		return
 	except KeyError,e:
@@ -179,7 +179,7 @@ def security_hole(vulnInfo):
 		plugininfo = getPluginInfo()
 		pluginName = plugininfo['pluginname']
 		# print scanID,server,token,subTarget,pluginName,vulnInfo
-		logger('%d %s %s %s %s %s' % (scanID,server,token,subTarget,pluginName,vulnInfo))
+		logger('%d %s %s %s %s %s' % (scanID,server,token,subTarget,pluginName,vulnInfo),'WARNING')
 		vuln_add(scanid=scanID,subtarget=subTarget,pluginname=pluginName,vulnlevel='high',vulninfo=vulnInfo,server=server,token=token)
 		return
 	except KeyError,e:
@@ -210,11 +210,20 @@ def add_task(task):
 # ----------------------------------------------------------------------------------------------------
 # 	logging 接口
 # ----------------------------------------------------------------------------------------------------
-def logger(log):
+def logger(log,loglevel='DEBUG'):
 	if globalVar.mainlogger != None:
-		globalVar.mainlogger.debug(log)
+		if loglevel == 'INFO':
+			globalVar.mainlogger.info(log)
+		elif loglevel == 'WARNING':
+			globalVar.mainlogger.warning(log)
+		elif loglevel == 'ERROR':
+			globalVar.mainlogger.error(log)
+		elif loglevel == 'CRITICAL':
+			globalVar.mainlogger.critical(log)		
+		else:
+			globalVar.mainlogger.debug(log)
 	else:
-		# print 'globalVar.mainlogger has not been valued'
+		print 'globalVar.mainlogger has not been valued'
 		print(log)
 	# logger = globalVar.mainlogger
 	# print 'globalVar.mainlogger=',globalVar.mainlogger

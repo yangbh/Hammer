@@ -13,6 +13,10 @@ info = {
 	'DESCRIPTION':'Rsync 配置不当导致未授权访问',
 	'VERSION':'0.2'
 }
+opts = [
+	['ip','221.123.140.66','target ip'],
+	['ports',[873],'target ip\'s ports']
+]
 
 def Assign(services):
 	if services.has_key('ip') and services.has_key('ports'):

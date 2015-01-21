@@ -19,133 +19,11 @@ require_once('common.php');
 
 		<style type="text/css">
 		.navbar {
-			margin-bottom: 0px;
+			margin-bottom: 5px;
 		}
-		.banner {
-			position: relative;
-			width: 100%;
-			overflow: auto;
-
-			font-size: 18px;
-			line-height: 24px;
-			text-align: center;
-
-			color: rgba(255,255,255,.6);
-			text-shadow: 0 0 1px rgba(0,0,0,.05), 0 1px 2px rgba(0,0,0,.3);
-
-			background: #5b4d3d;
-			box-shadow: 0 1px 2px rgba(0,0,0,.25);
-
-		}
-			.banner ul {
-				list-style: none;
-				width: 300%;
-				padding-left: 0px;
-			}
-			.banner ul li {
-				display: block;
-				float: left;
-				width: 33%;
-				min-height: 350px;
-
-				-o-background-size: 100% 100%;
-				-ms-background-size: 100% 100%;
-				-moz-background-size: 100% 100%;
-				-webkit-background-size: 100% 100%;
-				background-size: 100% 100%;
-
-				box-shadow: inset 0 -3px 6px rgba(0,0,0,.1);
-			}
-
-			.banner .inner {
-				padding: 80px 0 60px;
-			}
-
-			.banner h1, .banner h2 {
-				font-size: 30px;
-				line-height: 35px;
-
-				color: #fff;
-			}
-
-			.banner .btn {
-				display: inline-block;
-				margin: 25px 0 0;
-				padding: 9px 22px 7px;
-				clear: both;
-
-				color: #fff;
-				font-size: 12px;
-				font-weight: bold;
-				text-transform: uppercase;
-				text-decoration: none;
-
-				border: 2px solid rgba(255,255,255,.4);
-				border-radius: 5px;
-			}
-				.banner .btn:hover {
-					background: rgba(255,255,255,.05);
-				}
-				.banner .btn:active {
-					-webkit-filter: drop-shadow(0 -1px 2px rgba(0,0,0,.5));
-					-moz-filter: drop-shadow(0 -1px 2px rgba(0,0,0,.5));
-					-ms-filter: drop-shadow(0 -1px 2px rgba(0,0,0,.5));
-					-o-filter: drop-shadow(0 -1px 2px rgba(0,0,0,.5));
-					filter: drop-shadow(0 -1px 2px rgba(0,0,0,.5));
-				}
-
-			.banner .btn, .banner .dot {
-				-webkit-filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
-				-moz-filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
-				-ms-filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
-				-o-filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
-				filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
-			}
-
-			.banner .dots {
-				position: absolute;
-				left: 0;
-				right: 0;
-				bottom: 20px;
-				padding-left: 0px;
-			}
-				.banner .dots li {
-					display: inline-block;
-					width: 10px;
-					height: 10px;
-					margin: 0 4px;
-
-					text-indent: -999em;
-
-					border: 2px solid #fff;
-					border-radius: 6px;
-
-					cursor: pointer;
-					opacity: .4;
-
-					-webkit-transition: background .5s, opacity .5s;
-					-moz-transition: background .5s, opacity .5s;
-					transition: background .5s, opacity .5s;
-				}
-					.banner .dots li.active {
-						background: #fff;
-						opacity: 1;
-					}
-
-			.banner .arrows {
-				position: absolute;
-				bottom: 20px;
-				right: 20px;
-				color: #fff;
-			}
-				.banner .arrow {
-					display: inline;
-					padding-left: 10px;
-					cursor: pointer;
-				}
 		</style>
+		<link href="css/style.css" rel="stylesheet">
 
-		
 		<script src="js/jquery.min.js"></script>
 		<!-- <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script> -->
 		
@@ -154,7 +32,6 @@ require_once('common.php');
 		<script type="text/javascript">
 			$(document).ready(function(){
 				$(function() {
-					// $('.banner').unslider();
 					if(window.chrome) {
 						$('.banner li').css('background-size', '100% 100%');
 					}
@@ -166,6 +43,13 @@ require_once('common.php');
 						dots: true,               //  Display dot navigation
 						fluid: false              //  Support responsive design. May break non-responsive designs
 					});
+				})
+				$("#drop1").on("mouseover", function() {
+					if ($(this).parent().is(".open")) {
+						return
+					}
+
+					$(this).dropdown("toggle")
 				})
 			});
 		</script>
@@ -203,7 +87,7 @@ if (already_login()) {
 echo <<<EOF
 					<ul class ="nav navbar-nav navbar-right">
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown"  onmouseover="$(this).dropdown('toggle');">
 								<i class="glyphicon glyphicon-user"></i> $username<b class="caret"></b>
 							</a>
 							<ul class="dropdown-menu" role="meun">
@@ -248,7 +132,10 @@ EOF;
 			</div>
 		</div> -->
 
-		<div class="banner">
+
+		<div class="container">
+		<div class="row">
+		<div class="banner has-dots" style="overflow: hidden; width: 100%; height: 415px;">
 			<ul>
 				<li style="background-image: url('images/sunset.jpg');">
 					<div class="inner">
@@ -283,23 +170,22 @@ EOF;
 				</li>
 			</ul>
 		</div>
+		</div>
 
-		<div class="container">
-			<!-- Example row of columns -->
 			<div class="row">
 				<div class="col-md-4">
 					<h2>Framework</h2>
 					<p>Hammer is coded in Python, so it can cross platform, you can use hammer in windows, linux and mac... </p>
-					<p><a class="btn btn-default" href="plugins.php" role="button">View details &raquo;</a></p>
+					<p><a class="btn btn-default" href="documents.php#framework" role="button">View details &raquo;</a></p>
 				</div>
 				<div class="col-md-4">
 					<h2>API Docs</h2>
 					<p>In hammer, almost everything is plugin. If you want design you own plugins, you must know how to. API documents just tells you that. </p>
-					<p><a class="btn btn-default" href="documents.php" role="button">View details &raquo;</a></p>
-			 </div>
+					<p><a class="btn btn-default" href="documents.php#plugin" role="button">View details &raquo;</a></p>
+				</div>
 				<div class="col-md-4">
 					<h2>About</h2>
-					<p>Hammer is coded by yangbh, that's me of course. I design Hammer because i want a hacking tool of my own, like yascanner, mst, blackspider, multiproxies... I share Hammer because i hope everyone in hacking group can share their own good ideas and tools... </p>
+					<p>I also wish you can share your own good ideas, tools and plugins. Want know the design of Hammer? </p>
 					<p><a class="btn btn-default" href="about.php" role="button">View details &raquo;</a></p>
 				</div>
 			</div>
@@ -309,7 +195,7 @@ EOF;
 			<footer>
 				<p>&copy; Company 2014</p>
 			</footer>
-		</div> <!-- /container -->
+		</div>
 
 <?php
 if (!already_login()) {

@@ -126,7 +126,7 @@ if (already_login()) {
 echo <<<EOF
 					<ul class ="nav navbar-nav navbar-right">
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" onmouseover="$(this).dropdown('toggle');">
 								<i class="glyphicon glyphicon-user"></i> $username<b class="caret"></b>
 							</a>
 						 	<ul class="dropdown-menu" role="meun">

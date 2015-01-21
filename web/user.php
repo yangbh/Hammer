@@ -36,6 +36,25 @@ if (!already_login()) {
 			// $("#username").change(function(){
 			// 	alert($("#username").value);
 			// });
+			function changepassword(){
+				var oldpwd = $('#oldpassword').val();
+				var newpwd = $('#newpassword').val();
+				var newpwd2 = $('#newpassword2').val();
+				if (newpwd == newpwd2) {
+					$.post("user_setting.php", {type: "changepwd",oldpwd: oldpwd,newpwd: newpwd},
+						function(data){
+							if (data.code) {
+								alert('change password success');
+							}
+							else{
+								alert(data.info);
+							}
+						},"json");
+				}
+				else{
+					alert('new passwords not the same');
+				}
+			}
 		</script>
 
 	</head>
@@ -83,11 +102,11 @@ if (!already_login()) {
 								Change password
 							</div>
 							<div class="panel-body">
-								<form class="form-inline">
+								<div class="form-inline">
 									<div class="form-inline">
 										<div class="form-inline">
 											&nbsp;Old Password: &nbsp;&nbsp;&nbsp;
-											<input class="form-control" id="oldpassword" placeholder="Old Password" type="text" />
+											<input class="form-control" id="oldpassword" placeholder="Old Password" type="password" />
 										</div>
 									</div>
 									<div class="form-inline">
@@ -105,11 +124,11 @@ if (!already_login()) {
 									<div class="form-inline">
 										<div class="form-inline">
 											<div class="controls">
-												<button type="submit" class="btn">更改</button>
+												<button type="submit" class="btn" onclick="changepassword()">更改</button>
 											</div>
 										</div>
 									 </div>
-								</form>
+								</div>
 
 							</div>
 						</div>

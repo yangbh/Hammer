@@ -32,10 +32,12 @@ Usage: hammer.py [Auth] [Options] [Targets]
 	   --gather-depth: 信息收集深度，默认为1
 	-p --plugin: 单独跑一个插件
 	   --plugin-arg: 插件参数，格式为"port=20;name='hammer';"
+	-l --listen: 监听模式，在WEB上进行任务分配
 [Examples]
 	hammer.py -s www.hammer.org -t 3r75... -u plugins/Info_Collect/
 	hammer.py -s www.hammer.org -t 3r75... -T http://testphp.vulnweb.com
 	hammer.py -s www.hammer.org -t 3r75... -p plugins/System/iisshort.py -T target
+	hammer.py -s www.hammer.org -t 3r75... -l
 ```
 
 Install
@@ -51,9 +53,10 @@ Install
 2. 数据库导入sql文件，地址在bin/hammer.sql
 3. 配置web，修改web目录下config配置文件
 4. 将plugins目录下所有插件内容导入web数据库
-	1) 登录web，在user.php中获取token，执行更新插件:
+	1) 登录web，默认账号密码为admin/123456,在user.php中获取token
+	2) 将本地插件信息更新至WEB:
 	python hammer.py -s www.hammer.org -t yourtokenhere -u plugins/
-	2) 以后若添加插件，可以-u指定单独.py插件，也可以指定目录
+	3) 以后若添加插件，可以-u指定单独.py插件，也可以指定目录
 	python hammer.py -s www.hammer.org -t yourtokenhere -u yourpluginfilepath
 5. 运行hammer.py进行扫描
 	python hammer.py -s www.hammer.org -t yourtokenhere -T yourtargethere

@@ -68,7 +68,7 @@ if (already_login()) {
 echo <<<EOF
 					<ul class ="nav navbar-nav navbar-right">
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" onmouseover="$(this).dropdown('toggle');">
 								<i class="glyphicon glyphicon-user"></i> $username<b class="caret"></b>
 							</a>
 							<ul class="dropdown-menu">
@@ -125,6 +125,10 @@ EOF;
 
 				<div class="col-xs-10 col-sm-10 col-md-10" role="main" class="main">
 					<h2 id="1.4">1.4</h2>
+					<h3>1.4.1.150122_Beta</h3>
+						<p><strong>改进：</strong></p>
+						<p>a).参考mst，增加命令行模式</p>
+					<hr>
 					<h3>1.4.0.150118_Beta</h3>
 						<p><strong>改进：</strong></p>
 						<p>a).初步尝试web管理模式</p>

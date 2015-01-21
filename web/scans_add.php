@@ -13,7 +13,6 @@ $type = check_sql(trim($_REQUEST['type']));
 // start a scan task
 if ($type == 'start') {
 
-	$url = check_sql(trim($_REQUEST['url']));
 	// echo $url . '<br>';
 	$startTime = $_SERVER['REQUEST_TIME'] ;	//自 PHP 5.1 起在 $_SERVER['REQUEST_TIME'] 中保存了发起该请求时刻的时间戳。
 	// echo $startTime . '<br>';
@@ -24,6 +23,11 @@ if ($type == 'start') {
 	}
 	else{
 		die();
+	}
+
+	$url = check_sql(trim($_REQUEST['url']));
+	if ($url == 'console') {
+		$args = 'console mode';
 	}
 
 	$query = "INSERT INTO Scan(Url,Start_Time,Arguments,User_ID) VALUES('$url',$startTime,'$args',$userid)";

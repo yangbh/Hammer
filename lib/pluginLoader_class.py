@@ -109,38 +109,33 @@ class PluginLoader(object):
 
 		return True
 
-	def _initSubProcess(self):
+	def _initSubProcess(self,services=None):
 		'''
 		初始化子进程在globalVar中的全局变量，包括scan_task_dict
-
-		'''# sub porcess information
-		pid = os.getpid()
-		# parent process information
-		ppid = os.getppid()
-		tmpdict = {}
-		tmpdict['pid'] = pid
-		tmpdict['ppid'] = ppid
-		tmpdict['target'] = self.services
+		'''
 		try:
+			# sub porcess information
+			pid = os.getpid()
+			# parent process information
+			ppid = os.getppid()
 			# globalVar.scan_task_dict_lock.acquire()
 			# print 'in pluginLoader porcess pid=\t',os.getpid()
 			# print 'id(globalVar)=\t',id(globalVar)
-			globalVar.scan_task_dict['subtargets'] = tmpdict
+			if globalVar.scan_task_dict.has_key('subtargets'):
+				pass
+			else:
+				globalVar.scan_task_dict['subtargets'] = {}
+
+			globalVar.scan_task_dict['subtargets']['pid'] = pid
+			globalVar.scan_task_dict['subtargets']['ppid'] = ppid
+			globalVar.scan_task_dict['subtargets']['target'] = services if services else self.services
 			# pprint(globalVar.scan_task_dict)
 			# globalVar.scan_task_dict_lock.release()
 		except Exception,e:
 			# print 'Exception',e
 			globalVar.mainlogger.error('Exception:'+str(e))
 		
-		# log
-		# logger = logging.getLogger(self.target)
-		# self.logger.setLevel(logging.DEBUG)
-		# formatter = logging.Formatter('[%(name)s] - [%(levelname)s] - %(message)s')  
-		# ch = logging.StreamHandler()  
-		# ch.setFormatter(formatter)
-		# self.logger.addHandler(ch)
-		
-	def _getPluginInfo(self,pluginfilepath):
+	def getPluginInfo(self,pluginfilepath):
 		# print '>>>running plugin:',pluginfilepath
 		modulepath = pluginfilepath.replace(BASEDIR+'/plugins/','')
 		modulepath = modulepath.replace('.py','')
@@ -156,6 +151,23 @@ class PluginLoader(object):
 		exec(importcmd)
 		# print 'info=',info
 		return info
+
+	def getPluginOpts(self,pluginfilepath):
+		# print '>>>running plugin:',pluginfilepath
+		modulepath = pluginfilepath.replace(BASEDIR+'/plugins/','')
+		modulepath = modulepath.replace('.py','')
+		modulepath = modulepath.replace('.','')
+		modulepath = modulepath.replace('/','.')
+
+		importcmd = 'from ' + modulepath + ' import opts'
+		# importcmd += '\nprint info'
+		# exec_code = compile(importcmd,'','exec')
+		# importcmd = 'from temp.explugin import Audit'
+		# print 'importcmd=',importcmd
+		# from Info_Collect.subdomain import Audit,info
+		exec(importcmd)
+		# print 'info=',info
+		return opts
 
 	def loadPlugins(self, path=None):
 		
@@ -184,7 +196,7 @@ class PluginLoader(object):
 			globalVar.mainlogger.info('[*][*][-] running plugin:'+pluginfilepath)
 			
 			# init globalVar
-			plugininfo = self._getPluginInfo(pluginfilepath)
+			plugininfo = self.getPluginInfo(pluginfilepath)
 			pluginname = plugininfo['NAME']
 			# globalVar.plugin_now_lock.acquire()
 			globalVar.plugin_now = pluginname
@@ -262,11 +274,11 @@ class PluginLoader(object):
 			globalVar.mainlogger.error('Run Plugin Exception:\t:'+str(e))
 
 	def runAudit(self,pluginfilepath,services=None):
-		self._initSubProcess()
+		self._initSubProcess(services)
 		try:
 			globalVar.mainlogger.info('[*][*][-] running plugin:'+pluginfilepath)
 			# init globalVar
-			plugininfo = self._getPluginInfo(pluginfilepath)
+			plugininfo = self.getPluginInfo(pluginfilepath)
 			# pprint(plugininfo)
 			pluginname = plugininfo['NAME']
 			# globalVar.plugin_now_lock.acquire()
@@ -310,7 +322,6 @@ class PluginLoader(object):
 			services = self.services
 		# find auxiliary path and 
 		# self._saveRunningInfo(isinit=True)
-
 
 		# for test
 		# path1 = BASEDIR + '/plugins/Info_Collect'

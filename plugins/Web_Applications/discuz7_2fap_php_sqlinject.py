@@ -11,6 +11,9 @@ info = {
 	'WEB':'',
 	'DESCRIPTION':'discuz7.2 faq.php sql注入漏洞，可注入得到uckey直接写入webshell，详见http://www.cnseay.com/3967/'
 }
+opts = [
+	['url','http://testasp.vulnweb.com','target url'],
+]
 
 def Audit(services):
 	retinfo = None

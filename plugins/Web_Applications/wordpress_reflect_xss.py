@@ -11,6 +11,9 @@ info = {
 	'WEB':'',
 	'DESCRIPTION':'CVE-2012-3414'
 }
+opts = [
+	['url','http://testasp.vulnweb.com','target url'],
+]
 
 def Audit(services):
 	retinfo = None

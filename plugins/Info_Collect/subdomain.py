@@ -16,6 +16,9 @@ info = {
 	'VERSION':'1.0',
 	'RUNLEVEL':0
 }
+opts = [
+	['host','kangbtall.com','target host'],
+]
 
 def generateUrl(hosts=None):
 	''''''

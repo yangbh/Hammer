@@ -44,6 +44,85 @@ if ($type == 'start') {
 	$ret = array('id'=>$scanID,'startTime' => $startTime);
 	echo json_encode($ret);
 }
+//	vuln info
+elseif ($type == 'add') {
+	// echo $ipurl . '<br>';
+	if ($userid = get_userid()) {
+		// echo $userid . '<br>';
+	}
+	else{
+		die();
+	}
+
+	$retinfo = json_decode(trim($_REQUEST['retinfo']),true);
+	// var_dump($retinfo);
+	$pluginname = check_sql(trim($retinfo['pluginname']));
+	$scanid = (int)($retinfo['scanid']);
+	$subtarget = check_sql(trim($retinfo['subtarget']));
+	$vulninfo = check_sql(trim($retinfo['vulninfo']));
+	$vulnlevel = check_sql(trim($retinfo['vulnlevel']));
+
+	$level=array('info' => 1,'low' => 2,'medium' => 3,'high' => '4');
+	if (array_key_exists($vulnlevel,$level)) {
+		$vulnLevelInt = (int)$level[$vulnlevel];
+	}
+	else{
+		die();
+	}
+
+	//	check userid and scanid
+	$query = "SELECT Level FROM Scan WHERE  ID='$scanid' AND User_ID='$userid'";
+	echo $query . '<br>';
+	$result = mysql_query($query);
+	if ($row = mysql_fetch_array($result)) {
+		$scanLevelInt = (int)$row[0];
+	}
+	else{
+		die();
+	}
+
+	//	get pluginid
+	$query = "SELECT ID FROM Plugin WHERE Name = '$pluginname'";
+	echo $query . '<br>';
+	$result = mysql_query($query);
+	if ($row = mysql_fetch_array($result)) {
+		$pluginid = (int)$row[0];
+	}
+	else{
+		die();
+	}
+
+	//	check not repeat
+	$query = "SELECT COUNT(*) FROM Vuln WHERE Scan_ID='$scanid' AND Plugin_ID='$pluginid' AND Vuln_Info='$vulninfo' AND Level='$vulnLevelInt' AND IP_URL='$subtarget'";
+	echo $query . '<br>';
+	$result = mysql_query($query);
+	if ($row = mysql_fetch_array($result)) {
+		if ($row[0]) {
+			echo 'vuln repeat';
+			die();
+		}
+	}
+
+	//	insert into vuln info
+	$query = "INSERT INTO Vuln(Scan_ID,Plugin_ID,Vuln_Info,Level,IP_URL) VALUES('$scanid','$pluginid','$vulninfo',$vulnLevelInt,'$subtarget')";
+	echo $query . '<br>';
+	$result = mysql_query($query);
+	if ($row = mysql_fetch_array($result)) {
+		// echo $row;
+	}
+
+	//	refresh scan level if vuln level bigger than scan level
+	if ($scanLevelInt<$vulnLevelInt) {
+		//	update Scan
+		$scanLevelInt = $vulnLevelInt;
+		$query = "UPDATE Scan SET Level='$scanLevelInt' WHERE ID=$scanid";
+		echo $query . '<br>';
+		$result = mysql_query($query);
+		if ($row = mysql_fetch_array($result)) {
+			// echo $row;
+		}
+	}
+}
 //	end a scan task
 elseif ($type == 'end') {
 	$ipurl = check_sql(trim($_REQUEST['ipurl']));

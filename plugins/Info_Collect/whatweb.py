@@ -15,6 +15,9 @@ info = {
 	'VERSION':'1.0',
 	'RUNLEVEL':1
 }
+opts = [
+	['url','http://testasp.vulnweb.com','target url'],
+]
 
 def Assign(services):
 	if services.has_key('url'):

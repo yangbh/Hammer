@@ -10,6 +10,10 @@ info = {
 	'WEB':'https://github.com/stamparm/DSXS',
 	'DESCRIPTION':'sql 注入检测',
 }
+opts = [
+	['url','http://testasp.vulnweb.com','target url'],
+]
+
 
 def getCrawlerHrefs(url):
 	''' '''

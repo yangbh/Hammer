@@ -18,6 +18,9 @@ info = {
 	'DESCRIPTION':' DNS AXFR zone transfer',
 	'VERSION':'2',
 }
+opts = [
+	['host','cau.edu.cn','target host'],
+]
 
 def get_ns_records(adomain, aserver=None):
 	"""Pull NS records for our domain"""

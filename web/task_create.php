@@ -152,7 +152,7 @@ if (!already_login()) {
 								<div style="margin-bottom:6px" ng-if="submit_enable &amp;&amp; nodes.length==0" class="notice bg-darkOrange fg-white marker-on-bottom ng-scope">
 									No dispatchers created yet !&nbsp;&nbsp;<u><a target="_blank" href="http://www.python.org/">Depends on Python 2.7.*</a></u><br>Just paste following command at terminal prompt. <i>-m</i> options specifies maximum number of concurrent tasks.
 								</div>
-								<code class="ng-binding">python -c "exec(__import__('urllib').urlopen('https://www.yascanner.com/728ac34591904b28').read())" -m 50</code>
+								<code>python hammer.py -s <?php echo $_SERVER['HTTP_HOST'].str_replace('/task_create.php','',$_SERVER['PHP_SELF']);?> -t <?php $a=get_userinfo();echo $a['Token'];?> -l</code>
 							</div>
 						</div>
 					</div>

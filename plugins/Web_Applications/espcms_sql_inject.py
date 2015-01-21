@@ -11,6 +11,9 @@ info = {
 	'WEB':'',
 	'DESCRIPTION':'Via: http://www.cnseay.com/archives/2383'
 }
+opts = [
+	['url','http://testasp.vulnweb.com','target url'],
+]
 
 def Audit(services):
 	retinfo = None

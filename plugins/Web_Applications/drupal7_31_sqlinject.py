@@ -14,6 +14,9 @@ info = {
 	'WEB':'http://www.freebuf.com/vuls/47690.html',
 	'DESCRIPTION':'Drupal 7.31 SQL注入漏洞（CVE-2014-3704）'
 }
+opts = [
+	['url','http://testasp.vulnweb.com','target url'],
+]
 
 def Audit(services):
 	if services.has_key('url') and services.has_key('cms'):

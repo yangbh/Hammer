@@ -12,6 +12,9 @@ info = {
 	'WEB':'',
 	'DESCRIPTION':'When iis enable PUT or MOVE method, attacker can upload a webshell'
 }
+opts = [
+	['url','http://testasp.vulnweb.com','target url'],
+]
 
 def Assign(services):
 	if services.has_key('url'):
@@ -21,7 +24,7 @@ def Assign(services):
 def Audit(services):
 	retinfo = None
 	output = ''
-
+	# print services
 	if services.has_key('HTTPServer') and services['HTTPServer'].lower().find('iis') == -1:
 		return (retinfo,output)
 	output += 'plugin run' + os.linesep

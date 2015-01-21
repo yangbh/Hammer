@@ -9,3 +9,4 @@ paramiko
 pymongo
 easywebdav
 pyquery
+PyYAML

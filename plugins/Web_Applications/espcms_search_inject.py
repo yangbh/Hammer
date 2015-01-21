@@ -11,6 +11,9 @@ info = {
 	'WEB':'',
 	'DESCRIPTION':'Via: http://blog.163.com/j8g_/blog/static/217780396201321312334801/'
 }
+opts = [
+	['url','http://testasp.vulnweb.com','target url'],
+]
 
 def Audit(services):
 	retinfo = None

@@ -11,6 +11,9 @@ info = {
 	'WEB':'http://sebug.net/vuldb/ssvid-87183',
 	'DESCRIPTION':''
 }
+opts = [
+	['url','http://testasp.vulnweb.com','target url'],
+]
 
 def Audit(services):
 	retinfo = None
