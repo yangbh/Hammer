@@ -109,6 +109,7 @@ class Cache(object):
 	def connect(self):
 		''' '''
 		self.user.rsyncUserInfo()
+		self.user.dumpInfo()
 		self.username = self.user.name + '@' + self.user.server
 		self.initGlobal()
 

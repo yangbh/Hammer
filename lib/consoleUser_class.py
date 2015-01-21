@@ -82,6 +82,8 @@ class WebUser(object):
 					# print ret
 					self.id = ret['data']['id']
 					self.name = ret['data']['name']
+					
+					return
 
 			# otherwise, roll back
 			color.cprint("[!] Err: connect wrong, roll back user infomation",RED)
@@ -98,6 +100,7 @@ class WebUser(object):
 		try:
 			fp= open(self.conffile)
 			conf = yaml.load(fp)
+			conf = {} if conf==None else conf
 			fp.close()
 			conf['server'] = self.server
 			conf['token'] = self.token

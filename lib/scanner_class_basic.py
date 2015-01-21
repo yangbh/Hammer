@@ -9,7 +9,7 @@ import urllib2
 import socket
 import multiprocessing
 import multiprocessing.pool
-import ipaddress
+# import ipaddress
 import netaddr
 import logging
 
