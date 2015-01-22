@@ -189,22 +189,33 @@ Usage: hammer.py [Auth] [Options] [Targets]
 	   --gather-depth: information gather depth, default 1
 	-p --plugin: run a plugin type scan
 	   --plugin-arg: plugin argus
+	-l --listen: listen mode
+	   --max-size: scan pool max size, default 50
+	-c --console: console mode
 [Examples]
 	hammer.py -s www.hammer.org -t 3r75... -u plugins/Info_Collect/
 	hammer.py -s www.hammer.org -t 3r75... -T 192.168.1.1/24
-	hammer.py -s www.hammer.org -t 3r75... -p plugins/System/iisshort.py -T target
-						</pre>
-						<h3>1. 两种运行模式————自收集扫描和范围扫描</h3>
-						<pre class="prettyprint linenums Lang-python">
-1. 一种是常规的类似yascanner的扫描，扫描目标为一个ip、host、url
+	hammer.py -s www.hammer.org -t 3r75... -p plugins/System/iisshort.py -T target</pre>
+						<h3>1. 四种运行模式————自收集扫描模式、批量扫描模式、listen模式、console模式</h3>
+						<pre>
+1. 常规的类似yascanner自收集扫描模式，扫描目标为一个ip、host、url，系统会自动搜集该target相关目标
 hammer.py -s www.hammer.org -t 3r75... -T www.leesec.com
 例如：	python hammer.py -s www.hammer.org -t 4aSJWhngmZdhAvkCGt6ODVhHTQ1R4Jzz -T 73.50.49.151
 
-2. 另一种是批量扫描，可以是ip范围，也可以－T 从本地文件载入目标host、url等
+2. 批量扫描模式，可以是ip范围，也可以－T 从本地文件载入目标host、url等
 hammer.py -s www.hammer.org -t 3r75... -p plugins/System/iisshort.py -T 192.168.1.0/24
 例如：	python hammer.py -s www.hammer.org -t 4aSJWhngmZdhAvkCGt6ODVhHTQ1R4Jzz -p plugins/Info_Collect/portscan.py -T 73.50.49.151
 	python hammer.py -s www.hammer.org -t 4aSJWhngmZdhAvkCGt6ODVhHTQ1R4Jzz -p plugins/System/mongodb_unauth_access.py --plugin-arg "ports=[27017]" -T 73.50.49.151／30
-						</pre>
+
+3. listen模式，在此模式下可以通过WEB实现简单的分布式管理
+hammer.py -hammer.py -s www.hammer.org -t 3r75... -l [-v]
+
+4. console模式，类似mst，扫描结果存入WEB服务器中
+hammer.py -hammer.py -s www.hammer.org -t 3r75... -c
+此模式下可以在本地缓存server和token等信息，因此第二次使用不需要再带上server和token参数，直接可以：
+hammer.py -c
+hammer.py -l
+hammer.py -T http://testphp.vulnweb.com</pre>
 						<h3>2. 详细参数解释</h3>
 						<pre class="prettyprint linenums Lang-python">
 [Auth]
@@ -220,7 +231,105 @@ hammer.py -s www.hammer.org -t 3r75... -p plugins/System/iisshort.py -T 192.168.
 	   --gather-depth: 信息收集深度，默认为1
 	-p --plugin: 单独跑一个插件
 	   --plugin-arg: 插件参数，格式为"port=20;name='hammer';"
-						</pre>
+	-l --listen: 监听模式，在WEB上进行任务分配
+	-c --console: 控制台模式</pre>
+						<h3>3. listen模式详解</h3>
+						<p>listen模式下每个运行hammer.py -l 终端都会被充当成工作worker，并进行持续查询服务器是否存在扫描任务</p>
+						<p>web服务器也充当任务分发的角色</p>
+						
+						<hr>
+						<h3>4. console模式详解</h3>
+						<p>console模式下的命令有</p>
+						<pre class="prettyprint linenums Lang-bash">
+HAMMER COSOLE COMMAND HELP MENU
+=============
+        COMMAND         DESCRIPTION                       EXAMPLE
+        -------         -----------                       -----------
+	help		Displays the help menu            help
+	exit		Exit the Hammer console mode      exit
+	cls 		Clear the screen                  cls
+	set 		Set server and token              set PARAM VALUE
+	connect 	Connect to server                 connect
+	show 		List the plugins                  show info|com|sens|sys|pwd|web|all|user
+	search 		Search plugins                    search plugin
+	use 		Use the plugin                    use plugin|pluginID
+PLUGIN HELP MENU
+================
+        COMMAND         DESCRIPTION                       EXAMPLE
+        -------         -----------                       -----------
+	help            Displays the plugin menu          help
+	back            Back to Mst Main                  back
+	cls             Clear the screen                  cls
+	info            Displays the plugin info          info
+	opts            Displays the mst options          opts
+	set             Configure the plugin parameters   set PARAM VALUE
+	run             Start plugin to run               run</pre>
+						<p>首次使用需要登录</p>
+						<pre class="prettyprint linenums Lang-bash">
+Hammer$ python hammer.py -c
+Seems user info not inited File not open for reading
+Seems user info not inited 'NoneType' object has no attribute '__getitem__'
+[!] Err:has not logged in, please log in first!
+[!] Err:cannot concatenate 'str' and 'NoneType' objects
+[*] Start hammer console ..
+
+	   ██░ ██  ▄▄▄       ███▄ ▄███▓ ███▄ ▄███▓▓█████  ██▀███  
+	  ▓██░ ██▒▒████▄    ▓██▒▀█▀ ██▒▓██▒▀█▀ ██▒▓█   ▀ ▓██ ▒ ██▒
+	  ▒██▀▀██░▒██  ▀█▄  ▓██    ▓██░▓██    ▓██░▒███   ▓██ ░▄█ ▒
+	  ░▓█ ░██ ░██▄▄▄▄██ ▒██    ▒██ ▒██    ▒██ ▒▓█  ▄ ▒██▀▀█▄  
+	  ░▓█▒░██▓ ▓█   ▓██▒▒██▒   ░██▒▒██▒   ░██▒░▒████▒░██▓ ▒██▒
+	   ▒ ░░▒░▒ ▒▒   ▓▒█░░ ▒░   ░  ░░ ▒░   ░  ░░░ ▒░ ░░ ▒▓ ░▒▓░
+	   ▒ ░▒░ ░  ▒   ▒▒ ░░  ░      ░░  ░      ░ ░ ░  ░  ░▒ ░ ▒░
+	   ░  ░░ ░  ░   ▒   ░      ░   ░      ░      ░     ░░   ░ 
+	   ░  ░  ░      ░  ░       ░          ░      ░  ░   ░     
+
+          =[ HAMMER::My Sec Tools
+    + -- +=[ PLU::info::5 com::2 sens::5 sys::10 pwd::2 web::13
+anonymous@local >set server 0xff.sinaapp.com
+anonymous@local >set token XiUfga4xlS4ajBWnlUyBph9wGRxlFHF3
+anonymous@local >connect
+admin@0xff.sinaapp.com >show user
+SHOW USER INFORMATION
+=====================
+	server:		0xff.sinaapp.com
+	token:		XiUfga4xlS4ajBWnlUyBph9wGRxlFHF3
+	user id:	1
+	user name:	admin
+	scan id:	247
+==========================================================================</pre>
+					<p>接下来就可以使用插件了</p>
+					<pre class="prettyprint linenums Lang-bash">
+admin@0xff.sinaapp.com >search iis
+SEARCH 'iis'
+============
+   ID PATH                                                         TYPE   
+----- ------------------------------------------------------------ -------
+   15 System/iismethod                                             System 
+   16 System/iisshort                                              System 
+==========================================================================
+COUNT [2] RESULTS (*^_^*)
+admin@0xff.sinaapp.com >use 15
+hammer System[ iismethod ] >info
+PLUGIN INFOS
+============
+PARAMETER       VALUE
+--------------- --------------------
+WEB             
+DESCRIPTION     When iis enable PUT or MOVE method, attacker can upload a webshell
+TIME            20140731
+NAME            IIS Method Scanner
+AUTHOR          yangbh
+hammer System[ iismethod ] >opts
+PLUGIN OPTS
+===========
+PARAMETER       VALUE                DESCRIPTION                             
+--------------- -------------------- ----------------------------------------
+url             http://testasp.vulnweb.com target url                              
+hammer System[ iismethod ] >run
+[*] Start run..
+[2015-01-22 13:53:14,431] - [WARNING] - 247 0xff.sinaapp.com XiUfga4xlS4ajBWnlUyBph9wGRxlFHF3 http://testasp.vulnweb.com IIS Method Scanner OPTIONS, TRACE, GET, HEAD
+hammer System[ iismethod ] ></pre>
+					<p>登录状态下会将结果保存至web server中</p>					
 					<hr>
 					<h2 id="plugin">插件</h2>
 					<p>下面是一个典型的Hammer插件，功能为扫描robots.txt文件存在与否:</p>
@@ -240,7 +349,10 @@ info = {
 	'WEB':'',
 	'DESCRIPTION':'robots.txt文件扫描',
 }
-
+# 插件所需参数，格式类似msf/mst
+opts = [
+	['url','http://www.leesec.com','target url'],
+]
 # 任务分配函数Assign
 def Assign(services):
 	if services.has_key('url'):
@@ -261,9 +373,8 @@ def Audit(services):
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
 	services = {'url':'http://www.leesec.com'}
-	pprint(services)
-					</pre>
-					<h3>1. 插件信息info</h3>
+	pprint(services)</pre>
+					<h3>1. 插件信息info和插件参数opts</h3>
 					<p>一个标准的插件信息info变量，如下：</p>
 					<pre class="prettyprint linenums Lang-python">
 info = {
@@ -273,8 +384,20 @@ info = {
 	'WEB':'http://',		# 漏洞参考
 	'DESCRIPTION':'robots.txt文件扫描',		# 漏洞描述
 	'Version':'0.1'			# 插件版本号
-}
-					</pre>
+}</pre>
+<p>一个标准的插件参数opts变量，如下：</p>
+					<pre class="prettyprint linenums Lang-python">
+opts是一个python list 类型，其中每个变量参数由变量名、变量默认值以及变量含有组成
+opts = [
+	['url','http://www.leesec.com','target url'],
+]
+注意：在hammer中opts变量的值不仅可以为python的string类型，而且可以是dict、list类型，例如mongodb_unauth_access插件
+opts = [
+	['ip','221.123.140.66','target ip'],
+	['ports',[27017],'target ip\'s ports']
+]
+其中ports参数的值就是list类型
+在console模式下可以使用 set ports [27017,28017]重新赋值</pre>
 					<h3>2. 插件类型</h3>
 					<p>Hammer的插件总共分为以下七种类型，请将相应的插件放在对应的目录下。</p>
 					<pre class="prettyprint linenums Lang-python">
@@ -285,11 +408,10 @@ Sensitive Info	# 敏感信息类插件，目录：plugins/Sensitive_Info
 System		# 系统类插件，目录：plugins/System
 Web Applications	# WEB应用类插件，目录：plugins/Web_Applications
 Weak Password	# 弱口令类插件，目录：plugins/Weak_Password
-Others		# 其它类型插件，目录：plugins/Others
-					</pre>
+Others		# 其它类型插件，目录：plugins/Others</pre>
 					<p>请一定注意Info_Collect类插件，这类插件最先运行，将一些信息收集类的插件放在这个目录（如会改动services全局变量的插件），其它的插件的运行顺序未知，这点会在以后优化。</p>
-					<h3>3. 全局变量services</h3>
-					<p>services是一个全局变量，dict类型，内含信息收集阶段运行的信息.</p>
+					<h3>3. 全局变量&插件参数services</h3>
+					<p>services是一个全局变量，插件的参数，dict类型，内含信息收集阶段运行的信息.</p>
 					<p>键以及其含义：</p>
 					<pre class="prettyprint linenums Lang-python">
 services = {
@@ -311,8 +433,7 @@ services = {
 	# 弃用
 	'noSubprocess': True,	# 是否是子进程
 	'issubdomain': True,	# 是否是子域名
-}
-					</pre>
+}</pre>
 					<p>services变量很开放，是全局变量，意味着你可以在你的插件中修改它的值，或者增加你所需要的键，但是修改的时候请慎重！插件的调用的实现方式请参考pluginLoader_class.py</p>
 					<h3>4. 插件接口函数Assign/Audit</h3>
 					<p></p>
@@ -337,26 +458,22 @@ def Audit(services):
 		# 漏洞反馈函数security
 		security_note(url) 
 		# 调试输出函数logger,默认等级为
-		logger('Find %srobots.txt' % url)
-					</pre>
+		logger('Find %srobots.txt' % url)</pre>
 					<h3>5. 漏洞反馈接口security_info等</h3>
 					<p>漏洞反馈可以通过以下四个函数实现，参数都是字符串型</p>
 					<pre class="prettyprint linenums Lang-python">
 security_note(vulninfo) 	# information level
 security_info(vulninfo) 	# low level 
 security_warning(vulninfo) 	# mideum level
-security_hole(vulninfo) 	# high level
-					</pre>
+security_hole(vulninfo) 	# high level</pre>
 					<p>请自己参考漏洞危害酌情选择对应的接口函数。</p>
 					<h3>6. 调试输出接口logger</h3>
 					<pre class="prettyprint linenums Lang-python">
-logger(debuginfo) # debuginfo为string类型，输出插件运行信息，单独运行参见时为print函数，整体运行时为logging.debug函数
-					</pre>
+logger(debuginfo) # debuginfo为string类型，输出插件运行信息，单独运行参见时为print函数，整体运行时为logging.debug函数</pre>
 					<h3>7. 添加子扫描任务接口add_scan_task</h3>
 					<p>除此之外还有一个添加子扫描任务模块</p>
 					<pre class="prettyprint linenums Lang-python">
-add_scan_task(target) 		# target可以为url\ip\host之一
-					</pre>
+add_scan_task(target) 		# target可以为url\ip\host之一</pre>
 					<p>注意：这个函数只能作为信息收集模块内使用，即放在Infor_Collect目录下，可以参考subdomain.py插件。</p>
 					<h3>8. Hammer框架之dummy.py</h3>
 					<p>dummy.py是仿照yascanner的，是统一导入hammer框架的一些类库，结构有些牛头马面不成样子，在每个目录都得放一个，目前暂未有好的方法解决，留待后期吧</p>
@@ -388,8 +505,7 @@ from lib.ruleFile_class import RuleFile
 # from lib.theHarvester_class import TheHarvester
 # from lib.whatWeb_class import WhatWeb
 from lib.spider.domain import GetFirstLevelDomain
-from lib.crawler.crawlerFile import CrawlerFile
-					</pre>
+from lib.crawler.crawlerFile import CrawlerFile</pre>
 					<hr>
 					<h2 id="framework">框架</h2>
 					<h3>1. 插件调用的实现</h3>
@@ -436,8 +552,7 @@ if retflag and locals().has_key('Audit'):
 	if self.services != services:
 		self.services = services
 		globalVar.mainlogger.warning('services changed to:\t' + str(services))
-		self._saveRunningInfo('services changed to:\t' + str(services) + os.linesep)
-					</pre>
+		self._saveRunningInfo('services changed to:\t' + str(services) + os.linesep)</pre>
 					<p>services前文提到过，修改的原理就再此，修改时请慎重！</p>
 					<h3>2. whatweb识别cms</h3>
 					<p>本工具中的cms识别采用的是whatweb，有一个whatweb类，在lib/whatWeb_class.py。</p>
@@ -445,10 +560,7 @@ if retflag and locals().has_key('Audit'):
 					<p>Hammer的whatweb插件位于Info_Collect目录下，仍需补充完善，结构如下：</p>
 					<pre class="prettyprint linenums Lang-python">
 def Audit(services):
-	retinfo = {}
-	output = ''
 	if services.has_key('url'):
-		output += 'plugin run' + os.linesep
 		try:
 			url = services['url']
 			wb = WhatWeb(url)
@@ -465,20 +577,15 @@ def Audit(services):
 				if ret['plugins'].has_key('WordPress'):
 					#print services
 					services['cms'] = 'WordPress'
-					output += 'cms: WordPress' + os.linesep
 					if ret['plugins']['WordPress'].has_key('version'):
 						services['cmsversion'] = ret['plugins']['WordPress']['version'][0]
-						output += 'cmsversion: ' + services['cmsversion'] + os.linesep
 
 				# Discuz
 				elif ret['plugins'].has_key('Discuz'):
 					#print services
 					services['cms'] = 'Discuz'
-					output += 'cms: Discuz' + os.linesep
 					if ret['plugins']['Discuz'].has_key('version'):
-						services['cmsversion'] = ret['plugins']['Discuz']['version'][0]
-						output += 'cmsversion: ' + services['cmsversion'] + os.linesep					
-					</pre>
+						services['cmsversion'] = ret['plugins']['Discuz']['version'][0]</pre>
 					<p>修改时一定要参考原生whatweb的插件的返回结果！</p>
 					<h3>3. ruleFile类</h3>
 					<p>ruleFile类是一个通用密码生成类，根据一些密码规则，生成对应的密码或路径。该类在lib/ruleFile_class.py中。暴力破解和路径猜解都会用到该类，这里提出来。</p>
@@ -493,8 +600,7 @@ def Audit(services):
 %username%1234
 %username%12345
 %username%123456
-%username%@123
-					</pre>
+%username%@123</pre>
 					<hr>
 					<h2 id="questions">问题</h2>
 					<h4>1. Windows, Linux or Mac?</h4>
@@ -509,6 +615,7 @@ def Audit(services):
 					<h2 id="contact">联系</h2>
 						<p>github: <a target="_blank" href="https://github.com/yangbh/Hammer">https://github.com/yangbh/Hammer</a></p>
 						<p>QQ群: 397554752</p>
+						<p>感谢：Yascanner、MST、MultiProxies等众多开源的程序</p>
 					<hr>	
 				</div><!--/span-->
 

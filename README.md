@@ -33,6 +33,7 @@ Usage: hammer.py [Auth] [Options] [Targets]
 	-p --plugin: 单独跑一个插件
 	   --plugin-arg: 插件参数，格式为"port=20;name='hammer';"
 	-l --listen: 监听模式，在WEB上进行任务分配
+	-c --console: 控制台模式
 [Examples]
 	hammer.py -s www.hammer.org -t 3r75... -u plugins/Info_Collect/
 	hammer.py -s www.hammer.org -t 3r75... -T http://testphp.vulnweb.com

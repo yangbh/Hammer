@@ -111,7 +111,7 @@ if (!already_login()) {
 			//  search button click
 			$('#search').click(function() {
 				/* Act on the event */
-				var ajax_url = "./dist_search.php?level="+$('#level').val()+"&keyword="+$('#keyword').val();
+				var ajax_url = "./dist_search.php?status="+$('#level').val()+"&keyword="+$('#keyword').val();
 				$('#scans_table').DataTable().ajax.url(ajax_url).load();
 			});
 

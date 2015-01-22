@@ -16,10 +16,11 @@ function search_task($level,$keyword='',$taskid=0){
 	}
 	// echo $userid . '<br>';
 	// print $pLevel.$pKeyword;
-	$query = "SELECT Task.ID,Task.Target,Task.Start_Time,Task.End_Time,Task.Arguments,Task.Status,User.Name,
-			IF(Task.Dispatcher_ID,(SELECT CONCAT(Dispatcher.ID,':',Dispatcher.MAC,':',Dispatcher.OS,':',Dispatcher.IP) FROM Task,Dispatcher WHERE Dispatcher.ID=Task.Dispatcher_ID limit 1),NULL)
-			FROM Task,User
-			WHERE Task.User_ID=User.ID AND Task.User_ID='$userid'";
+	$query = "SELECT Task.ID,Task.Target,Task.Start_Time,Task.End_Time,Task.Arguments,Task.Status,User.Name,CONCAT(Dispatcher.ID,':',Dispatcher.MAC,':',Dispatcher.OS,':',Dispatcher.IP) 
+			FROM Task
+			INNER JOIN User ON Task.User_ID=User.ID
+			LEFT JOIN Dispatcher ON Dispatcher.ID=Task.Dispatcher_ID 
+			WHERE Task.User_ID='$userid'";
 	if (is_int($pLevel) and $pLevel>0 and $pLevel<4) {
 		$pLevel = ($pLevel==1)?'done':($pLevel==2?'running':($pLevel==3?'waiting':'others'));
 		$query .= " AND Task.Status='$pLevel'";

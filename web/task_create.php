@@ -82,6 +82,32 @@ if (!already_login()) {
 				}
 			});
 		}
+		$(document).ready(function () {
+			$.ajax({
+				type: "POST",
+				url: "dist_search.php",
+				data: "status=0",
+				dataType: "json",
+				success: function(data){
+					console.log(data.data);
+					dists = data.data;
+					if (dists.length) {
+						var html = '';
+						console.log('yes');
+						for (var i = dists.length - 1; i >= 0; i--) {
+							dist = dists[i];
+							if (dist[5]=='1') {
+								html += '<span class="label label-info">'+dist[1]+'@'+dist[3]+'</span>&nbsp;';
+							}
+						};
+						$('#dists').html(html);
+						$('#submit').removeClass('disabled');
+					}
+					
+				}
+			});
+		});
+
 		</script>
 	</head>
 
@@ -146,12 +172,12 @@ if (!already_login()) {
 				<div class="panel panel-default form-group">
 					<div class="panel-heading"><strong>Dispachers</strong></div>
 					<div class="panel-body collapse in" id="modules">
-						<div class="content" style="display: block;">
-							
-							<div style="margin-top:10px">
-								<div style="margin-bottom:6px" ng-if="submit_enable &amp;&amp; nodes.length==0" class="notice bg-darkOrange fg-white marker-on-bottom ng-scope">
-									No dispatchers created yet !&nbsp;&nbsp;<u><a target="_blank" href="http://www.python.org/">Depends on Python 2.7.*</a></u><br>Just paste following command at terminal prompt. <i>-m</i> options specifies maximum number of concurrent tasks.
-								</div>
+						<div class="content">
+							<div style="margin-top:5px">
+								<p><div id="dists">
+									No dispatchers created yet !<a target="_blank" href="http://www.python.org/">Depends on Python 2.7.*</a><br>
+								</div></p>
+								<p>Just paste following command at terminal prompt. <i>-m</i> options specifies maximum number of concurrent tasks.<br></p>
 								<code>python hammer.py -s <?php echo $_SERVER['HTTP_HOST'].str_replace('/task_create.php','',$_SERVER['PHP_SELF']);?> -t <?php $a=get_userinfo();echo $a['Token'];?> -l</code>
 							</div>
 						</div>
@@ -247,7 +273,7 @@ if (!already_login()) {
 					</div>
 				</div> -->
 				<div>
-					<button class="btn btn-warning btn-lg" onclick="task_create()">
+					<button class="btn btn-warning btn-lg disabled" id="submit" onclick="task_create()">
 						<span class="glyphicon glyphicon-flash"></span>
 						Scan it!
 					</button>

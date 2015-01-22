@@ -27,19 +27,21 @@ class WebUser(object):
 	def loadInfo(self):
 		if os.path.isfile(self.conffile):
 			fp = open(self.conffile)
-			try:
-				conf = yaml.load(fp)
-				# print conf
-				self.server = conf['server']
-				self.token 	= conf['token']
-				self.id 	= conf['id']
-				self.name 	= conf['name']
-				self.taskid = conf['taskid']
+		else:
+			fp = open(self.conffile,'a')
+		try:
+			conf = yaml.load(fp)
+			# print conf
+			self.server = conf['server']
+			self.token 	= conf['token']
+			self.id 	= conf['id']
+			self.name 	= conf['name']
+			self.taskid = conf['taskid']
 
-			except Exception,e:
-				print 'Seems user info not inited',e
-			finally:
-				fp.close()
+		except Exception,e:
+			print 'Seems user info not inited',e
+		finally:
+			fp.close()
 
 	def setUserInfo(self,server=None,token=None):
 		try:

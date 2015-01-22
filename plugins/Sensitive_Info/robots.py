@@ -15,6 +15,9 @@ info = {
 	'VERSION':'1.0',
 	'RUNLEVEL':2
 }
+opts = [
+	['url','http://www.leesec.com','target url'],
+]
 
 # 任务分配函数Assign
 def Assign(services):

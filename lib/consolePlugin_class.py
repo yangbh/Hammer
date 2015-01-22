@@ -21,6 +21,8 @@ class m:
 		for t in self.pluginOpts:
 			o=t[0]
 			v=t[1]
+			if (v[0]=='[' and v[-1] == ']') or (v[0]=='{' and v[-1] == '}'):
+				v = eval(v)
 			self.services[o] = v
 
 	def info(self):
@@ -52,10 +54,11 @@ class m:
 
 	def setp(self,p,v):
 		'''set plugin par value'''
-		p=p.upper()
+		# p=p.upper()
 		if self.services.has_key(p):
 			color.cprint("[*] SET %s=>%s"%(p,v),YELLOW)
-			self.services[p]=v
+			self.services[p]=eval(v) if (v[0]=='[' and v[-1] == ']') or (v[0]=='{' and v[-1] == '}') else v
+			# print self.services
 		else:
 			color.cprint("[*] NO PARA %s" % p,YELLOW)
 

@@ -60,8 +60,14 @@ if (!already_login()) {
 
 $os = check_sql(trim($_REQUEST['os']));
 $mac = check_sql(trim($_REQUEST['mac']));
-$status = (int)($_REQUEST['status']);
-$distID = (int)($_REQUEST['distid']);
-$data=search_dist($level,$os,$mac,$distID);
+$status = None;
+if ($_REQUEST['status']) {
+	$status = (int)($_REQUEST['status']);
+}
+$distID = None;
+if ($_REQUEST['distid']) {
+	$distID = (int)($_REQUEST['distid']);
+}
+$data=search_dist($status,$os,$mac,$distID);
 echo json_encode($data);
 ?>
