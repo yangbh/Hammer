@@ -28,7 +28,8 @@ class WhatWeb(object):
 		'''start whatweb scan'''
 		url = self.url
 		outfile = self.outfile
-		shellcmd = CURRENT_PATH + '/' + './whatweb/whatweb -q --follow-redirect=never --log-json=' +outfile +' '+url
+		# 改为--follow-redirect = same-site，而非never
+		shellcmd = CURRENT_PATH + '/' + './whatweb/whatweb -q --follow-redirect=same-site --log-json=' +outfile +' '+url
 		#shellcmd = 'whatweb -q --follow-redirect=never --log-json=' +outfile +' '+url
 		#print 'shellcmd=',shellcmd
 		if os.path.isfile(outfile):
@@ -46,7 +47,12 @@ class WhatWeb(object):
 				cont = cont[:-lensep_len]
 				ret = cont
 			elif format == 'dict':
-				ret = json.load(fp)
+				# 结果在倒数第二行
+				result = ''
+				for eachline in fp:
+					if eachline and eachline != '':
+						result = eachline 
+				ret = json.loads(result)
 			else:
 				ret = FALSE
 
@@ -59,7 +65,11 @@ class WhatWeb(object):
 # 
 # ----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
+	import sys
 	from pprint import pprint
-	wb = WhatWeb('http://www.sel.zju.edu.cn')
+	url='http://www.sel.zju.edu.cn'
+	if len(sys.argv) ==  2:
+		url = sys.argv[1]
+	wb = WhatWeb(url)
 	wb.scan()
 	pprint(wb.getResult())

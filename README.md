@@ -45,22 +45,44 @@ Install
 =================================== 
 
 ```
-目前建议在kali上运行：
+目前建议在Linux/Mac上运行，Mac上请用brew安装pip：
 ```
 ```
 1. 安装python依赖库
-	sudo apt-get install python-pip python-dev build-essential
+	sudo apt-get install python-pip python-dev
 	sudo pip install -r requirement.txt
-2. 数据库导入sql文件，地址在bin/hammer.sql
-3. 配置web，修改web目录下config配置文件
-4. 将plugins目录下所有插件内容导入web数据库
+2. 下载项目
+	~$>mkdir Hammer
+	~$>cd Hammer
+	Hammer$>git init
+	Hammer$>git remote add origin https://github.com/yangbh/Hammer.git
+	Hammer$>git pull origin master
+	以后更新就可以直接用git pull origin master解决了
+3. 数据库导入sql文件，地址在bin/hammer.sql，并为Hammer数据库分配账户密码
+	source bin/hammer.sql
+4. 配置web，修改web/config.php配置文件
+	$DB_HOST = 'localhost';
+	$DB_PORT = '3389';
+	$DB_NAME = 'Hammer';
+	$DB_USER = 'user';
+	$DB_PWD = 'password';	
+	$DB_SALT = 'hammer';	# salt是盐，建议修改
+5. 将plugins目录下所有插件内容导入web数据库
 	1) 登录web，默认账号密码为admin/123456,在user.php中获取token
 	2) 将本地插件信息更新至WEB:
 	python hammer.py -s www.hammer.org -t yourtokenhere -u plugins/
 	3) 以后若添加插件，可以-u指定单独.py插件，也可以指定目录
 	python hammer.py -s www.hammer.org -t yourtokenhere -u yourpluginfilepath
-5. 运行hammer.py进行扫描
-	python hammer.py -s www.hammer.org -t yourtokenhere -T yourtargethere
+6. 运行hammer.py进行扫描
+	1) 第一次使用－c模式设置本地缓存server和token
+	python hammer.py -c
+	anonymous@local >set server 0xff.sinaapp.com
+	anonymous@local >set token XiUfga4xlS4ajBWnlUyBph9wGRxlFHF3
+	anonymous@local >connect
+	admin@0xff.sinaapp.com >show user
+	2) 若未设置token，则以后的扫描需要带上server和token，具体扫描命令参考web/documents.php,常用的命令：
+	python hammer.py -l
+	python hammer.py -T yourtargethere
 ```
  Require
 ----------------------------------- 
@@ -70,28 +92,4 @@ python2.7
 ruby
 # dig
 # whatweb
-```
-
-Required python plugins:
-```
-# framework basic
-futures		# for Parallel Processing
-argparse 	# for input handling
-#sqlite3		# for local database
-#MySQL-python
-beautifulsoup4	# for crawler
-#ipaddress	# for handling input ip
-netaddr		# for handling input ip range
-# used in plugins
-python-nmap	# for nmap scanning
-dnspython	# for dns zone transfer
-#httplib		# for http request
-#urllib
-#urllib2
-requests
-paramiko	# for ssh cracker
-pymongo		# for mongodb
-easywebdav	# for webdav
-#json		# others
-pyquery
 ```

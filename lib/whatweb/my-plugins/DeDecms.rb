@@ -24,7 +24,8 @@ matches [
 {:text=>"/include/dedeajax2.js"},
 {:text=>"Power by DedeCms"},
 {:url=>"/templets/default/style/dedecms.css",:version=>/DedeCMS v([\d\.]+)/m},
-
+{:name=>"Powered by meta",
+:version=>/<a href=\"http:\/\/www.dedecms.com\/\" target=\"_blank\">DedeCms v([\w]+)<\/a>/i},
 ]
 
 

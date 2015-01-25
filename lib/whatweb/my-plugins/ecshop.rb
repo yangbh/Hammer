@@ -16,8 +16,7 @@ dorks [
 
 # Matches #
 matches [
-
-  # url exists, i.e. returns HTTP status 200
+# url exists, i.e. returns HTTP status 200
 #title="Powered by ECShop" || header="ECS_ID" || body="content=\"ECSHOP" || body="/api/cron.php"
 {:text=>"Powered by ECShop"},
 {:text=>"content=\"ECSHOP"},

@@ -259,6 +259,45 @@ class Cache(object):
 		elif c == "set":
 			ius('set <server|token> <valus>')
 
+	def banner(self):
+		'''mst banner :)'''
+		ic=self.getplunums('Info_Collect')
+		co=self.getplunums('Common')
+		si=self.getplunums('Sensitive_Info')
+		sy=self.getplunums('System')
+		wp=self.getplunums('Weak_Password')
+		wa=self.getplunums('Web_Applications')
+		choice([self.ban1,self.ban2,self.ban3,self.ban4,self.ban5])()
+		print '          =[',
+		color.cprint('HAMMER::My Sec Tools',GREEN)
+		print '    + -- +=[',
+		color.cprint('PLU::info::%s com::%s sens::%s sys::%s pwd::%s web::%s'%(ic,co,si,sy,wp,wa),YELLOW)
+		
+	def printhammer(self):
+		'''print mst..'''
+		color.cprint(self.username,GREY,0)
+			
+	def execmd(self,cmd):
+		'''run system command'''
+		color.cprint('[*] EXEC:%s'%cmd,RED)
+		system(cmd)
+			
+	def cls(self):
+		'''clear'''
+		if name == 'nt':
+			system("cls")
+		else:
+			system("clear")
+
+	def errmsg(self,msg):
+		'''show error msg'''
+		color.cprint("[!] Err:%s"%msg,RED)
+			
+	def mainexit(self):
+		'''exit app'''
+		color.cprint("\n[*] GoodBye :)",RED)
+		exit(0)
+
 	def ban1(self):
 		'''banner 1'''
 		color.cprint('''
@@ -357,45 +396,28 @@ class Cache(object):
                              ==     ;,                          
                               ,;;;;:                            
 ''',PURPLE)
-	def banner(self):
-		'''mst banner :)'''
-		ic=self.getplunums('Info_Collect')
-		co=self.getplunums('Common')
-		si=self.getplunums('Sensitive_Info')
-		sy=self.getplunums('System')
-		wp=self.getplunums('Weak_Password')
-		wa=self.getplunums('Web_Applications')
-		choice([self.ban1,self.ban2,self.ban3,self.ban4])()
-		print '          =[',
-		color.cprint('HAMMER::My Sec Tools',GREEN)
-		print '    + -- +=[',
-		color.cprint('PLU::info::%s com::%s sens::%s sys::%s pwd::%s web::%s'%(ic,co,si,sy,wp,wa),YELLOW)
-		
-	def printhammer(self):
-		'''print mst..'''
-		color.cprint(self.username,GREY,0)
-			
-	def execmd(self,cmd):
-		'''run system command'''
-		color.cprint('[*] EXEC:%s'%cmd,RED)
-		system(cmd)
-			
-	def cls(self):
-		'''clear'''
-		if name == 'nt':
-			system("cls")
-		else:
-			system("clear")
-
-	def errmsg(self,msg):
-		'''show error msg'''
-		color.cprint("[!] Err:%s"%msg,RED)
-			
-	def mainexit(self):
-		'''exit app'''
-		color.cprint("\n[*] GoodBye :)",RED)
-		exit(0)
-
+	def ban5(self):
+		color.cprint('''
+               ,'``.._   ,'``.
+              :,--._:)\,:,._,.:     
+              :`--,''   :`...';\    
+               `,'       `---'  `.
+               /                 :
+              /                   \\
+            ,'                     :\.___,-.
+           `...,---'``````-..._    |:       \\
+             (                 )   ;:    )   \\  _,-.
+              `.              (   //          `'    \\
+               :               `.//  )      )     , ;
+             ,-|`.            _,'/       )    ) ,' ,'
+            (  :`.`-..____..=:.-':     .     _,' ,'
+             `,'\ ``--....-)='    `._,  \  ,') _ '``._
+          _.-/ _ `.       (_)      /     )' ; / \ \-.'
+         `--(   `-:`.     `' ___..'  _,-'   |/   '.)
+             `-. `.`.``-----``--,  .'
+                /'.\\''       ,',');
+                   `         (/  (/
+''',PURPLE)
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
