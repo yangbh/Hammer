@@ -25,6 +25,7 @@ class WebUser(object):
 		self.loadInfo()
 
 	def loadInfo(self):
+		'''从配置文件加载用户信息，若配置文件内信息不全则提示'''
 		if os.path.isfile(self.conffile):
 			fp = open(self.conffile)
 		else:
@@ -44,6 +45,7 @@ class WebUser(object):
 			fp.close()
 
 	def setUserInfo(self,server=None,token=None):
+		'''设置用户的信息，但是暂时不存入配置文件'''
 		try:
 			conf = {}
 			if server:
@@ -55,6 +57,7 @@ class WebUser(object):
 			print 'IndexError',e
 
 	def refreshTaskID(self):
+		'''创建一个新的task'''
 		try:
 			serverurl = 'http://' + self.server +'/scans_add.php'
 			postdata = {'token':self.token,'type':'start','url':'console'}
@@ -69,6 +72,9 @@ class WebUser(object):
 			color.cprint("[!] Err:%s"%e,RED)
 
 	def rsyncUserInfo(self):
+		'''用户使用set命令将信息缓存在内存，再通过此同步用户信息函数验证用户凭证
+		正确则获取用户信息，但是不存入配置文件
+		不正确则不存入配置文件，并将程序中的用户信息回滚'''
 		try:
 			serverurl = 'http://' + self.server +'/user_setting.php'
 			postdata = {'token':self.token,'type':'getinfo'}
@@ -99,6 +105,7 @@ class WebUser(object):
 			color.cprint("[!] Err:%s"%e,RED)
 
 	def dumpInfo(self):
+		'''将程序中的用户信息写入配置文件'''
 		try:
 			fp= open(self.conffile)
 			conf = yaml.load(fp)
