@@ -12,7 +12,7 @@ info = {
     'AUTHOR':'c4bbage',
     'TIME':'20130315',
     'WEB':'http://technet.microsoft.com/zh-cn/security/bulletin/ms12-020',
-    'DESCRIPTION':'ElasticSearch 远程代码执行'
+    'DESCRIPTION':'ms12020 checker'
 }
 opts = [
 ['ip','221.123.140.66','target ip'],
