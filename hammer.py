@@ -110,10 +110,13 @@ def main():
 		else:
 			pass
 
-	user = WebUser()
-	if user.server and user.token:
-		_server = user.server
-		_token = user.token
+	if _server and _token:
+		pass
+	else:
+		user = WebUser()
+		if user.server and user.token:
+			_server = user.server
+			_token = user.token
 
 	if _console:
 		cn = Consoler()

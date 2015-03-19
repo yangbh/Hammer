@@ -6,6 +6,7 @@
 import time
 import random
 import requests
+import futures
 
 from pprint import pprint
 from bs4 import BeautifulSoup
@@ -60,6 +61,7 @@ class ProxyScraper:
 
 			self.proxies.append((ip,port,proxy_type,ssl,country,latency,reliability))
 			print ip,port,proxy_type,ssl,country,latency,reliability
+	
 	def getTime(self,proxyurl,basicurl='http://www.baidu.com'):
 		'''return mico seconds '''
 		if proxyurl.startswith('http://'):

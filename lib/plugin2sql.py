@@ -85,11 +85,11 @@ def write2web(filepath=None,server='localhost',token=''):
 		serverurl = 'http://' + server +'/plugins_add.php'
 		# cookies = {'PHPSESSID':token}
 		postdata = {'name':pName,'type':pType,'token':token,'author':pAuthor,'time':pTime,'version':pVersion,'web':pWeb,'description':pDescription,'code':pCode}
-		print postdata
+		# print postdata
 		r = requests.post(serverurl,data=postdata)
 		print r.status_code,r.text
-		if r.status_code == 200:
-		# print r.request.headers
+		if r.status_code == 200 and r.text != 'false':
+			# print r.request.headers
 			# print r.text
 			pass
 		else:

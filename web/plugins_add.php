@@ -4,6 +4,7 @@ require_once('common.php');
 <?php
 //	check login first
 if (!already_login()) {
+	echo 'false';
 	die();
 }
 
@@ -17,7 +18,7 @@ $pluginDescription = check_sql(trim($_REQUEST['description']));
 $pluginCode = check_sql(trim($_REQUEST['code']));
 
 $query = "SELECT ID FROM Plugin WHERE Name='$pluginName'";
-print '$query='.$query.'<br>';
+// print '$query='.$query.'<br>';
 $result = mysql_query($query);
 if ($row = mysql_fetch_array($result)) {
 	// echo $row;
@@ -27,10 +28,10 @@ if ($row = mysql_fetch_array($result)) {
 else{
 	$query = "INSERT INTO Plugin(Name,Type,Author,Time,Version,Web,Description,Code) VALUES('$pluginName','$pluginType','$pluginAuthor','$pluginTime','$pluginVersion','$pluginWeb','$pluginDescription','$pluginCode')";
 }
-print '$query='.$query.'<br>';
+// print '$query='.$query.'<br>';
 $result = mysql_query($query);
 if ($row = mysql_fetch_array($result)) {
 	// echo $row;
 }
-
+echo 'true';
 ?>
