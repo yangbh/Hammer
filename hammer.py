@@ -75,6 +75,7 @@ def main():
 	_vv = 'INFO'
 	_plugin_arg=None
 	_threads = None
+	_maxsize = 50
 
 	for opt, arg in opts:
 		if opt in ('-h','--help'):
@@ -105,6 +106,8 @@ def main():
 			_target = arg
 		elif opt in ('-l','--listen'):
 			_listen = True
+		elif opt in ('--max-size'):
+			_maxsize = int(arg)
 		elif opt in ('-c','--console'):
 			_console = True
 		else:
@@ -143,7 +146,7 @@ def main():
 				sn.scan()
 
 		elif _listen:
-			li = Listener(server=_server, token=_token, loglevel=_vv)
+			li = Listener(server=_server, token=_token, loglevel=_vv, maxsize=_maxsize)
 			li.run()
 		
 	else:

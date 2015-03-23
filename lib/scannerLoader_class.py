@@ -12,6 +12,7 @@ class ScannerLoader(object):
 		self.token = token
 		self.arg = arg
 
+
 	def run(self):
 		try:
 			# basic mode scanner
@@ -20,7 +21,7 @@ class ScannerLoader(object):
 					target=self.arg['target'],\
 					threads=int(self.arg['global']['threads']) if self.arg['global']['threads']!= '' else None,\
 					loglevel=self.arg['global']['loglevel'] if self.arg['global']['loglevel']!= '' else 'INFO',\
-					gatherdepth=self.arg['global']['gatherdepth'] if self.arg['global']['gatherdepth']!= '' else 1)
+					gatherdepth=int(self.arg['global']['gatherdepth']) if self.arg['global']['gatherdepth']!= '' else 1)
 				sn.initInfo()
 				sn.infoGather()
 				sn.scan()

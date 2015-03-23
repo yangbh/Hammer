@@ -8,6 +8,7 @@ import time
 import platform
 import requests
 import threading
+import multiprocessing
 import logging
 
 import globalVar
@@ -27,12 +28,12 @@ class Listener(object):
 		self.server = server
 		self.token = token
 		self.loglevel = loglevel
+		self.maxsize = maxsize
 		self.os = platform.system()
 		self.mac = get_mac_address()
 		self.lock = threading.Lock()
 		self.tasks = []
 		self.flag = True
-
 
 		self.loghandler = []
 		# log 模块,确保赋值一次
@@ -119,6 +120,23 @@ class Listener(object):
 
 			time.sleep(10)
 
+	def deal_onetask(self,arg):
+		try:
+			globalVar.logger.debug('prepare to run a task: %s' % arg['target'])
+			sl = ScannerLoader(self.server, self.token, arg)
+			sl.run()
+			globalVar.logger.info('[*] done: %s' % arg['target'])
+			# notice server this task done
+			serverurl = 'http://' + self.server +'/dist_hi.php'
+			postdata = {'token':self.token,'os':self.os,'mac':self.mac,'type':'end','taskid':arg['taskid']}
+			r = requests.post(serverurl,data=postdata)
+			# print r.status_code
+			if r.status_code == 200:
+				globalVar.logger.debug('worker: hello server, one task done, taskid: %s' % arg['taskid'])
+				globalVar.logger.debug('server: %s' % r.text)
+		except Exception,e:
+			globalVar.logger.error('Exception: %s' % e)
+
 	def deal_task(self):
 		'''
 		持续执行task
@@ -130,20 +148,9 @@ class Listener(object):
 					arg = self.tasks[0]
 					del(self.tasks[0])
 					self.lock.release()
-					globalVar.logger.debug('prepare to run a task: %s' % arg['target'])
-					sl = ScannerLoader(self.server, self.token, arg)
-					sl.run()
-
-					globalVar.logger.info('[*] done: %s' % arg['target'])
-					# notice server this task done
-					serverurl = 'http://' + self.server +'/dist_hi.php'
-					postdata = {'token':self.token,'os':self.os,'mac':self.mac,'type':'end','taskid':arg['taskid']}
-
-					r = requests.post(serverurl,data=postdata)
-					# print r.status_code
-					if r.status_code == 200:
-						globalVar.logger.debug('worker: hello server, one task done, taskid: %s' % arg['taskid'])
-						globalVar.logger.debug('server: %s' % r.text)
+					
+					p = multiprocessing.Process(target=self.deal_onetask,args=(arg,))
+					p.start()
 
 			except Exception,e:
 				globalVar.logger.error('Exception: %s' % e)
@@ -154,6 +161,7 @@ class Listener(object):
 		'''
 		开启监听与处理两个线程
 		'''
+		# 监听线程
 		listenth = threading.Thread(target=self.listen_task)
 		dealth = threading.Thread(target=self.deal_task)
 

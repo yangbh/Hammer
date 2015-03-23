@@ -1,5 +1,9 @@
 #!/usr/bin/python2.7
 #coding:utf-8
+#
+#	2015-03-22 
+#		修复globalVar.undone_targets每次运行之后未复原，在多进程状态下没有影响，但是在多线程下却有
+		
 import os
 import sys
 import re
@@ -130,17 +134,24 @@ class Scanner(object):
 		globalVar.mainlogger.info('\ttarget\t=%s' % target)
 		globalVar.mainlogger.info('\tthreads\t=%d' % self.threads)
 
+		# 注意：不能通过以下的方式进行清空
+		# globalVar.undone_targets = []
+		# 
+		tmpundone = copy.deepcopy(globalVar.undone_targets)
+		for each_target in tmpundone:
+			globalVar.undone_targets.remove(each_target)
+
 	def _initLogging(self):
-		globalVar.mainlogger.info('before test')
+		# globalVar.mainlogger.info('before test')
 		for handler in self.loghandler:
 			globalVar.mainlogger.addHandler(handler)
-		globalVar.mainlogger.info('after test')
+		# globalVar.mainlogger.info('after test')
 	
 	def _removeLogging(self):
-		globalVar.mainlogger.info('before test')
+		# globalVar.mainlogger.info('before test')
 		for handler in self.loghandler:
 			globalVar.mainlogger.removeHandler(handler)
-		globalVar.mainlogger.info('after test')
+		# globalVar.mainlogger.info('after test')
 		globalVar.mainlogger = None
 
 	def _getServiceType(self,target):
@@ -194,7 +205,6 @@ class Scanner(object):
 	def initInfo(self,target=None):
 		try:
 			#	Step 1
-			# print '>>>Step1: init starting info'
 			globalVar.mainlogger.info('[*][*] Step1: init starting info')
 			self.services = []
 			if target==None:
@@ -250,19 +260,18 @@ class Scanner(object):
 							domain = GetFirstLevelDomain(target)
 							targets.append(domain)
 
-
-			globalVar.target_lock.acquire()
-			globalVar.undone_targets += targets
-			globalVar.target_lock.release()
-
-			for each_target in globalVar.undone_targets:
+			# for each_target in globalVar.undone_targets:
+			for each_target in targets:
+				globalVar.undone_targets.append(each_target)
 				service = {}
 				service_type = self._getServiceType(each_target)
 				# print service_type
 				service[service_type] = each_target
 				self.services.append(service)
 
-			# pprint(self.services)
+			print 'globalVar.undone_targets=',globalVar.undone_targets
+			print 'self.services=',
+			pprint(self.services)
 			globalVar.mainlogger.info('Targets:')
 			for service in self.services:
 				globalVar.mainlogger.info('\t'+str(service))
@@ -271,7 +280,6 @@ class Scanner(object):
 			self._initGlobalVar()
 		except IndexError,e:
 		# except Exception,e:
-			# print 'Exception:',e
 			globalVar.mainlogger.error('Exception:'+str(e))
 
 	def infoGather(self,depth=None):
@@ -279,18 +287,15 @@ class Scanner(object):
 			depth = self.gatherdepth
 		try:
 			#	Step 2
-			# print '>>>Step2: gathing info'
 			globalVar.mainlogger.info('[*][*] Step2: gathing info')
 			
 			self.services = []
 			for i in range(depth):
-				# print '>>>',i,'<<<'
+				globalVar.mainlogger.info('[*][*][-] >>> depth: %d <<<' % i)
 				# print globalVar.done_targets
 				# print 'id(globalVar.undone_targets)=\t',id(globalVar.undone_targets)
-				# print 'globalVar.undone_targets=',globalVar.undone_targets
 
-				# 				
-				globalVar.depth_now += globalVar.depth_now + 1
+				globalVar.depth_now = globalVar.depth_now + 1
 
 				if globalVar.undone_targets:
 					# Step1: 
@@ -339,22 +344,17 @@ class Scanner(object):
 
 					results = p.get()
 
-					# newpls = []
-					# for res in results:
-					# 	newpls.append(res)
-					# self.pls = self.pls + newpls
-
 					for service in results:
 						service['alreadyrun'] = True
 						self.services.append(service)
 
-			# for pl in self.pls:
-			# 	service = pl.services
-			# 	service['alreadyrun'] = True
-			# 	self.services.append(service)
-			# self.pls = []
+				print 'globalVar.undone_targets=',globalVar.undone_targets
+				print 'self.services=',
+				pprint(self.services)
+
 
 			for each_target in globalVar.undone_targets:
+				print each_target
 				service = {}
 				service_type = self._getServiceType(each_target)
 				# print service_type
@@ -362,7 +362,6 @@ class Scanner(object):
 				service['nogather'] = True
 				self.services.append(service)
 
-			# pprint(self.services)
 			globalVar.mainlogger.info('Targets:')
 			for service in self.services:
 				globalVar.mainlogger.info('\t'+str(service))
@@ -375,9 +374,13 @@ class Scanner(object):
 		''' '''
 		try:
 			#	Step 3
-			# print '>>>Step3: run each sub task'
 			globalVar.mainlogger.info('[*][*] Step3: run each sub task')
 			
+			# globalVar.undone_targets = []
+			print 'globalVar.undone_targets=',globalVar.undone_targets
+			print 'self.services=',
+			pprint(self.services)
+
 			self.pls = []
 			for each_service in self.services:
 				pl = PluginLoader(None,each_service,self.target)
@@ -398,7 +401,6 @@ class Scanner(object):
 				# print '---------->>hahahaha main thread caught ctrl+c'
 				globalVar.mainlogger.error('Caught KeyboardInterrupt, terminating workers')
 
-			# print '>>>>>>>>>>>>>>>>>>All Done<<<<<<<<<<<<<<<<'s
 			globalVar.mainlogger.info('[*] All Done')
 			# # 改用map_async的方式
 			# proPool = MyPool(10)

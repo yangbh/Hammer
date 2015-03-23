@@ -125,6 +125,16 @@ EOF;
 
 				<div class="col-xs-10 col-sm-10 col-md-10" role="main" class="main">
 					<h2 id="1.4">1.4</h2>
+					<h3>1.4.1.150322_Beta</h3>
+						<p><strong>改进：</strong></p>
+						<p>a).-l监听模式修改成多线程模式修复</p>
+						<p>b).autoproxy自动代理雏形</p>
+						<p><strong>待完善：</strong></p>
+						<p>a).代理接口自动化管理，参考multiproxies</p>
+						<p>b).增加搜索引擎支持，类似multisearch</p>
+						<p>c).搜索引擎自动代理攻击模块，类似golismero</p>
+						<p>d).重构pluginloader，一次加载所有插件，避免多次文件读取加载，类似msf</p>
+					<hr>
 					<h3>1.4.1.150122_Beta</h3>
 						<p><strong>改进：</strong></p>
 						<p>a).参考mst，增加命令行模式</p>

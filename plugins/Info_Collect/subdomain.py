@@ -3,7 +3,7 @@
 
 import os
 import urllib2
-
+import requests
 import socket
 from dummy import *
 
@@ -20,44 +20,50 @@ opts = [
 	['host','kangbtall.com','target host'],
 ]
 
-def generateUrl(hosts=None):
+def generateUrl(hosts=[]):
 	''''''
 	# url redict  hasn't been considered
 	urls = []
+	# step 1: check https type
 	tmpurls = []
-	if hosts != None:
-		for eachhost in hosts:
-			url = 'http://' + eachhost
-			tmpurls.append(url)
-			url = 'https://' + eachhost
-			tmpurls.append(url)
-	# print 'tmpurls:\t',tmpurls
-	logger('tmpurls:\t'+str(tmpurls))
+
+	for eachhost in hosts:
+		httpurl = 'http://' + eachhost
+		tmpurls.append(httpurl)
+	logger('http type tmpurls:\t'+str(tmpurls))
 	
-	for url in tmpurls:
+	for httpurl in tmpurls:
+		flag = True
 		try:
 			# print 'url=',url
-			logger('url=%s ' % url)
-			respone = urllib2.urlopen(url,timeout=20)
-			redirected = respone.geturl()
-			if redirected == url:
-				urls.append(url)
-			continue
-		except urllib2.URLError,e:
-			#print 'urllib2.URLError',e,url
-			pass
-		except urllib2.HTTPError,e:
-			#print 'urllib2.HTTPError',e,url
-			pass
-		except urllib2.socket.timeout,e:
-			#print 'urllib2.socket.timeout',e,url
-			pass
-		except urllib2.socket.error,e:
-			#print 'urllib2.socket.error',e,url
-			pass
-	# print 'urls:\t',urls
+			logger('httpurl=%s ' % httpurl)
+			httprq = requests.get(httpurl,timeout=20,allow_redirects=True)
+			flag = False
+			if httprq.status_code == 200 and httpurl in httprq.url:
+				urls.append(httpurl)
+				httpsurl = httpurl.replace('http://','https://')
+				logger('httpsurl=%s ' % httpsurl)
+				httpsrq = requests.get(httpsurl,timeout=20,allow_redirects=True,verify=False)
+				if httpsrq.status_code == 200 and httpsurl in httpsrq.url:
+					if httprq.text != httpsrq.text:
+						urls.append(httpsurl)
+			else:
+				flag = True
+		except (requests.exceptions.RequestException) as e:
+			logger(str(e))
+
+		if flag:
+			try:
+				httpsurl = httpurl.replace('http://','https://')
+				logger('httpsurl=%s ' % httpsurl)
+				httpsrq = requests.get(httpsurl,timeout=20,allow_redirects=True,verify=False)
+				if httpsrq.status_code == 200 and httpsurl in httpsrq.url:
+					urls.append(httpsurl)
+			except (requests.exceptions.RequestException) as e:
+				logger(str(e))
+
 	logger('urls:\t'+str(urls))
-	
+
 	return urls
 
 def Assign(services):
@@ -146,6 +152,6 @@ if __name__=='__main__':
 	host = 'kangbtall.com'
 	if len(sys.argv) ==  2:
 		host = sys.argv[1]
-	services = {'host':host,'nogather':True}
+	services = {'host':host,'nogather':False}
 	pprint(Audit(services))
 	pprint(services)

@@ -338,7 +338,8 @@ class Crawler(object):
 		for a in results:
 			#必须将链接encode为utf8, 因为中文文件链接如 http://aa.com/文件.pdf 
 			#在bs4中不会被自动url编码，从而导致encodeException
-			href = a.get('href').encode('utf8')
+			# href = a.get('href').encode('utf8')
+			href = a.get('href')
 			# 去除两边空格
 			href = href.strip()
 			# added by mody at 2014-11-28
@@ -352,7 +353,8 @@ class Crawler(object):
 		# 2. as <from action=http://www.example.com></form>
 		results = soup.findAll('form',action=True)
 		for form in results:
-			href = form.get('action').encode('utf8')
+			# href = form.get('action').encode('utf8')
+			href = form.get('action')
 			if not href.startswith('http'):
 				href = urljoin(url, href)#处理相对链接的问题
 			if href not in hrefs:

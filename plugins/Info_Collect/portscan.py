@@ -3,6 +3,7 @@
 
 import os
 import urllib2
+import requests
 from dummy import *
 
 info = {
@@ -15,7 +16,7 @@ info = {
 	'RUNLEVEL':0
 }
 opts = [
-	['ip','61.164.42.190','target ip'],
+	['ip','176.28.50.165','target ip'],
 ]
 def generateUrl(ip=None,ports=None):
 	''''''
@@ -32,35 +33,23 @@ def generateUrl(ip=None,ports=None):
 
 	if ip != None and httpports != None:
 		for eachport in httpports:
-			url = 'http://' + ip + ':' + str(eachport)
+			if eachport == 443:
+				url = 'https://' + ip + ':' + str(eachport)
+			else:
+				url = 'http://' + ip + ':' + str(eachport)
 			tmpurls.append(url)
-			url = 'https://' + ip + ':' + str(eachport)
-			tmpurls.append(url)
-	# print 'tmpurls:\t',tmpurls
 	logger('tmpurls:\t'+str(tmpurls))
 
 	for url in tmpurls:
 		try:
-			# print 'url=',url
 			logger('url=%s ' % url)
-			respone = urllib2.urlopen(url,timeout=10)
-			redirected = respone.geturl()
-			if redirected == url:
-				urls.append(url)
-			continue
-		except urllib2.URLError,e:
-			#print 'urllib2.URLError',e,url
-			pass
-		except urllib2.HTTPError,e:
-			#print 'urllib2.HTTPError',e,url
-			pass
-		except urllib2.socket.timeout,e:
-			#print 'urllib2.socket.timeout',e,url
-			pass
-		except urllib2.socket.error,e:
-			#print 'urllib2.socket.error',e,url
-			pass
-	# print 'urls:\t',urls
+			rq = requests.get(url,timeout=20,allow_redirects=True)
+			if rq.status_code == 200:
+				if url in rq.url:
+					urls.append(url)
+		except (requests.exceptions.RequestException) as e:
+			logger(str(e))
+
 	logger('urls:\t'+str(urls))
 
 	return urls
@@ -72,12 +61,9 @@ def Assign(services):
 
 def Audit(services):
 	logger('services=%s' % services)
-	# logger('you are success')
-	# logger.debug('logger test plugin run')
 	ip = services['ip']
 	np = NmapScanner(ip)
 	sc = np.scanPorts()
-	#print sc
 	try:
 		services['ip'] = sc.keys()[0]
 		services['ports'] = []
@@ -91,6 +77,7 @@ def Audit(services):
 			for eachport in sc[sc.keys()[0]]['udp']:
 				services['ports'].append(eachport)
 
+		services['ports'].sort()
 		logger('services:%s' %services)
 		security_note(str(services['ports']))
 		if services.has_key('nogather') and services['nogather'] == True:
@@ -101,6 +88,7 @@ def Audit(services):
 				pass
 			else:
 				urls = generateUrl(ip,services['port_detail'])
+				pprint(urls)
 				for url in urls:
 					add_scan_task(url)
 
@@ -111,9 +99,9 @@ def Audit(services):
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	ip='172.16.3.5'
+	ip='176.28.50.165'
 	if len(sys.argv) ==  2:
-		url = sys.argv[1]
+		ip = sys.argv[1]
 	services={'ip':ip}
 	print Audit(services)
 	pprint(services)
