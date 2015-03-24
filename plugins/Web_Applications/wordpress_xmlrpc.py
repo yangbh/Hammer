@@ -15,22 +15,20 @@ opts = [
 	['url','http://testasp.vulnweb.com','target url'],
 ]
 
-def Audit(services):
-	retinfo = None
-	output = ''
+def Assign(services):
 	if services.has_key('url') and services.has_key('cms'):
-		if services['cms'] == 'PhpMyAdmin':
-			output += 'plugin run' + os.linesep
-			url = services['url'] + '/xmlrpc.php'
-			try:
-				rqu = requests.get(url)
-				if rqu.status_code == 200 and rqu.text == 'XML-RPC server accepts POST requests only.':
-					retinfo = {'level':'low','content':url}
-					output += 'Vula:\t' + url
-					security_note(url)
-			except:
-				pass
-	return (retinfo,output)
+		if services['cms'] == 'Wordpress':
+			return True
+	return False
+
+def Audit(services):
+	url = services['url'] + '/xmlrpc.php'
+	try:
+		rqu = requests.get(url)
+		if rqu.status_code == 200 and rqu.text == 'XML-RPC server accepts POST requests only.':
+			security_note(url)
+	except:
+		pass
 # ----------------------------------------------------------------------------------------------------
 #	untest yet
 # ----------------------------------------------------------------------------------------------------

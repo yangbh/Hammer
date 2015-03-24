@@ -23,10 +23,8 @@ def Assign(services):
 	return False
 
 def Audit(services):
-	retinfo = {}
-	output = ''
 	# print 'logger=',logger
-	logger('plugin run')
+	# logger('plugin run')
 	neighborhosts = []
 	nbh = NeighborHost(services['ip'])
 	neighborhosts = nbh.getFromChinaZ()
@@ -34,8 +32,6 @@ def Audit(services):
 	logger('neighborhosts=\t'+str(neighborhosts))
 	if neighborhosts and len(neighborhosts) != 0:
 		services['neighborhosts'] = neighborhosts
-		ret = neighborhosts
-		retinfo = {'level':'info','content':ret}
 		for each_neighbor in neighborhosts:
 			security_note(each_neighbor)
 			if services.has_key('nogather') and services['nogather'] == True:
@@ -43,13 +39,13 @@ def Audit(services):
 			else:
 				add_scan_task(each_neighbor)
 
-	return (retinfo,output)
-
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	# www.leesec.com
-	services = {'ip':'61.164.42.190'}
+	ip = '222.84.126.197'
+	if len(sys.argv) ==  2:
+		ip = sys.argv[1]
+	services = {'ip':ip}
 	print Audit(services)
 	pprint(services)

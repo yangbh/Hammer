@@ -10,7 +10,7 @@ from dummy import *
 info = {
     'NAME':'ms12-020 checker',
     'AUTHOR':'c4bbage',
-    'TIME':'20130315',
+    'TIME':'20150315',
     'WEB':'http://technet.microsoft.com/zh-cn/security/bulletin/ms12-020',
     'DESCRIPTION':'ms12-020 checker'
 }

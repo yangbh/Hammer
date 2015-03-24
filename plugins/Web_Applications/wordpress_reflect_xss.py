@@ -15,22 +15,20 @@ opts = [
 	['url','http://testasp.vulnweb.com','target url'],
 ]
 
-def Audit(services):
-	retinfo = None
-	output = ''
+def Assign(services):
 	if services.has_key('url') and services.has_key('cms'):
 		if services['cms'] == 'Wordpress':
-			output += 'plugin run' + os.linesep
-			url = services['url'] + '/wp-includes/js/swfupload/swfupload.swf'
-			try:
-				rqu = requests.get(url)
-				if rqu.status_code == 200 and validate(rqu.text):
-					retinfo = {'level':'low','content':url}
-					output += 'Vula:\t' + url
-					security_note(url)
-			except:
-				pass
-	return (retinfo,output)
+			return True
+	return False
+
+def Audit(services):
+	url = services['url'] + '/wp-includes/js/swfupload/swfupload.swf'
+	try:
+		rqu = requests.get(url)
+		if rqu.status_code == 200 and validate(rqu.text):
+			security_note(url)
+	except:
+		pass
 
 def validate(res):
 	val_hash = '3a1c6cc728dddc258091a601f28a9c12'

