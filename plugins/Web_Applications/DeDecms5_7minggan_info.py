@@ -5,7 +5,7 @@ import requests
 from dummy import *
 
 info = {
-	'NAME':'dedecms 敏感信息泄露',
+	'NAME':'DeDeCms 敏感信息泄露',
 	'AUTHOR':'seay,wjk',
 	'TIME':'20150323',
 	'WEB':'',
@@ -17,7 +17,7 @@ opts = [
 
 def Assign(services):
 	if services.has_key('url') and services.has_key('cms'):
-		if services['cms'] == 'Dedecms':
+		if services['cms'] == 'DedeCms':
 			return True
 	return False
 

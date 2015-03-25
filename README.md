@@ -66,7 +66,7 @@ Install
 	$DB_NAME = 'Hammer';
 	$DB_USER = 'user';
 	$DB_PWD = 'password';	
-	$DB_SALT = 'hammer';	# salt是盐，建议修改
+	$DB_SALT = 'hammer';	# salt是盐，建议修改，改动后请手动修改数据库中web admin密码hash
 5. 将plugins目录下所有插件内容导入web数据库
 	1) 登录web，默认账号密码为admin/123456,在user.php中获取token
 	2) 将本地插件信息更新至WEB:

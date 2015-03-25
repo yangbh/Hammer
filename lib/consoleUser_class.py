@@ -59,7 +59,7 @@ class WebUser(object):
 	def refreshTaskID(self):
 		'''创建一个新的task'''
 		try:
-			serverurl = 'http://' + self.server +'/scans_add.php'
+			serverurl = 'http://' + self.server + '/scans_add.php'
 			postdata = {'token':self.token,'type':'start','url':'console'}
 
 			r = requests.post(serverurl,data=postdata)

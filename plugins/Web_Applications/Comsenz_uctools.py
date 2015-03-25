@@ -3,13 +3,14 @@
 
 import requests
 from dummy import *
+import re
 
 info = {
-	'NAME':'Dedecms /plus/download.php URL redirect',
-	'AUTHOR':'Ario,yangbh',
-	'TIME':'20140811',
+	'NAME':'Discuz Comsenz uctools',
+	'AUTHOR':'真爱,wjk',
+	'TIME':'20150325',
 	'WEB':'',
-	'DESCRIPTION':''
+	'DESCRIPTION':'Comsenz 系统维护工具箱（UCenter专用版）破解登陆密码后可控制Discuz!'
 }
 opts = [
 	['url','http://testasp.vulnweb.com','target url'],
@@ -17,17 +18,19 @@ opts = [
 
 def Assign(services):
 	if services.has_key('url') and services.has_key('cms'):
-		if services['cms'] == 'DedeCms':
+		if services['cms'] == 'Discuz':
 			return True
 	return False
 
 def Audit(services):
-	url = services['url'] + "/plus/download.php?open=1&link=aHR0cDovL3d3dy5iYWlkdS5jb20%3D"
+	url = services['url'] +'/uc_server/uctools.php'
 	try:
-		rqu = requests.get(url)
-		if rqu.url == 'http://www.baidu.com':
-			security_note(url)
-
+		rqu =requests.get(url)
+		if rqu.status_code == 200 :
+			res = rqu.text 
+			m = re.reserch('Comsenz',res)
+			if m :
+				security_hole(url+'Comsenz 系统维护工具箱（UCenter专用版）')
 	except:
 		pass
 # ----------------------------------------------------------------------------------------------------

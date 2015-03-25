@@ -6,7 +6,7 @@ import re
 from dummy import *
 
 info = {
-	'NAME':'WordPress cp-multi-view-calendar <= 1.1.4 - SQL Injection',
+	'NAME':'WordPress cp multi view calendar <= 1.1.4 - SQL Injection',
 	'AUTHOR':'WJK,yangbh,lkz',
 	'TIME':'20150320',
 	'WEB':'https://www.yascanner.com/#!/n/120',

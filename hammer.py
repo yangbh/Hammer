@@ -6,13 +6,16 @@ import getopt
 import re
 sys.path.append('./lib')
 # from scanner_class_mp import Scanner
+
+import globalVar
+
 from scanner_class_basic import Scanner
 from scanner_class_pluginrunner import PluginMultiRunner
 from listener_class import Listener
 from consoler_class import Consoler
 from consoleUser_class import WebUser
 from plugin2sql import loadPlugins
-
+from proxyScraper_class import ProxyScraper
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
@@ -37,8 +40,10 @@ def usage():
 	print "\t-t --token: token, find it in http://www.hammer.org/user.php"
 	print "[Options]"
 	print "\t-u --update-plugins: update new added plugins to web"
+	print "\t   --update-proxies: update proxies to web server"
 	print "\t-v --verbose: increase verbosity level"
 	print "\t   --threads: max number of process, default cpu number"
+	print "\t   --auto-proxy: use auto proxy, make sure server exist proxies first"
 	print "\t-h: help"
 	print "[Targets]"
 	print "\t-T --target: target, can be an ip address, an url or an iprange"
@@ -59,7 +64,7 @@ def usage():
 def main():
 
 	try :
-		opts, args = getopt.getopt(sys.argv[1:], "hvlcs:t:u:T:p:",['help','verbose=','server=','token=','update-plugins=','target=','plugin=','plugin-arg=','no-gather','gather-depth=','threads=','listen','console'])
+		opts, args = getopt.getopt(sys.argv[1:], "hvlcs:t:u:T:p:",['help','verbose=','server=','token=','update-plugins=','update-proxies','target=','plugin=','plugin-arg=','no-gather','gather-depth=','threads=','listen','console'])
 	except getopt.GetoptError,e:
 		print 'getopt.GetoptError',e
 		usage()
@@ -76,6 +81,7 @@ def main():
 	_plugin_arg=None
 	_threads = None
 	_maxsize = 50
+	_update_proxy = False
 
 	for opt, arg in opts:
 		if opt in ('-h','--help'):
@@ -96,6 +102,8 @@ def main():
 				_pluginpath = arg
 			else:
 				_pluginpath = 'plugins/'
+		elif opt in ('--update-proxies'):
+			_update_proxy = True
 		elif opt in ('--threads'):
 			_threads = int(arg)
 		elif opt in ('-p','--plugin'):
@@ -120,6 +128,10 @@ def main():
 		if user.server and user.token:
 			_server = user.server
 			_token = user.token
+
+	# init global var
+	globalVar.server = _server
+	globalVar.token = _token
 
 	if _console:
 		cn = Consoler()
@@ -149,6 +161,11 @@ def main():
 			li = Listener(server=_server, token=_token, loglevel=_vv, maxsize=_maxsize)
 			li.run()
 		
+		elif _update_proxy:
+			ps = ProxyScraper()
+			ps.scrap_proxies_1()
+			ps.proxies_submit()
+
 	else:
 		usage()
 # ----------------------------------------------------------------------------------------------------

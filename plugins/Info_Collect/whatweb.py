@@ -35,6 +35,8 @@ def Audit(services):
 			retinfo = {'level':'info','content':ret['plugins']}
 			security_info(str(ret['plugins']))
 			
+			# 概率大的放在前面
+			# already test
 			# wordpress
 			if ret['plugins'].has_key('WordPress'):
 				#print services

