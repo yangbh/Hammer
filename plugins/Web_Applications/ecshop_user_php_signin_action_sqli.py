@@ -6,7 +6,7 @@ from dummy import *
 import re
 
 info = {
-	'NAME':'Ecshop user.php signin action sqli',
+	'NAME':'Ecshop user.php signin Action SQL Injection',
 	'AUTHOR':'wjk',
 	'TIME':'20150325',
 	'WEB':'',

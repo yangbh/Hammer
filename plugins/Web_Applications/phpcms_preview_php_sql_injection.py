@@ -6,11 +6,11 @@ from dummy import *
 import re
 
 info = {
-	'NAME':'phpcms_preview_php_sql_injection',
+	'NAME':'phpCMS preview.php SQL Injection',
 	'AUTHOR':'range,wjk',
 	'TIME':'20150325',
 	'WEB':'http://www.wooyun.org/bugs/wooyun-2013-022112',
-	'DESCRIPTION':'phpcms_preview_php_sql_injection'
+	'DESCRIPTION':'phpCMS preview.php sql injection'
 }
 opts = [
 	['url','http://testasp.vulnweb.com','target url'],

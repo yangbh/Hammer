@@ -5,7 +5,7 @@ import requests
 from dummy import *
 
 info = {
-	'NAME':'Mvmmall unauthentication RCE',
+	'NAME':'Mvmmall Unauthentication RCE',
 	'AUTHOR':'wjk',
 	'TIME':'20150325',
 	'WEB':'',

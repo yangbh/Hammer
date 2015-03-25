@@ -6,7 +6,7 @@ from dummy import *
 import re
 
 info = {
-	'NAME':'AppCMS backup files download',
+	'NAME':'AppCMS Backup Files Download',
 	'AUTHOR':'1c3z,wjk',
 	'TIME':'20150325',
 	'WEB':'http://www.wooyun.org/bugs/wooyun-2014-077157',

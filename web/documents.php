@@ -374,15 +374,28 @@ def Audit(services):
 if __name__=='__main__':
 	services = {'url':'http://www.leesec.com'}
 	pprint(services)</pre>
-					<h3>1. 插件信息info和插件参数opts</h3>
+					<h3>1. 插件的命名</h3>
+					<pre class="prettyprint linenums Lang-python">
+正确命名方式如下，第一个字母不能为数字，且文件名内不能有空格，可以以_下划线代替
+├── CMS53KF_file_download.py
+├── Comsenz_uctools.py
+├── DeDecms5_7_plus_recommend_php_injection.py
+├── DeDecms5_7minggan_info.py
+例如下方式都为错误
+53KF_file_download.py
+Comsenz uctools.py
+错误命名时，将导致插件不能被调用与导入
+</pre>	
+					<p>一个标准的插件信息info变量，如下：</p>
+					<h3>2. 插件信息info和插件参数opts</h3>
 					<p>一个标准的插件信息info变量，如下：</p>
 					<pre class="prettyprint linenums Lang-python">
 info = {
-	'NAME':'Robots.txt Sensitive Information',	# 插件名称，必须唯一
+	'NAME':'Robots.txt Sensitive Information',	# 插件名称，必须唯一，建议命名方式一致，首写字母大写
 	'AUTHOR':'yangbh',		# 插件作者，不能为空
-	'TIME':'20140707',		# 插件编写时间，不能为空
-	'WEB':'http://',		# 漏洞参考
-	'DESCRIPTION':'robots.txt文件扫描',		# 漏洞描述
+	'TIME':'20140707',		# 插件编写时间，不能为空，格式要保持一致：yyyymmdd
+	'WEB':'http://',		# 漏洞参考，以逗号分开
+	'DESCRIPTION':'robots.txt文件扫描',		# 插件简要描述
 	'Version':'0.1'			# 插件版本号
 }</pre>
 <p>一个标准的插件参数opts变量，如下：</p>
@@ -398,7 +411,7 @@ opts = [
 ]
 其中ports参数的值就是list类型
 在console模式下可以使用 set ports [27017,28017]重新赋值</pre>
-					<h3>2. 插件类型</h3>
+					<h3>3. 插件类型</h3>
 					<p>Hammer的插件总共分为以下七种类型，请将相应的插件放在对应的目录下。</p>
 					<pre class="prettyprint linenums Lang-python">
 Info Collect	# 信息收集类插件，目录：plugins/Info_Collect, 注意这类的插件最先运行!
@@ -410,7 +423,7 @@ Web Applications	# WEB应用类插件，目录：plugins/Web_Applications
 Weak Password	# 弱口令类插件，目录：plugins/Weak_Password
 Others		# 其它类型插件，目录：plugins/Others</pre>
 					<p>请一定注意Info_Collect类插件，这类插件最先运行，将一些信息收集类的插件放在这个目录（如会改动services全局变量的插件），其它的插件的运行顺序未知，这点会在以后优化。</p>
-					<h3>3. 全局变量&插件参数services</h3>
+					<h3>4. 全局变量&插件参数services</h3>
 					<p>services是一个全局变量，插件的参数，dict类型，内含信息收集阶段运行的信息.</p>
 					<p>键以及其含义：</p>
 					<pre class="prettyprint linenums Lang-python">
@@ -435,7 +448,7 @@ services = {
 	'issubdomain': True,	# 是否是子域名
 }</pre>
 					<p>services变量很开放，是全局变量，意味着你可以在你的插件中修改它的值，或者增加你所需要的键，但是修改的时候请慎重！插件的调用的实现方式请参考pluginLoader_class.py</p>
-					<h3>4. 插件接口函数Assign/Audit</h3>
+					<h3>5. 插件接口函数Assign/Audit</h3>
 					<p></p>
 					<pre class="prettyprint linenums Lang-python">
 # 任务分配函数Assign
@@ -459,7 +472,7 @@ def Audit(services):
 		security_note(url) 
 		# 调试输出函数logger,默认等级为
 		logger('Find %srobots.txt' % url)</pre>
-					<h3>5. 漏洞反馈接口security_info等</h3>
+					<h3>6. 漏洞反馈接口security_info等</h3>
 					<p>漏洞反馈可以通过以下四个函数实现，参数都是字符串型</p>
 					<pre class="prettyprint linenums Lang-python">
 security_note(vulninfo) 	# information level
@@ -467,15 +480,15 @@ security_info(vulninfo) 	# low level
 security_warning(vulninfo) 	# mideum level
 security_hole(vulninfo) 	# high level</pre>
 					<p>请自己参考漏洞危害酌情选择对应的接口函数。</p>
-					<h3>6. 调试输出接口logger</h3>
+					<h3>7. 调试输出接口logger</h3>
 					<pre class="prettyprint linenums Lang-python">
 logger(debuginfo) # debuginfo为string类型，输出插件运行信息，单独运行参见时为print函数，整体运行时为logging.debug函数</pre>
-					<h3>7. 添加子扫描任务接口add_scan_task</h3>
+					<h3>8. 添加子扫描任务接口add_scan_task</h3>
 					<p>除此之外还有一个添加子扫描任务模块</p>
 					<pre class="prettyprint linenums Lang-python">
 add_scan_task(target) 		# target可以为url\ip\host之一</pre>
 					<p>注意：这个函数只能作为信息收集模块内使用，即放在Infor_Collect目录下，可以参考subdomain.py插件。</p>
-					<h3>8. Hammer框架之dummy.py</h3>
+					<h3>9. Hammer框架之dummy.py</h3>
 					<p>dummy.py是仿照yascanner的，是统一导入hammer框架的一些类库，结构有些牛头马面不成样子，在每个目录都得放一个，目前暂未有好的方法解决，留待后期吧</p>
 					<pre class="prettyprint linenums Lang-python">
 #!/usr/bin/python2.7

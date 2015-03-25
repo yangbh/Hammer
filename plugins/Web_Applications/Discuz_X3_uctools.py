@@ -6,7 +6,7 @@ from dummy import *
 import re
 
 info = {
-	'NAME':'Discuz X3 uctools default password',
+	'NAME':'Discuz X3 uctools Default Password',
 	'AUTHOR':'darkkid,wjk',
 	'TIME':'20150325',
 	'WEB':'',

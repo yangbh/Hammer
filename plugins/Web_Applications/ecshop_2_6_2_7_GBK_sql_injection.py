@@ -6,7 +6,7 @@ from dummy import *
 import re
 
 info = {
-	'NAME':'Ecshop 2.6-2.7 GBK sql injection',
+	'NAME':'Ecshop 2.6-2.7 GBK SQL Injection',
 	'AUTHOR':'wjk',
 	'TIME':'20150325',
 	'WEB':'',

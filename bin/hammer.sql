@@ -20,8 +20,8 @@ SET time_zone = "+00:00";
 -- Database: `hammer`
 --
 
-CREATE DATABASE IF NOT EXISTS Hammer DEFAULT CHARACTER SET utf8;
-USE Hammer;
+-- CREATE DATABASE IF NOT EXISTS Hammer DEFAULT CHARACTER SET utf8;
+-- USE Hammer;
 
 -- --------------------------------------------------------
 

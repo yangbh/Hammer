@@ -6,7 +6,7 @@ from dummy import *
 import re
 
 info = {
-	'NAME':'Ecshop path info',
+	'NAME':'Ecshop Path Disclosure',
 	'AUTHOR':'wjk',
 	'TIME':'20150325',
 	'WEB':'',

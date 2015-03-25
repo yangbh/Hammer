@@ -6,7 +6,7 @@ from dummy import *
 import re
 
 info = {
-	'NAME':'MvmMall search.php sql injection',
+	'NAME':'MvmMall search.php SQL Injection',
 	'AUTHOR':'wjk',
 	'TIME':'20150325',
 	'WEB':'',

@@ -5,7 +5,7 @@ import requests
 from dummy import *
 
 info = {
-	'NAME':'Dedecms /plus/download.php URL redirect',
+	'NAME':'Dedecms /plus/download.php URL Redirect',
 	'AUTHOR':'Ario,yangbh',
 	'TIME':'20140811',
 	'WEB':'',

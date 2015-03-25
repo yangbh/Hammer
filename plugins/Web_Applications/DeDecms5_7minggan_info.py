@@ -5,7 +5,7 @@ import requests
 from dummy import *
 
 info = {
-	'NAME':'DeDeCms 敏感信息泄露',
+	'NAME':'DeDeCms Sensitive Information Disclosure',
 	'AUTHOR':'seay,wjk',
 	'TIME':'20150323',
 	'WEB':'',

@@ -5,7 +5,7 @@ import urllib2
 from dummy import *
 
 info = {
-	'NAME':'Kindeditor_mulu_bianli',
+	'NAME':'Kindeditor Directory Traversal',
 	'AUTHOR':'WJK,1c3z',
 	'TIME':'20150320',
 	'WEB':'http://www.wooyun.org/bugs/wooyun-2010-076974',

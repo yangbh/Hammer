@@ -6,7 +6,7 @@ from dummy import *
 import re
 
 info = {
-	'NAME':'CSCMS index php open bang sql injection',
+	'NAME':'CSCMS index.php/pen/bang SQL Injection',
 	'AUTHOR':'1c3z,wjk',
 	'TIME':'20150325',
 	'WEB':'',

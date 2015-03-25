@@ -6,7 +6,7 @@ from dummy import *
 import re
 
 info = {
-	'NAME':'53KF_file_download',
+	'NAME':'CMS53KF File Download',
 	'AUTHOR':'ko0zhi,wjk',
 	'TIME':'20150325',
 	'WEB':' http://www.wooyun.org/bugs/wooyun-2014-086882',

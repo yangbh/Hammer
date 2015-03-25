@@ -5,7 +5,7 @@ import urllib2
 from dummy import *
 
 info = {
-	'NAME':'discuz7_2faq.php injection',
+	'NAME':'Discuz 7.2 faq.php SQL Injection',
 	'AUTHOR':'seay,yangbh',
 	'TIME':'20140730',
 	'WEB':'',

@@ -5,7 +5,7 @@ import urllib2
 from dummy import *
 
 info = {
-	'NAME':'DeDecms5.7 plus recommend php injection',
+	'NAME':'DeDecms5.7 /plus/recommend.php SQL Injection',
 	'AUTHOR':'seay,wjk',
 	'TIME':'20150323',
 	'WEB':'',

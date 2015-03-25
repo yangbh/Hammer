@@ -9,7 +9,7 @@ from dummy import *
 import socket, urlparse
 
 info = {
-	'NAME':'Elasticsearch Groovy rce CVE-2015-1427',
+	'NAME':'Elasticsearch Groovy RCE CVE-2015-1427',
 	'AUTHOR':'yangbh',
 	'TIME':'20150315',
 	'WEB':'https://www.bugscan.net/#!/n/361,http://zone.wooyun.org/content/18915',
