@@ -23,6 +23,18 @@ class AutoProxyRequests(object):
 			else:
 				print 'unknow type proxy',proxy
 
+	def add_proxies(self,proxies=[]):
+		''' 添加代理接口'''
+		for proxy in self.proxies:
+			self.proxies.append(proxy)
+			if proxy.startswith('http://'):
+				self.proxies_http.append(proxy)
+			elif proxy.startswith('https://'):
+				self.proxies_https.append(proxy)
+			else:
+				print 'unknow type proxy',proxy
+
+
 	def rand_proxy(self,type='all'):
 		if type == 'all' and len(self.proxies):
 			return self.proxies[random.randint(0,len(self.proxies))]

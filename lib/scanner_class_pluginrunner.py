@@ -184,6 +184,7 @@ class PluginMultiRunner(object):
 			targets = []
 			# file type target
 			if os.path.isfile(target):
+				f= open(target)
 				for eachLine in f:
 					eachLine = eachLine.replace('\r','')
 					eachLine = eachLine.replace('\n','')

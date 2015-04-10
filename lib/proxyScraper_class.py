@@ -47,6 +47,9 @@ class ProxyScraper:
 			self.parse_document(r.content)
 
 	def parse_document(self, xml):
+		'''
+		@xml
+		'''
 		soup = BeautifulSoup(xml)
 		soup.prettify()
 
@@ -67,7 +70,10 @@ class ProxyScraper:
 			print ip,port,proxy_type,ssl,country,latency,reliability
 	
 	def getTime(self,proxyurl,basicurl='http://www.baidu.com'):
-		'''return mico seconds '''
+		'''return mico seconds 
+		@proxyurl
+		@basicurl
+		'''
 		if proxyurl.startswith('http://'):
 			proxies = {'http':proxyurl}
 		elif proxyurl.startswith('https://'):
@@ -91,6 +97,10 @@ class ProxyScraper:
 		return timeavrage
 
 	def check_proxies(self,basicurl='http://www.baidu.com',timeout=20000):
+		'''
+		@basicurl:
+		@timeout:
+		'''
 		proxies_avalible = []
 		for each_proxy in self.proxies:
 			proxy_type = 'http' if each_proxy[3] else 'https'
@@ -102,8 +112,35 @@ class ProxyScraper:
 				proxies_avalible.append((each_proxy[0],each_proxy[1],each_proxy[2],each_proxy[3],each_proxy[4],timesec,each_proxy[6]))
 		pprint(proxies_avalible)
 		return proxies_avalible
+		
+	def format_proxie(self,proxies=None,type=0):
+		'''
+		@proxies
+		@type
+		'''
+		if proxies == None:
+			proxies = self.proxies
+
+		if type == 0:
+			return proxies
+		elif type == 1:
+			str_proxies = []
+			for each_proxy in proxies:
+				str_proxy = 'http://'
+				if each_proxy[3]:
+					str_proxy = 'https://'
+				str_proxy += each_proxy[0] + each_proxy[1]
+				str_proxies.append(str_proxy)
+			return str_proxies
+		else:
+			return 'type error'
 
 	def proxies_submit(self,proxies=None,server=None,token=None):
+		'''
+		@proxies
+		@server
+		@token
+		'''
 		if server == None:
 			server = globalVar.server
 		if token == None:
@@ -123,6 +160,11 @@ class ProxyScraper:
 			print 'submit proxies failed'
 
 	def proxies_get(self,num=1000,server=None,token=None):
+		'''
+		@num
+		@server
+		@token
+		'''
 		if server == None:
 			server = globalVar.server
 		if token == None:

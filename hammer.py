@@ -3,12 +3,13 @@
 
 import sys
 import getopt
-import re
+# import re
 sys.path.append('./lib')
 # from scanner_class_mp import Scanner
 
 import globalVar
 
+from pprint import pprint
 from scanner_class_basic import Scanner
 from scanner_class_pluginrunner import PluginMultiRunner
 from listener_class import Listener
@@ -64,7 +65,7 @@ def usage():
 def main():
 
 	try :
-		opts, args = getopt.getopt(sys.argv[1:], "hvlcs:t:u:T:p:",['help','verbose=','server=','token=','update-plugins=','update-proxies','target=','plugin=','plugin-arg=','no-gather','gather-depth=','threads=','listen','console'])
+		opts, args = getopt.getopt(sys.argv[1:], "hvlcs:t:u:T:p:",['help','verbose=','server=','token=','update-plugins=','update-proxies','auto-proxy','target=','plugin=','plugin-arg=','no-gather','gather-depth=','threads=','listen','console'])
 	except getopt.GetoptError,e:
 		print 'getopt.GetoptError',e
 		usage()
@@ -82,6 +83,7 @@ def main():
 	_threads = None
 	_maxsize = 50
 	_update_proxy = False
+	_auto_proxy = False
 
 	for opt, arg in opts:
 		if opt in ('-h','--help'):
@@ -103,6 +105,8 @@ def main():
 			else:
 				_pluginpath = 'plugins/'
 		elif opt in ('--update-proxies'):
+			_update_proxy = True
+		elif opt in ('--auto-proxy'):
 			_update_proxy = True
 		elif opt in ('--threads'):
 			_threads = int(arg)
@@ -132,6 +136,13 @@ def main():
 	# init global var
 	globalVar.server = _server
 	globalVar.token = _token
+	if _auto_proxy:
+		ps = ProxyScraper()
+		ps.proxies_get(1000)
+		globalVar.proxyRequest.add_proxies(ps.format_proxie(type=1))
+
+	pprint(globalVar.proxyRequest.proxies)
+	globalVar.proxyRequest
 
 	if _console:
 		cn = Consoler()

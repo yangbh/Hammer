@@ -4,12 +4,19 @@
 import logging
 import multiprocessing
 from dummy import BASEDIR
+from autoProxyRequests_class import AutoProxyRequests
 
 #
 #	server info
 #
 server = ''
 token = ''
+
+#
+#	proxies info
+#
+
+proxyRequest = AutoProxyRequests()
 
 #
 # shared variables
