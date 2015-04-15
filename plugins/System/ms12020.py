@@ -15,8 +15,8 @@ info = {
 	'DESCRIPTION':'ms12-020 checker'
 }
 opts = [
-['ip','221.123.140.66','target ip'],
-['ports',[3389],'target ip\'s ports']
+	['ip','221.123.140.66','target ip'],
+	['ports',[3389],'target ip\'s ports']
 ]
 def Assign(services):
 	if services.has_key('ip') and services.has_key('ports'):
