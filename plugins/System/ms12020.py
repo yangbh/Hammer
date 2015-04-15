@@ -133,6 +133,9 @@ def Audit(services):
 # untest yet
 # ----------------------------------------------------------------------------------------------------
 if __name__=='__main__':
-	services = {'ip':'192.168.142.39','ports':[3389]}
+	ip='192.168.142.39'
+	if len(sys.argv) ==  2:
+		ip = sys.argv[1]
+	services = {'ip':ip,'ports':[3389]}
 	pprint(Audit(services))
 	pprint(services)
