@@ -9,15 +9,14 @@ import random
 from dummy import *
 
 info = {
-	'NAME':'MS15-034 checker',
+	'NAME':'MS15-034 RCE',
 	'AUTHOR':'yangbh',
 	'TIME':'20150415',
 	'WEB':'http://www.secpulse.com/archives/6009.html',
 	'DESCRIPTION':'MS15-034 checker'
 }
 opts = [
-['ip','221.123.140.66','target ip'],
-['ports',[3389],'target ip\'s ports']
+	['url','http://testasp.vulnweb.com','target url']
 ]
 
 def Assign(services):
