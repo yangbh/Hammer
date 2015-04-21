@@ -6,7 +6,7 @@ import logging
 import globalVar
 
 # from globalVar import mainlogger
-
+from multiprocessing import Process,Manager
 from dummy import BASEDIR
 from pprint import pprint
 
@@ -51,7 +51,6 @@ class PluginLoader(object):
 		# init sub process in globalVar
 
 		# globalVar.mainlogger.info('\tSub Scan Start:\t'+self.target)
-
 
 	def _saveRunningInfo(self,info='',isinit=False,isret=False):
 		''' '''
@@ -135,6 +134,22 @@ class PluginLoader(object):
 			# print 'Exception',e
 			globalVar.mainlogger.error('Exception:'+str(e))
 		
+
+	def _safeRunAudit(self,audit,services,timeout=60):
+		'''
+		'''
+		mg = Manager()
+		gservices = mg.dict(services)
+
+		p = Process(target=audit, args=(gservices,))
+		p.start()
+		p.join(timeout=timeout)
+		if p.is_alive():
+			p.terminate()
+			globalVar.mainlogger.warning('plugin run time out, stop it')
+			print 'plugin run time out, stop it'
+		return gservices
+
 	def getPluginInfo(self,pluginfilepath):
 		# print '>>>running plugin:',pluginfilepath
 		modulepath = pluginfilepath.replace(BASEDIR+'/plugins/','')
@@ -170,9 +185,9 @@ class PluginLoader(object):
 		return opts
 
 	def loadPlugins(self, path=None):
-		
+		'''
+		'''
 		#print '>>>loading plugins'
-		
 		if path == None:
 			path = self.path
 		ret = {}
@@ -196,13 +211,20 @@ class PluginLoader(object):
 			globalVar.mainlogger.info('[*][*][-] running plugin:'+pluginfilepath)
 			
 			# init globalVar
-			plugininfo = self.getPluginInfo(pluginfilepath)
+			plugininfo = self.getPluginInfo(pluginfilepath)			
 			pluginname = plugininfo['NAME']
 			# globalVar.plugin_now_lock.acquire()
 			globalVar.plugin_now = pluginname
 			# print id(globalVar)
 			# pprint(globalVar.plugin_now)
 			# globalVar.plugin_now_lock.release()
+
+			# set each plugin timeout value
+			pluginopts = self.getPluginOpts(pluginfilepath)
+			timeout = None
+			for eachline in pluginopts:
+				if eachline[0] == 'timeout':
+					timeout = eachline[1]
 
 			if services == None:
 				services = dict(self.services)
@@ -247,14 +269,16 @@ class PluginLoader(object):
 			if retflag and locals().has_key('Audit'):
 				ret, output = ({},'')
 				try:
-					Audit(services)
+					# Audit(services)
 					# ret,output = Audit(services)
+					services = self._safeRunAudit(Audit,services,timeout) 
+				
 				except Exception,e:
 					globalVar.mainlogger.error('Audit Function Exception:\t'+str(e))
 
 				# services info
 				if self.services != services:
-					self.services = services
+					self.services = dict(services)
 					globalVar.mainlogger.warning('services changed to:\t' + str(services))
 					self._saveRunningInfo('services changed to:\t' + str(services) + os.linesep)
 				
