@@ -194,6 +194,8 @@ def add_scan_task(target):
 	# print 'globalVar.undone_targets=',globalVar.undone_targets
 	# globalVar.target_lock.acquire()
 	if target not in globalVar.done_targets and target not in globalVar.undone_targets:
+		# http 类型的target 可能存在一站多地址
+		# 
 		globalVar.undone_targets.append(target)
 	# globalVar.target_lock.release()
 	# print 'globalVar.undone_targets=',globalVar.undone_targets

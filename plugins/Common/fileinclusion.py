@@ -156,8 +156,6 @@ def Assign(services):
 	return False
 
 def Audit(services):
-	retinfo = {}
-	output = ''
 	url = services['url']
 	hrefs = getCrawlerHrefs(url)
 	pprint(hrefs)
@@ -182,9 +180,7 @@ def Audit(services):
 					# 如果发现参数有漏洞，返回
 					ret = check_rfi(action, pairs, k, v, normal_res)
 					if ret:
-						retinfo += ret + os.linesep
 						security_warning(ret)
-						return (retinfo,output)
 			except Exception,e:
 				print 'Exception:\t',e
 
@@ -200,8 +196,7 @@ def Audit(services):
 					flags.append(w)
 			# 没有找到可以使用的签名，返回
 			if not flags:
-				return (retinfo,output)
-
+				return
 			paths = ['.', '..', '../..', '../../..', '../../../..', '../../../../..']
 			files = []
 			# 获取URL的文件名
@@ -231,12 +226,10 @@ def Audit(services):
 				# 
 				ret = check_lfi(action, pairs, k, v, set(files), suffix, flags)
 				if ret:
-					retinfo += ret + os.linesep
 					security_warning(ret)
 					return (retinfo,output)
 	except Exception,e:
 		print 'Exception:\t',e
-	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------
 #	untest yet
 # ----------------------------------------------------------------------------------------------------

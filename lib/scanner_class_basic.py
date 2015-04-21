@@ -41,8 +41,9 @@ def procFunc(pluginheader):
 			globalVar.mainlogger.info('\tSub Scan Start:\t'+pl.target)
 			pl.loadPlugins()
 			pl.runPlugins()
-			globalVar.mainlogger.debug('returnning pl')			
+			globalVar.mainlogger.debug('returnning pl.services')			
 			# return pl
+			print pl.services
 			return pl.services
 		else:
 			print 'pl is not a pluginLoader_class.PluginLoader class'
@@ -54,17 +55,17 @@ def procFunc(pluginheader):
 #
 # ----------------------------------------------------------------------------------------------------
 class NoDaemonProcess(multiprocessing.Process):
-    # make 'daemon' attribute always return False
-    def _get_daemon(self):
-        return False
-    def _set_daemon(self, value):
-        pass
-    daemon = property(_get_daemon, _set_daemon)
+	# make 'daemon' attribute always return False
+	def _get_daemon(self):
+		return False
+	def _set_daemon(self, value):
+		pass
+	daemon = property(_get_daemon, _set_daemon)
 
 # We sub-class multiprocessing.pool.Pool instead of multiprocessing.Pool
 # because the latter is only a wrapper function, not a proper class.
 class MyPool(multiprocessing.pool.Pool):
-    Process = NoDaemonProcess
+	Process = NoDaemonProcess
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
@@ -343,8 +344,9 @@ class Scanner(object):
 						print "Caught KeyboardInterrupt, terminating workers"
 
 					results = p.get()
-
+					
 					for service in results:
+						# print service
 						service['alreadyrun'] = True
 						self.services.append(service)
 

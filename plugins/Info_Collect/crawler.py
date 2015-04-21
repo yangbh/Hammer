@@ -22,7 +22,6 @@ def Assign(services):
 	return False
 
 def Audit(services):
-	output = ''
 	url = services['url']
 	args = Strategy(url=url,max_depth=5,max_count=500,concurrency=20,
 		timeout=10,time=6*3600,headers=None,cookies=None,ssl_verify=False,
@@ -40,7 +39,6 @@ def Audit(services):
 	logger('saving extensions to file')
 	crawler.saveAllFileExtensions()
 
-	return (None,output)
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------

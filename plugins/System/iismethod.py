@@ -22,12 +22,9 @@ def Assign(services):
 	return False
 
 def Audit(services):
-	retinfo = None
-	output = ''
 	# print services
 	if services.has_key('HTTPServer') and services['HTTPServer'].lower().find('iis') == -1:
 		return (retinfo,output)
-	output += 'plugin run' + os.linesep
 	url = services['url']
 	method = None
 	# first, if option method is useful
@@ -51,8 +48,6 @@ def Audit(services):
 		else:
 			security_note(method)
 
-		return (retinfo,output)
-
 	# else, option method not useful
 	try:
 		tmethod = []
@@ -62,24 +57,16 @@ def Audit(services):
 		respone = requests.delete(url)
 		if respone.status_code == 200:
 			tmethod.append('DELETE')
-
 		method = string.join(tmethod,', ')
 		if method != '':
-			retinfo = {'level':'medium','content':method}
-			output += 'HTTP Methods found:\t' + method
-			
 			if 'PUT' in method:
 				security_warning(method)
 			else:
 				security_note(method)
 
-			return (retinfo,output)
 	except Exception,e:
 		# print 'Exception:\t',e
 		logger('Exception:\t'+str(e))
-
-	return (retinfo,output)
-
 # ----------------------------------------------------------------------------------------------------
 #	untest yet
 # ----------------------------------------------------------------------------------------------------

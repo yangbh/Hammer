@@ -448,6 +448,7 @@ services = {
 	'issubdomain': True,	# 是否是子域名
 }</pre>
 					<p>services变量很开放，是全局变量，意味着你可以在你的插件中修改它的值，或者增加你所需要的键，但是修改的时候请慎重！插件的调用的实现方式请参考pluginLoader_class.py</p>
+					<p>注：services自从插件单独以进程方式运行时有个坑，请参考portscan.py插件。</p>
 					<h3>5. 插件接口函数Assign/Audit</h3>
 					<p></p>
 					<pre class="prettyprint linenums Lang-python">

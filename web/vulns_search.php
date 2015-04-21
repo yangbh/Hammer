@@ -10,7 +10,7 @@ function search_vuln($scanID){
 	else{
 		die();
 	}
-	$query = "SELECT Vuln.IP_URL,Plugin.Name,Vuln.Vuln_Info,Vuln.Level FROM Plugin,Scan,Vuln WHERE Vuln.Scan_ID=Scan.ID AND Vuln.Plugin_ID=Plugin.ID AND Scan.ID=$scanID AND Scan.User_ID='$userid' ORDER BY Vuln.IP_URL,Vuln.Level";
+	$query = "SELECT Vuln.IP_URL,Plugin.Name,Vuln.Vuln_Info,Vuln.Level FROM Plugin,Scan,Vuln WHERE Vuln.Scan_ID=Scan.ID AND Vuln.Plugin_ID=Plugin.ID AND Scan.ID=$scanID AND Scan.User_ID='$userid' ORDER BY Vuln.IP_URL,Vuln.Level,Vuln.ID";
 	// echo $query.'<br>';
 
 	$ret = array();

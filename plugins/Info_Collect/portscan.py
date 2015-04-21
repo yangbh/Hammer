@@ -17,6 +17,7 @@ info = {
 }
 opts = [
 	['ip','176.28.50.165','target ip'],
+	['timeout',300,'pulgin run max time'],
 ]
 def generateUrl(ip=None,ports=None):
 	''''''
@@ -64,22 +65,28 @@ def Audit(services):
 	ip = services['ip']
 	np = NmapScanner(ip)
 	sc = np.scanPorts()
+	# logger('sc=%s' % str(sc))
 	try:
-		services['ip'] = sc.keys()[0]
-		services['ports'] = []
-		services['port_detail'] = {}
+		ports = []
+		port_detail = {}
 		if sc[sc.keys()[0]].has_key('tcp'):
-			services['port_detail'].update(sc[sc.keys()[0]]['tcp'])
+			port_detail.update(sc[sc.keys()[0]]['tcp'])
 			for eachport in sc[sc.keys()[0]]['tcp']:
-				services['ports'].append(eachport)
+				ports.append(eachport)
 		if sc[sc.keys()[0]].has_key('udp'):
-			services['port_detail'].update(sc[sc.keys()[0]]['udp'])
+			port_detail.update(sc[sc.keys()[0]]['udp'])
 			for eachport in sc[sc.keys()[0]]['udp']:
-				services['ports'].append(eachport)
+				ports.append(eachport)
 
-		services['ports'].sort()
+		ports.sort()
+		services['ports'] = ports
+		services['port_detail'] = port_detail
+		for eachport in ports:
+			logger('eachport= %d' % eachport)
+			security_note('%d: %s' % (eachport,str(port_detail[eachport])))
+
 		logger('services:%s' %services)
-		security_note(str(services['ports']))
+		# security_note(str(services['ports']))
 		if services.has_key('nogather') and services['nogather'] == True:
 			pass
 		else:
