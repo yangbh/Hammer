@@ -125,7 +125,7 @@ EOF;
 
 				<div class="col-xs-10 col-sm-10 col-md-10" role="main" class="main">
 					<h2 id="1.4">1.4</h2>
-					<h3>1.4.1.150421_Beta</h3>
+					<h3>1.4.3.150421_Beta</h3>
 						<p><strong>改进：</strong></p>
 						<p>a).增加插件超时机制</p>
 						<p><strong>待完善：</strong></p>
@@ -135,7 +135,7 @@ EOF;
 						<p>d).引入全局config与插件config</p>
 						<p>e).重构pluginloader，一次加载所有插件，避免多次文件读取加载，类似msf</p>
 						<p>f).设置http类型的target黑名单，比如默认建站可能一站多地址，对此进行target过滤</p>
-					<h3>1.4.1.150322_Beta</h3>
+					<h3>1.4.2.150322_Beta</h3>
 						<p><strong>改进：</strong></p>
 						<p>a).-l监听模式修改成多线程模式修复</p>
 						<p>b).autoproxy自动代理雏形</p>

@@ -9,7 +9,6 @@ import sys
 import re
 import time
 import copy
-import json
 import urllib2
 import socket
 import multiprocessing
@@ -72,26 +71,23 @@ class MyPool(multiprocessing.pool.Pool):
 # ----------------------------------------------------------------------------------------------------
 class Scanner(object):
 	"""docstring for Scanner"""
-	def __init__(self,conffile):
+	def __init__(self,server=None,token=None,target=None,threads=None,loglevel='INFO',gatherdepth=1):
 		super(Scanner, self).__init__()
-		config = json.load(open(conffile,'r'))
-		pprint(config['global'])
-		self.server = config['global']['server']
-		self.token = config['global']['token']
-		self.target = config['global']['target']
-		threads = config['global']['threads']
+		self.server = server
+		self.token = token
+		self.target = target
 		if threads and type(threads) == int:
 			self.threads = threads
 		else:
 			self.threads = multiprocessing.cpu_count()
-		self.gatherdepth = config['global']['gatherdepth']
-		self.loglevel = config['global']['loglevel']
+		self.gatherdepth = gatherdepth
+		self.loglevel = loglevel
 		self.args = {'loglevel':self.loglevel,'threads':self.threads,'gatherdepth':self.gatherdepth}
 
 		# web接口
 		self.web_interface = None
-		if self.server and self.token:
-			self.web_interface = WebInterface(self.server,self.token)
+		if server and token:
+			self.web_interface = WebInterface(server,token)
 		# 任务
 		self.services = []
 		# 扫描结果
@@ -105,7 +101,7 @@ class Scanner(object):
 		# log 模块,确保赋值一次
 		if globalVar.mainlogger is None:
 			globalVar.mainlogger = logging.getLogger('main')
-			if self.loglevel == 'DEBUG':
+			if loglevel == 'DEBUG':
 				globalVar.mainlogger.setLevel(logging.DEBUG)
 			else:
 				globalVar.mainlogger.setLevel(logging.INFO)
@@ -134,9 +130,9 @@ class Scanner(object):
 			self._initLogging()
 
 		globalVar.mainlogger.info('[*] Start a new scan')
-		globalVar.mainlogger.info('\tserver\t=%s' % self.server)
-		globalVar.mainlogger.info('\ttoken\t=%s' % self.token)
-		globalVar.mainlogger.info('\ttarget\t=%s' % self.target)
+		globalVar.mainlogger.info('\tserver\t=%s' % server)
+		globalVar.mainlogger.info('\ttoken\t=%s' % token)
+		globalVar.mainlogger.info('\ttarget\t=%s' % target)
 		globalVar.mainlogger.info('\tthreads\t=%d' % self.threads)
 
 		# 注意：不能通过以下的方式进行清空

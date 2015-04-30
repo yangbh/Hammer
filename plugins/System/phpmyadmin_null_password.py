@@ -22,20 +22,13 @@ def Assign(services):
 	return False
 
 def Audit(services):
-	retinfo = None
-	output = 'plugin run' + os.linesep
-	
 	url = services['url'] + '/main.php'
 	try:
 		rqu = requests.get(url)
 		if rqu.status_code == 200 and rqu.text.find('MySQL client version') != -1 and rqu.text.find('root@localhost') != -1:
-			retinfo = {'level':'low','content':url}
-			output += 'Vula:\t' + url
 			security_warning(url)
 	except:
 		pass
-
-	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------
 #	untest yet
 # ----------------------------------------------------------------------------------------------------

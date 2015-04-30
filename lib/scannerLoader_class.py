@@ -16,9 +16,9 @@ class ScannerLoader(object):
 	def run(self):
 		try:
 			# basic mode scanner
-			if self.arg['mode'] == '1':
+			if self.arg['global']['mode'] == '1':
 				sn = Scanner(server=self.server,token=self.token,\
-					target=self.arg['target'],\
+					target=self.arg['global']['target'],\
 					threads=int(self.arg['global']['threads']) if self.arg['global']['threads']!= '' else None,\
 					loglevel=self.arg['global']['loglevel'] if self.arg['global']['loglevel']!= '' else 'INFO',\
 					gatherdepth=int(self.arg['global']['gatherdepth']) if self.arg['global']['gatherdepth']!= '' else 1)
@@ -26,9 +26,9 @@ class ScannerLoader(object):
 				sn.infoGather()
 				sn.scan()
 			# plugin mode scanner
-			elif self.arg['mode'] == '2':
+			elif self.arg['global']['mode'] == '2':
 				sn = PluginMultiRunner(server=self.server,token=self.token,\
-					target=self.arg['target'],\
+					target=self.arg['global']['target'],\
 					threads=int(self.arg['global']['threads']) if self.arg['global']['threads']!= '' else None,\
 					pluginfilepath=self.arg['pluginfilepath'],\
 					pluginargs=self.arg['pluginargs'])

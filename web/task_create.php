@@ -130,14 +130,14 @@ if (!already_login()) {
 			<div class="form" id="dlg_form">
 				<div class="form-inline">
 					<div class="btn-group">
-						<select class="form-control" name="config[mode]" id="mode">
+						<select class="form-control" name="config[global][mode]" id="mode">
 							<option value="1">Common mode</option>
 							<option value="2">Plugin mode</option>
 							<option value="3">Others</option>
 						</select>
 					</div>
 					<div class="form-group">
-						<input type="text" class="form-control" id="target" name="target" size="30" placeholder="testphp.vulnweb.com">
+						<input type="text" class="form-control" id="target" name="config[global][target]" size="30" placeholder="testphp.vulnweb.com">
 						<label class="control-label" for="target">(Exp: http://testphp.vulnweb.com/)</label>
 					</div>
 				</div>
@@ -146,25 +146,25 @@ if (!already_login()) {
 					<div class="panel-body collapse in" id="modules">
 						<div class="checkbox">
 							<label class="mcheck">
-								<input type="checkbox" id="test" name="config[runplugin][Info_Collect]" checked ="checked"> Info Collect
+								<input type="checkbox" id="test" name="config[plugins][Info_Collect][run]" checked ="checked"> Info Collect
 							</label>
 							<label class="mcheck">
-								<input type="checkbox" name="config[runplugin][Common]" checked ="checked"> Common
+								<input type="checkbox" name="config[plugins][Common][run]" checked ="checked"> Common
 							</label>
 							<label class="mcheck">
-								<input type="checkbox" name="config[runplugin][Sensitive_Info]" checked ="checked"> Sensitive Info
+								<input type="checkbox" name="config[plugins][Sensitive_Info][run]" checked ="checked"> Sensitive Info
 							</label>
 							<label class="mcheck">
-								<input type="checkbox" name="config[runplugin][System]" checked ="checked"> System
+								<input type="checkbox" name="config[plugins][System][run]" checked ="checked"> System
 							</label>
 							<label class="mcheck">
-								<input type="checkbox" name="config[runplugin][Web_Applications]" checked ="checked"> Web Applications
+								<input type="checkbox" name="config[plugins][Web_Applications][run]" checked ="checked"> Web Applications
 							</label>
 							<label class="mcheck">
-								<input type="checkbox" name="config[runplugin][Weak_Password]"> Weak Password
+								<input type="checkbox" name="config[plugins][Weak_Password][run]"> Weak Password
 							</label>
 							<label class="mcheck">
-								<input type="checkbox" name="config[runplugin][Others]"> Others
+								<input type="checkbox" name="config[plugins][Others][run]"> Others
 							</label>
 						 </div>
 					</div>
@@ -211,7 +211,7 @@ if (!already_login()) {
 								<div class="col-md-2">
 									<div class="checkbox">
 										<label class="mcheck">
-											<input type="checkbox" name="config[inforgather][issubdomain]" checked ="checked">
+											<input type="checkbox" name="config[plugins][Info_Collect][issubdomain]" checked ="checked">
 											Sub-Domain
 										</label>
 									</div>
@@ -219,7 +219,7 @@ if (!already_login()) {
 								<div class="col-md-8">
 									<div class="checkbox">
 										<label class="mcheck">
-											<input type="checkbox" name="config[inforgather][isneiborhost]" checked ="checked">
+											<input type="checkbox" name="config[plugins][Info_Collect][isneiborhost]" checked ="checked">
 											Neibor-Host
 										</label>
 									</div>
@@ -232,7 +232,7 @@ if (!already_login()) {
 								</div>
 							<div class="col-md-8">
 								<div class="input-group">
-									<input type="text" class="form-control" name="config[inforgather][crawler][useragent]" placeholder="Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; .NET CLR 2.0.50727)" >
+									<input type="text" class="form-control" name="config[plugins][Info_Collect][crawler][useragent]" placeholder="Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; .NET CLR 2.0.50727)" >
 									<span class="input-group-addon glyphicon glyphicon-search"></span>
 								</div>
 							</div>
@@ -241,13 +241,13 @@ if (!already_login()) {
 								<div class="col-md-2">
 									<div>
 										<blockquote>Exlude
-											<input type="checkbox" name="config[inforgather][crawler][isexlude]">
+											<input type="checkbox" name="config[plugins][Info_Collect][crawler][isexlude]">
 										</blockquote>
 									</div>
 								</div>
 							<div class="col-md-8">
 								<div>
-									<input type="text" class="form-control" name="config[inforgather][crawler][exlude]" placeholder="logout;log_out;/admin;/manage;/phpmyadmin">
+									<input type="text" class="form-control" name="config[plugins][Info_Collect][crawler][exlude]" placeholder="logout;log_out;/admin;/manage;/phpmyadmin">
 								</div>
 							</div>
 							</div>
@@ -257,7 +257,7 @@ if (!already_login()) {
 								</div>
 								<div class="col-md-8">
 									<div>
-										<textarea class="form-control" rows="3" name="config[inforgather][crawler][cookies]"></textarea>
+										<textarea class="form-control" rows="3" name="config[plugins][Info_Collect][crawler][cookies]"></textarea>
 									</div>
 								</div>
 							</div>

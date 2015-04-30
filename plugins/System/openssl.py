@@ -101,9 +101,6 @@ def Assign(services):
 	return False
 
 def Audit(services):
-	retinfo = None
-	output = 'plugin run' + os.linesep
-	
 	host = services['ip']
 	for port in services['ports']:
 		try:
@@ -113,19 +110,16 @@ def Audit(services):
 			while True:
 				typ, ver, pay = recvmsg(s)
 				if typ == None:
-					return(None,output)
+					return
 				# Look for server hello done message.
 				if typ == 22 and ord(pay[0]) == 0x0E:
 					break
 			s.send(hb)
 			if hit_hb(s):
-				retinfo = {'level':'high','content':host}
 				security_hole(host)
 			s.close()
 		except:
 			pass
-
-	return(retinfo,output)
 # ----------------------------------------------------------------------------------------------------
 #	untest yet
 # ----------------------------------------------------------------------------------------------------

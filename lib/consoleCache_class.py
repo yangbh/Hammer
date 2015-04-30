@@ -32,7 +32,7 @@ pldict = {'info':'Info_Collect',
 
 class Cache(object):
 	'''consoleCache=>Class::Cache'''
-	def __init__(self,dbfile=BASEDIR+'/cache/hammer.sql',conffile=BASEDIR+'/cache/hammer.yaml'):
+	def __init__(self,dbfile=BASEDIR+'/cache/hammer.sql',conffile=BASEDIR+'/conf/hammer.yaml'):
 		super(Cache, self).__init__()
 		self.db   = dbfile
 		self.conffile = conffile

@@ -25,12 +25,8 @@ def Assign(services):
 	return False
 
 def Audit(services):
-	retinfo = None
-	output = ''
-	
 	if services.has_key('HTTPServer') and services['HTTPServer'].lower().find('iis') == -1:
-		return (retinfo,output)
-	output += 'plugin run' + os.linesep
+		return
 	url = services['url'] 
 	upl = urlparse(url)
 
@@ -39,23 +35,13 @@ def Audit(services):
 	try:
 		respone = session.request('PROPFIND',url+'/.')
 		if respone.status_code == 207:
-			retinfo = {'level':'medium','content':url}
-			output += 'WebDAV service is open:\t' + url
 			security_warning(output)
-			
-			return (retinfo,output)
+		
 		elif respone.status_code == 401:
-			retinfo = {'level':'low','content':url}
-			output += 'WebDAV service is open(need password):\t' + url
 			security_warning(output)
-
-			return (retinfo,output)
 			crackflag = True
 	except Exception,e:
 		pass
-
-	return (retinfo,output)
-
 # ----------------------------------------------------------------------------------------------------
 #	
 # ----------------------------------------------------------------------------------------------------

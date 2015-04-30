@@ -12,6 +12,9 @@ from autoProxyRequests_class import AutoProxyRequests
 server = ''
 token = ''
 
+# 	global config
+config = dict()
+
 #
 #	proxies info
 #

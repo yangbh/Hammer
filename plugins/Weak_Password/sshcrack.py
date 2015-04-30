@@ -15,7 +15,10 @@ info = {
 	'TIME':'20140716',
 	'WEB':''
 }
-
+opts = [
+	['ip','176.28.50.165','target url'],
+	['timeout',3000,'pulgin run max time'],
+]
 ret = ''
 # ----------------------------------------------------------------------------------------------------
 #
@@ -120,8 +123,6 @@ def getPortByService(services,scname):
 		print 'KeyError:\t', e
 
 def Audit(services):
-	retinfo = {}
-	output = ''
 	if services.has_key('ip') and services.has_key('ports') and False:
 		# get ssh port
 		ssh_port  = 0
@@ -135,9 +136,7 @@ def Audit(services):
 			if ports and len(ports):
 				ssh_port = ports[0]
 		if ssh_port == 0:
-			return (None,output)
-
-		output += 'plugin run' + os.linesep
+			return
 
 		pwddicts = {}
 		# 
@@ -189,10 +188,7 @@ def Audit(services):
 	# 	output += 'plugin does not run' + os.linesep
 
 	if ret != '':
-		retinfo = {'level':'high','content':ret}
-		# security_hole(str(ret))
-
-	return (retinfo,output)
+		security_hole(str(ret))
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------

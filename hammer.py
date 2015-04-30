@@ -3,6 +3,7 @@
 
 import sys
 import getopt
+import json
 # import re
 sys.path.append('./lib')
 # from scanner_class_mp import Scanner
@@ -10,9 +11,11 @@ sys.path.append('./lib')
 import globalVar
 
 from pprint import pprint
+from common import genFileName_v2
 from scanner_class_basic import Scanner
 from scanner_class_pluginrunner import PluginMultiRunner
-from listener_class import Listener
+# from listener_class import Listener
+from listener_class_mp import Listener
 from consoler_class import Consoler
 from consoleUser_class import WebUser
 from plugin2sql import loadPlugins
@@ -50,6 +53,7 @@ def usage():
 	print "\t-T --target: target, can be an ip address, an url or an iprange"
 	print "\t   --no-gather: do not use information gather module"
 	print "\t   --gather-depth: information gather depth, default 1"
+	print "\t   --conf-file: config file, default conf/basic.conf"
 	print "\t-p --plugin: run a plugin type scan"
 	print "\t   --plugin-arg: plugin argus"
 	print "\t-l --listen: listen mode"
@@ -58,6 +62,7 @@ def usage():
 	print "[Examples]"
 	print "\thammer.py -s www.hammer.org -t 3r75... -u plugins/Info_Collect/"
 	print "\thammer.py -s www.hammer.org -t 3r75... -T http://testphp.vulnweb.com"
+	print "\thammer.py -s www.hammer.org -t 3r75... --conf-file cache/conf/basic.conf"
 	print "\thammer.py -s www.hammer.org -t 3r75... -p plugins/System/dnszone.py -T vulnweb.com"
 	print "\thammer.py -s www.hammer.org -t 3r75... -l"
 	sys.exit(0)
@@ -65,13 +70,13 @@ def usage():
 def main():
 
 	try :
-		opts, args = getopt.getopt(sys.argv[1:], "hvlcs:t:u:T:p:",['help','verbose=','server=','token=','update-plugins=','update-proxies','auto-proxy','target=','plugin=','plugin-arg=','no-gather','gather-depth=','threads=','listen','console'])
+		opts, args = getopt.getopt(sys.argv[1:], "hvlcs:t:u:T:p:",['help','verbose=','server=','token=','update-plugins=','update-proxies','auto-proxy','target=','plugin=','plugin-arg=','no-gather','gather-depth=','threads=','conf-file=','listen','console'])
 	except getopt.GetoptError,e:
 		print 'getopt.GetoptError',e
 		usage()
 
 	# default arguments
-	_url = None
+	_target = None
 	_server = None
 	_token = None
 	# _gather_flag = True
@@ -84,6 +89,7 @@ def main():
 	_maxsize = 50
 	_update_proxy = False
 	_auto_proxy = False
+	_conf_file = 'conf/basic.conf'
 
 	for opt, arg in opts:
 		if opt in ('-h','--help'):
@@ -108,6 +114,8 @@ def main():
 			_update_proxy = True
 		elif opt in ('--auto-proxy'):
 			_update_proxy = True
+		elif opt in ('--conf-file'):
+			_conf_file = arg
 		elif opt in ('--threads'):
 			_threads = int(arg)
 		elif opt in ('-p','--plugin'):
@@ -141,34 +149,69 @@ def main():
 		ps.proxies_get(1000)
 		globalVar.proxyRequest.add_proxies(ps.format_proxie(type=1))
 
-	pprint(globalVar.proxyRequest.proxies)
-	globalVar.proxyRequest
+	# pprint(globalVar.proxyRequest.proxies)
+	# globalVar.proxyRequest
 
+	# 控制台方式
 	if _console:
 		cn = Consoler()
 		cn.run()
+		return
 
-	elif _server and _token:
+	# 其它方式
+	if _server and _token:
 		show()
+
+		# set global config
+		config = json.load(open(_conf_file,'r'))
+		config['global']['server'] = _server
+		config['global']['token'] = _token
+		if _target:
+			config['global']['target'] = _target
+		else:
+			_target = config['global']['target']
+		if _threads:
+			config['global']['threads'] = _threads
+		else:
+			 _threads = config['global']['threads']
+		if _vv:
+			config['global']['loglevel'] = _vv
+		else:
+			_vv = config['global']['loglevel']
+		if _gather_depth:
+			config['global']['gatherdepth'] = _gather_depth
+		else:
+			_gather_depth = config['global']['gatherdepth']
+
+		globalVar.config = dict(config)	
+		conffile = 'cache/conf/' + genFileName_v2(_target) + '.json'
+		json.dump(globalVar.config,open(conffile,'w'))
+		
 		if '_pluginpath' in dir():
 			# print '_pluginpath=',_pluginpath
 			# print '_server=',_server
 			# print '_token=',_token
 			loadPlugins(_pluginpath,_server,_token)
 
-		elif '_target' in dir():
-			# plugin type scan
+		elif '_target' in dir():			
+
+
 			if '_plugin' in dir():
+				# 单插件模式
+				# plugin type scan
 				sn = PluginMultiRunner(server=_server,token=_token,target=_target,loglevel=_vv,threads=_threads,pluginfilepath=_plugin,pluginargs=_plugin_arg)
 				sn.initInfo()
 				sn.scan()
 			else:
-				sn = Scanner(server=_server,token=_token,target=_target,threads=_threads,loglevel=_vv,gatherdepth=_gather_depth)
-				sn.initInfo()
-				sn.infoGather(depth=_gather_depth)
-				sn.scan()
+				# 自收集模式
+				sn = Scanner(conffile=conffile)
+				sn.safeRun()
+				#  sn.initInfo()
+				# sn.infoGather()
+				# sn.scan()
 
 		elif _listen:
+			# 监听模式
 			li = Listener(server=_server, token=_token, loglevel=_vv, maxsize=_maxsize)
 			li.run()
 		

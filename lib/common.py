@@ -23,6 +23,7 @@ def genFilename(url):
 def genFileName_v2(target):
 	target = target.replace('://','_')
 	target = target.replace('/','')
+	target = target.replace(':','')
 	return target
 
 def addslashes(s):

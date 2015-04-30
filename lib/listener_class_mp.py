@@ -14,6 +14,7 @@ import logging
 import globalVar
 
 from pprint import pprint
+from common import genFileName_v2
 from scannerLoader_class import ScannerLoader
 from dummy import *
 
@@ -105,7 +106,12 @@ class Listener(object):
 					globalVar.logger.debug('worker: hello server, any task?')
 					globalVar.logger.debug('server: %s' % info)
 					if code and 'no task' not in info:
-						globalVar.logger.info('[*] new task %s' % data['target'])
+						target = data['global']['target']
+						
+						conffile = BASEDIR + '/cache/conf/' + genFileName_v2(target) + '.json'
+						json.dump(data,open(conffile,'w'))
+
+						globalVar.logger.info('[*] new task %s' % target)
 						globalVar.logger.debug('%s' % data)
 						if type(data)==dict:
 							self.lock.acquire()
@@ -122,18 +128,24 @@ class Listener(object):
 
 	def deal_onetask(self,arg):
 		try:
-			globalVar.logger.debug('prepare to run a task: %s' % arg['target'])
-			sl = ScannerLoader(self.server, self.token, arg)
-			sl.run()
-			globalVar.logger.info('[*] done: %s' % arg['target'])
-			# notice server this task done
-			serverurl = 'http://' + self.server +'/dist_hi.php'
-			postdata = {'token':self.token,'os':self.os,'mac':self.mac,'type':'end','taskid':arg['taskid']}
-			r = requests.post(serverurl,data=postdata)
-			# print r.status_code
-			if r.status_code == 200:
-				globalVar.logger.debug('worker: hello server, one task done, taskid: %s' % arg['taskid'])
-				globalVar.logger.debug('server: %s' % r.text)
+			# globalVar.logger.debug('prepare to run a task: %s' % arg['global']['target'])
+			# sl = ScannerLoader(self.server, self.token, arg)
+			# sl.run()
+			# globalVar.logger.info('[*] done: %s' % arg['global']['target'])
+			# # notice server this task done
+			# serverurl = 'http://' + self.server +'/dist_hi.php'
+			# postdata = {'token':self.token,'os':self.os,'mac':self.mac,'type':'end','taskid':arg['global']['taskid']}
+			# r = requests.post(serverurl,data=postdata)
+			# # print r.status_code
+			# if r.status_code == 200:
+			# 	globalVar.logger.debug('worker: hello server, one task done, taskid: %s' % arg['global']['taskid'])
+			# 	globalVar.logger.debug('server: %s' % r.text)
+			globalVar.logger.info('[*] done: %s' % arg['global']['target'])
+			target = arg['global']['target']
+			conffile = genFileName_v2(target) + '.json'
+			cmd = 'python hammer.py --conf-file cache/conf/'+conffile
+			os.system(cmd)
+
 		except Exception,e:
 			globalVar.logger.error('Exception: %s' % e)
 
@@ -156,6 +168,8 @@ class Listener(object):
 				globalVar.logger.error('Exception: %s' % e)
 
 			time.sleep(20)
+
+
 
 	def run(self):
 		'''

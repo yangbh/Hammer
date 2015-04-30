@@ -18,6 +18,7 @@ info = {
 }
 opts = [
 	['host','kangbtall.com','target host'],
+	['timeout',600,'pulgin run max time'],
 ]
 
 def generateUrl(hosts=[]):

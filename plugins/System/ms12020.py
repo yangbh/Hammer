@@ -34,10 +34,6 @@ def make_rdp(type, flags, data):
 	return pack("<BBH", type, flags, 4+len(data)) + data
  
 def Audit(services):
-	retinfo = None
-	output = ''
-	output = 'plugin run' + os.linesep
-
 	for port in services['ports']:
 		sk = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		sk.settimeout(10)
@@ -121,14 +117,11 @@ def Audit(services):
 		sk.send(make_tpkt(x224_2 + "\x38" + pack("!HH", user1, user2+1001)))
 		data = sk.recv(8192)
 		if data[7:9] == "\x3e\x00":
-			retinfo = {'level':'high','content':services['ip']}
 			security_hole(services['ip'])
-			output = 'vuln ms12-020'
 		else:
 			print "patched"
 		 
 		sk.close()
-		return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------
 # untest yet
 # ----------------------------------------------------------------------------------------------------

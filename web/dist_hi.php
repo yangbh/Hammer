@@ -120,8 +120,8 @@ if ($type=='start') {
 				// echo $sql.'<br>';
 				mysql_query($sql);
 				
-				$ret['data']['taskid'] = $row[0];
-				$ret['data']['target'] = $row[1];
+				// $ret['data']['global']['taskid'] = $row[0];
+				// $ret['data']['global']['target'] = $row[1];
 				$arg = json_decode($row[2]);
 				foreach ($arg as $key => $value){
 					$ret['data'][$key] = $value;

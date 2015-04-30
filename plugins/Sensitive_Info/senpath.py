@@ -19,6 +19,10 @@ info = {
 	'WEB':'',
 	'DESCRIPTION':'Sensitive file or directory such as: /admin, /conf, /backup /db'
 }
+opts = [
+	['url','http://testasp.vulnweb.com','target url'],
+	['timeout',3000,'pulgin run max time'],
+]
 
 ret = ''
 # ----------------------------------------------------------------------------------------------------

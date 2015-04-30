@@ -17,6 +17,7 @@ info = {
 }
 opts = [
 	['url','http://www.sel.zju.edu.cn','target url'],
+	['timeout',300,'pulgin run max time'],
 ]
 
 def Assign(services):

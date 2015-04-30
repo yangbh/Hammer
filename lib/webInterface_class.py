@@ -12,10 +12,7 @@ class WebInterface(object):
 	def __init__(self,server,token):
 		super(WebInterface, self).__init__()
 		self.server = server
-		if token  and type(token) == str:
-			self.token = token
-		else:
-			raise SystemExit,  "invalid token for class WebInterface"
+		self.token = token
 		self.startTime = 0
 		self.endTime = 0
 		self.id = None

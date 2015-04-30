@@ -18,6 +18,10 @@ info = {
 	'WEB':'',
 	'DESCRIPTION':'Tries to find sensitive compressd files. such as .zip、.rar、.gz、.tar.gz、.gz'
 }
+opts = [
+	['url','http://testasp.vulnweb.com','target url'],
+	['timeout',3000,'pulgin run max time'],
+]
 
 ret = ''
 # ----------------------------------------------------------------------------------------------------

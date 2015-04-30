@@ -28,10 +28,11 @@ function add_task($target,$arguments){
 	}
 }
 
-$method = check_sql(trim($_REQUEST['method']));
-$target = check_sql(trim($_REQUEST['target']));
+// $method = check_sql(trim($_REQUEST['method']));
+// $target = check_sql(trim($_REQUEST['target']));
 // var_dump($_REQUEST);
 $arguments = $_REQUEST['config'];
+$target = check_sql(trim($arguments['global']['target']));
 // var_dump($arguments);
 if ($target and $target!='') {
 	$ret = add_task($target,$arguments);

@@ -20,6 +20,7 @@ info = {
 }
 opts = [
 	['host','cau.edu.cn','target host'],
+	['timeout',300,'pulgin run max time'],
 ]
 
 def get_ns_records(adomain, aserver=None):

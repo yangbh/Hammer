@@ -13,7 +13,7 @@ from consoleColor_class import *
 
 class WebUser(object):
 	"""docstring for WebUser"""
-	def __init__(self,conffile=BASEDIR+'/cache/hammer.yaml'):
+	def __init__(self,conffile=BASEDIR+'/conf/hammer.yaml'):
 		super(WebUser, self).__init__()
 		self.conffile 	= conffile
 		self.server = None
@@ -23,6 +23,29 @@ class WebUser(object):
 		self.taskid = None
 
 		self.loadInfo()
+
+		if self.checklogin:
+			color.cprint("[*] Login success",GREEN)
+		else:
+			color.cprint("[*] Login failed",RED)
+			
+
+	def checklogin(self,server,token):
+		'''检测server&token'''
+		try:
+			server = server if server else self.server
+			token = token if token else self.token
+			serverurl = 'http://' + server + '/login.php'
+			postdata = {'token':token}
+
+			r = requests.post(serverurl,data=postdata)
+			# print r.status_code
+			if r.url.endswith('index.php'):
+				return True
+			return False
+
+		except Exception,e:
+			color.cprint("[!] Err:%s"%e,RED)
 
 	def loadInfo(self):
 		'''从配置文件加载用户信息，若配置文件内信息不全则提示'''
