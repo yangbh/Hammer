@@ -58,19 +58,20 @@ def usage():
 	print "\t   --plugin-arg: plugin argus"
 	print "\t-l --listen: listen mode"
 	print "\t   --max-size: scan pool max size, default 50"
-	print "\t-c --console: console mode"
+	print "\t   --console: console mode"
 	print "[Examples]"
 	print "\thammer.py -s www.hammer.org -t 3r75... -u plugins/Info_Collect/"
 	print "\thammer.py -s www.hammer.org -t 3r75... -T http://testphp.vulnweb.com"
 	print "\thammer.py -s www.hammer.org -t 3r75... --conf-file cache/conf/basic.conf"
 	print "\thammer.py -s www.hammer.org -t 3r75... -p plugins/System/dnszone.py -T vulnweb.com"
 	print "\thammer.py -s www.hammer.org -t 3r75... -l"
+	print "\thammer.py -s www.hammer.org -t 3r75... --console"
 	sys.exit(0)
 
 def main():
 
 	try :
-		opts, args = getopt.getopt(sys.argv[1:], "hvlcs:t:u:T:p:",['help','verbose=','server=','token=','update-plugins=','update-proxies','auto-proxy','target=','plugin=','plugin-arg=','no-gather','gather-depth=','threads=','conf-file=','listen','console'])
+		opts, args = getopt.getopt(sys.argv[1:], "hvls:t:u:T:p:",['help','verbose=','server=','token=','update-plugins=','update-proxies','auto-proxy','target=','plugin=','plugin-arg=','no-gather','gather-depth=','threads=','conf-file=','listen','console'])
 	except getopt.GetoptError,e:
 		print 'getopt.GetoptError',e
 		usage()
@@ -154,6 +155,7 @@ def main():
 
 	# 控制台方式
 	if _console:
+		# print 'running console'
 		cn = Consoler()
 		cn.run()
 		return
@@ -162,41 +164,52 @@ def main():
 	if _server and _token:
 		show()
 
-		# set global config
-		config = json.load(open(_conf_file,'r'))
-		config['global']['server'] = _server
-		config['global']['token'] = _token
-		if _target:
-			config['global']['target'] = _target
-		else:
-			_target = config['global']['target']
-		if _threads:
-			config['global']['threads'] = _threads
-		else:
-			 _threads = config['global']['threads']
-		if _vv:
-			config['global']['loglevel'] = _vv
-		else:
-			_vv = config['global']['loglevel']
-		if _gather_depth:
-			config['global']['gatherdepth'] = _gather_depth
-		else:
-			_gather_depth = config['global']['gatherdepth']
+		if _listen:
+			# 监听模式
+			li = Listener(server=_server, token=_token, loglevel=_vv, maxsize=_maxsize)
+			li.run()
+			return
 
-		globalVar.config = dict(config)	
-		conffile = 'cache/conf/' + genFileName_v2(_target) + '.json'
-		json.dump(globalVar.config,open(conffile,'w'))
+		elif _update_proxy:
+			ps = ProxyScraper()
+			ps.scrap_proxies_1()
+			ps.proxies_submit()
+			return
 		
-		if '_pluginpath' in dir():
+		elif '_pluginpath' in dir() and _pluginpath:
 			# print '_pluginpath=',_pluginpath
 			# print '_server=',_server
 			# print '_token=',_token
 			loadPlugins(_pluginpath,_server,_token)
 
-		elif '_target' in dir():			
+		elif '_target' in dir() and _target:			
+			# set global config
+			config = json.load(open(_conf_file,'r'))
+			config['global']['server'] = _server
+			config['global']['token'] = _token
+			if _target:
+				config['global']['target'] = _target
+			else:
+				_target = config['global']['target']
+			if _threads:
+				config['global']['threads'] = _threads
+			else:
+				 _threads = config['global']['threads']
+			if _vv:
+				config['global']['loglevel'] = _vv
+			else:
+				_vv = config['global']['loglevel']
+			if _gather_depth:
+				config['global']['gatherdepth'] = _gather_depth
+			else:
+				_gather_depth = config['global']['gatherdepth']
 
+			globalVar.config = dict(config)	
+			conffile = 'cache/conf/' + genFileName_v2(_target) + '.json'
+			json.dump(globalVar.config,open(conffile,'w'))
+		
 
-			if '_plugin' in dir():
+			if '_plugin' in dir() and _plugin:
 				# 单插件模式
 				# plugin type scan
 				sn = PluginMultiRunner(server=_server,token=_token,target=_target,loglevel=_vv,threads=_threads,pluginfilepath=_plugin,pluginargs=_plugin_arg)
@@ -209,16 +222,6 @@ def main():
 				#  sn.initInfo()
 				# sn.infoGather()
 				# sn.scan()
-
-		elif _listen:
-			# 监听模式
-			li = Listener(server=_server, token=_token, loglevel=_vv, maxsize=_maxsize)
-			li.run()
-		
-		elif _update_proxy:
-			ps = ProxyScraper()
-			ps.scrap_proxies_1()
-			ps.proxies_submit()
 
 	else:
 		usage()

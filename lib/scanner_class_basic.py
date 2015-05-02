@@ -79,13 +79,11 @@ class Scanner(object):
 		self.server = config['global']['server']
 		self.token = config['global']['token']
 		self.target = config['global']['target']
-		threads = config['global']['threads']
-		if threads and type(threads) == int:
-			self.threads = threads
-		else:
-			self.threads = multiprocessing.cpu_count()
-		self.gatherdepth = config['global']['gatherdepth']
-		self.loglevel = config['global']['loglevel']
+		self.threads = int(config['global']['threads']) if config['global']['threads']!= '' \
+														and type(config['global']['threads']) == int \
+													else multiprocessing.cpu_count()
+		self.gatherdepth = int(config['global']['gatherdepth']) if config['global']['threads']!= '' else 0
+		self.loglevel = config['global']['loglevel'] if config['global']['threads'] == '' else 'INFO'
 		self.args = {'loglevel':self.loglevel,'threads':self.threads,'gatherdepth':self.gatherdepth}
 
 		# web接口

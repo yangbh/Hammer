@@ -11,11 +11,12 @@ import threading
 import multiprocessing
 import logging
 
-import globalVar
+import globalTaskVar
 
-from pprint import pprint
+from pprint import pprint,pformat
 from common import genFileName_v2
 from scannerLoader_class import ScannerLoader
+from scanner_class_basic import Scanner
 from dummy import *
 
 def get_mac_address():
@@ -38,15 +39,15 @@ class Listener(object):
 
 		self.loghandler = []
 		# log 模块,确保赋值一次
-		if globalVar.logger is None:
-			globalVar.logger = logging.getLogger('root')
+		if globalTaskVar.logger is None:
+			globalTaskVar.logger = logging.getLogger('root')
 			if loglevel == 'DEBUG':
-				globalVar.logger.setLevel(logging.DEBUG)
+				globalTaskVar.logger.setLevel(logging.DEBUG)
 			else:
-				globalVar.logger.setLevel(logging.INFO)
+				globalTaskVar.logger.setLevel(logging.INFO)
 
 			#	logging handler
-			formatter = logging.Formatter('[%(asctime)s] - [%(process)d] - [%(levelname)s] - %(message)s')  
+			formatter = logging.Formatter('[%(asctime)s] - [%(process)d:%(name)s] - [%(levelname)s] - %(message)s')  
 			# 创建一个handler，用于写入日志文件 
 			filepath = BASEDIR+'/output/listen.log'
 			if os.path.isfile(filepath):
@@ -68,22 +69,22 @@ class Listener(object):
 
 			self._initLogging()
 
-		globalVar.logger.info('[*] Start a new listener')
-		globalVar.logger.info('\tserver\t=%s' % server)
-		globalVar.logger.info('\ttoken\t=%s' % token)
-		globalVar.logger.info('\tloglevel=%s' % loglevel)
+		globalTaskVar.logger.info('[*] Start a new listener')
+		globalTaskVar.logger.info('\tserver\t=%s' % server)
+		globalTaskVar.logger.info('\ttoken\t=%s' % token)
+		globalTaskVar.logger.info('\tloglevel=%s' % loglevel)
 
 	def _initLogging(self):
-		# globalVar.logger.info('before test')
+		# globalTaskVar.logger.info('before test')
 		for handler in self.loghandler:
-			globalVar.logger.addHandler(handler)
-		# globalVar.logger.info('after test')
+			globalTaskVar.logger.addHandler(handler)
+		# globalTaskVar.logger.info('after test')
 	
 	def _removeLogging(self):
-		# globalVar.logger.info('before test')
+		# globalTaskVar.logger.info('before test')
 		for handler in self.loghandler:
-			globalVar.logger.removeHandler(handler)
-		# globalVar.logger.info('after test')
+			globalTaskVar.logger.removeHandler(handler)
+		# globalTaskVar.logger.info('after test')
 
 	def listen_task(self):
 		'''
@@ -103,51 +104,62 @@ class Listener(object):
 					code = ret['code']
 					info = ret['info']
 					data = ret['data']
-					globalVar.logger.debug('worker: hello server, any task?')
-					globalVar.logger.debug('server: %s' % info)
+					globalTaskVar.logger.debug('worker: hello server, any task?')
+					globalTaskVar.logger.debug('server: %s' % info)
+					# 添加一个任务
 					if code and 'no task' not in info:
+						pprint(data)
+						data['global']['server'] = self.server
+						data['global']['token']	= self.token
 						target = data['global']['target']
 						
 						conffile = BASEDIR + '/cache/conf/' + genFileName_v2(target) + '.json'
 						json.dump(data,open(conffile,'w'))
 
-						globalVar.logger.info('[*] new task %s' % target)
-						globalVar.logger.debug('%s' % data)
+						globalTaskVar.logger.info('[*] new task %s' % target)
+						globalTaskVar.logger.info('%s' % pformat(data))
 						if type(data)==dict:
 							self.lock.acquire()
 							self.tasks.append(data)
 							self.lock.release()
 
+					# 终止一个任务
+
 				else:
-					globalVar.logger.error('return error, please check token and server')
+					globalTaskVar.logger.error('return error, please check token and server')
 				pass
 			except requests.HTTPError,e:
-				globalVar.logger.error('requests.HTTPError %s' %e)
+				globalTaskVar.logger.error('requests.HTTPError %s' %e)
 
 			time.sleep(10)
 
-	def deal_onetask(self,arg):
+	def deal_onetask(self,conffile):
 		try:
-			# globalVar.logger.debug('prepare to run a task: %s' % arg['global']['target'])
+			arg = json.load(open(conffile,'r'))
+			globalTaskVar.logger.debug('prepare to run a task: %s' % arg['global']['target'])
+			sn = Scanner(conffile)
+			sn.run()
 			# sl = ScannerLoader(self.server, self.token, arg)
 			# sl.run()
-			# globalVar.logger.info('[*] done: %s' % arg['global']['target'])
-			# # notice server this task done
-			# serverurl = 'http://' + self.server +'/dist_hi.php'
-			# postdata = {'token':self.token,'os':self.os,'mac':self.mac,'type':'end','taskid':arg['global']['taskid']}
-			# r = requests.post(serverurl,data=postdata)
-			# # print r.status_code
-			# if r.status_code == 200:
-			# 	globalVar.logger.debug('worker: hello server, one task done, taskid: %s' % arg['global']['taskid'])
-			# 	globalVar.logger.debug('server: %s' % r.text)
-			globalVar.logger.info('[*] done: %s' % arg['global']['target'])
-			target = arg['global']['target']
-			conffile = genFileName_v2(target) + '.json'
-			cmd = 'python hammer.py --conf-file cache/conf/'+conffile
-			os.system(cmd)
+			
+			globalTaskVar.logger.info('[*] done: %s' % arg['global']['target'])
+			# notice server this task done
+			serverurl = 'http://' + self.server +'/dist_hi.php'
+			postdata = {'token':self.token,'os':self.os,'mac':self.mac,'type':'end','taskid':arg['taskid']}
+			r = requests.post(serverurl,data=postdata)
+			# print r.status_code
+			if r.status_code == 200:
+				globalTaskVar.logger.debug('worker: hello server, one task done, taskid: %s' % arg['taskid'])
+				globalTaskVar.logger.debug('server: %s' % r.text)
+
+			# globalTaskVar.logger.info('[*] done: %s' % arg['global']['target'])
+			# target = arg['global']['target']
+			# conffile = genFileName_v2(target) + '.json'
+			# cmd = 'python hammer.py --conf-file cache/conf/'+conffile
+			# os.system(cmd)
 
 		except Exception,e:
-			globalVar.logger.error('Exception: %s' % e)
+			globalTaskVar.logger.error('Exception: %s' % e)
 
 	def deal_task(self):
 		'''
@@ -160,16 +172,16 @@ class Listener(object):
 					arg = self.tasks[0]
 					del(self.tasks[0])
 					self.lock.release()
+					target = arg['global']['target']		
+					conffile = BASEDIR + '/cache/conf/' + genFileName_v2(target) + '.json'
 					
-					p = multiprocessing.Process(target=self.deal_onetask,args=(arg,))
+					p = multiprocessing.Process(target=self.deal_onetask,args=(conffile,))
 					p.start()
 
 			except Exception,e:
-				globalVar.logger.error('Exception: %s' % e)
+				globalTaskVar.logger.error('Exception: %s' % e)
 
 			time.sleep(20)
-
-
 
 	def run(self):
 		'''
@@ -183,9 +195,9 @@ class Listener(object):
 		dealth.start()
 		try:
 			while True:
-				time.sleep(10)
+				time.sleep(5)
 		except KeyboardInterrupt,e:
-			globalVar.logger.debug("Caught KeyboardInterrupt, terminating lisent and deal threads")
+			globalTaskVar.logger.debug("Caught KeyboardInterrupt, terminating lisent and deal threads")
 			self.flag = False
 
 # ----------------------------------------------------------------------------------------------------

@@ -6,50 +6,57 @@ import multiprocessing
 from dummy import BASEDIR
 from autoProxyRequests_class import AutoProxyRequests
 
+
+#						主进程
+#		ListenTask子进程			TaskDeal子进程
+#										SubTarget子进程
+#												SubRunPlugin子进程								
+
 #
 #	server info
-#
+#	主进程中初始化之后，不需要修改
 server = ''
 token = ''
 
-# 	global config
-config = dict()
-
 #
 #	proxies info
-#
-
+#	主进程中初始化之后，不再修改
 proxyRequest = AutoProxyRequests()
 
 #
-# shared variables
-#
+# 	shared variables
+# 	共享变量
 manager = multiprocessing.Manager()
+
+# 	global config
+#	主进程改一次之后，在子进程中不需要修改，因此不用进程间共享
+config = dict()
+
 # 	tasks
+# 	需要在ListenTask子进程\TaskDeal子进程间共享
 done_tasks = manager.list()
 undone_tasks = manager.list()
+
 #	targets
+#	需要在TaskDeal子进程中初始化
+#	在每个SubTarget子进程中共享
 target_lock = multiprocessing.Lock()
-# done_targets = []
-# undone_targets =[]
 done_targets = manager.list()
 undone_targets = manager.list()
 willdone_targets = manager.list()
 
-#
 #	main scan task
 #
-# scan_task_dict just like
-# {'pid': 3280,
-# 'scanID': None,
-# 'subtargets': {},
-# 'target': 'http://www.leesec.com/',
-# 'server': 'www.hammer.org'}
+	# scan_task_dict just like
+	# {'pid': 3280,
+	# 'scanID': None,
+	# 'subtargets': {},
+	# 'target': 'http://www.leesec.com/',
+	# 'server': 'www.hammer.org'}
 scan_task_dict = {}
 scan_task_dict_lock = multiprocessing.Lock()
 depth_now = 0
 
-#
 #	for each sub scan task
 #
 # plugin_now just like

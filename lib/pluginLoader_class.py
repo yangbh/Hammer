@@ -146,8 +146,8 @@ class PluginLoader(object):
 		p.join(timeout=timeout)
 		if p.is_alive():
 			p.terminate()
-			globalVar.mainlogger.warning('plugin run time out, stop it')
-			print 'plugin run time out, stop it'
+			globalVar.mainlogger.warning('%s plugin run time out, stop it', globalVar.plugin_now)
+			# print 'plugin run time out, stop it'
 		return gservices
 
 	def getPluginInfo(self,pluginfilepath):

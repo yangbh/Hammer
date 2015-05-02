@@ -17,7 +17,7 @@ info = {
 }
 opts = [
 	['ip','176.28.50.165','target ip'],
-	['timeout',300,'pulgin run max time'],
+	['timeout',600,'pulgin run max time'],
 ]
 def generateUrl(ip=None,ports=None):
 	''''''

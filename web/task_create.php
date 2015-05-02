@@ -142,6 +142,129 @@ if (!already_login()) {
 					</div>
 				</div>
 				<div class="panel panel-default form-group">
+					<div class="panel-heading"><strong>Dispachers</strong></div>
+					<div class="panel-body collapse in" id="modules">
+						<div class="content">
+							<div style="margin-top:5px">
+								<p><div id="dists">
+									No dispatchers created yet !<a target="_blank" href="http://www.python.org/">Depends on Python 2.7.*</a><br>
+								</div></p>
+								<p>Just paste following command at terminal prompt. <i>-m</i> options specifies maximum number of concurrent tasks.<br></p>
+								<code>python hammer.py -s <?php echo $_SERVER['HTTP_HOST'].str_replace('/task_create.php','',$_SERVER['PHP_SELF']);?> -t <?php $a=get_userinfo();echo $a['Token'];?> -l</code>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default form-group">
+					<div class="panel-heading" data-toggle="collapse" data-target="#options" aria-expanded="true" aria-controls="options"><strong>Global Options</strong></div>
+					<div class="panel-body collapse in" id="options">
+						<div class="content" style="overflow: hidden; display: block;">
+							<div class="row">
+								<div class="col-md-2">
+									<blockquote>Global</blockquote>
+								</div>
+								<div class="col-md-10 form-inline">
+									<div>
+										Threads
+										<input type="text" class="form-control" name="config[global][threads]" size="4" value=4>
+										Timeout
+										<input type="text" class="form-control" name="config[global][timeout]" size="4" value=10>
+										Loglevel
+										<div class="btn-group">
+											<select class="form-control" name="config[global][timeout]">
+												<option value="INFO">INFO</option>
+												<option value="DEBUG">DEBUG</option>
+											</select>
+										</div>
+										<!-- <input type="text" class="form-control" name="config[global][loglevel]" size="4" value="INFO"> -->
+										GatherDepth
+										<input type="text" class="form-control" name="config[global][gatherdepth]" size="4" value=1>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-2">
+									<blockquote>Proxies</blockquote>
+								</div>
+								<div class="col-md-8">
+									<div class="checkbox">
+										<label class="mcheck">
+											<input type="checkbox" name="config[global][autoproxy]" checked ="checked">
+											AutoProxies
+										</label>
+									</div>
+								</div>
+							</div>
+							<div class="row form-line">
+								<div class="col-md-2">
+									<blockquote>User Agent</blockquote>
+								</div>
+								<div class="col-md-2">
+									<div class="checkbox">
+										<label class="mcheck">
+											<input type="checkbox" name="config[global][autoagent]" checked ="checked">
+											AutoAgents
+										</label>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="input-group">
+										<input type="text" class="form-control" name="config[global][useragent]" placeholder="Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; .NET CLR 2.0.50727)" >
+										<span class="input-group-addon glyphicon glyphicon-search"></span>
+									</div>
+								</div>
+							</div>
+							<!-- <div class="row">
+								<div class="col-md-2">
+									<blockquote>Crawler</blockquote>
+								</div>
+								<div class="col-md-2">
+									<div class="checkbox">
+										<label class="mcheck">
+											<input type="checkbox" name="config[plugins][Info_Collect][issubdomain]" checked ="checked">
+											Sub-Domain
+										</label>
+									</div>
+								</div>
+								<div class="col-md-8">
+									<div class="checkbox">
+										<label class="mcheck">
+											<input type="checkbox" name="config[plugins][Info_Collect][isneiborhost]" checked ="checked">
+											Neibor-Host
+										</label>
+									</div>
+								</div>
+							</div>
+
+
+							<div class="row">
+								<div class="col-md-2">
+									<div>
+										<blockquote>Exlude
+											<input type="checkbox" name="config[plugins][Info_Collect][crawler][isexlude]">
+										</blockquote>
+									</div>
+								</div>
+							<div class="col-md-8">
+								<div>
+									<input type="text" class="form-control" name="config[plugins][Info_Collect][crawler][exlude]" placeholder="logout;log_out;/admin;/manage;/phpmyadmin">
+								</div>
+							</div>
+							</div>
+							<div class="row">
+								<div class="col-md-2">
+									<blockquote>Cookies</blockquote>
+								</div>
+								<div class="col-md-8">
+									<div>
+										<textarea class="form-control" rows="3" name="config[plugins][Info_Collect][crawler][cookies]"></textarea>
+									</div>
+								</div>
+							</div> -->
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default form-group">
 					<div class="panel-heading"><strong>Modules</strong></div>
 					<div class="panel-body collapse in" id="modules">
 						<div class="checkbox">
@@ -167,101 +290,6 @@ if (!already_login()) {
 								<input type="checkbox" name="config[plugins][Others][run]"> Others
 							</label>
 						 </div>
-					</div>
-				</div>
-				<div class="panel panel-default form-group">
-					<div class="panel-heading"><strong>Dispachers</strong></div>
-					<div class="panel-body collapse in" id="modules">
-						<div class="content">
-							<div style="margin-top:5px">
-								<p><div id="dists">
-									No dispatchers created yet !<a target="_blank" href="http://www.python.org/">Depends on Python 2.7.*</a><br>
-								</div></p>
-								<p>Just paste following command at terminal prompt. <i>-m</i> options specifies maximum number of concurrent tasks.<br></p>
-								<code>python hammer.py -s <?php echo $_SERVER['HTTP_HOST'].str_replace('/task_create.php','',$_SERVER['PHP_SELF']);?> -t <?php $a=get_userinfo();echo $a['Token'];?> -l</code>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="panel panel-default form-group">
-					<div class="panel-heading" data-toggle="collapse" data-target="#options" aria-expanded="true" aria-controls="options"><strong>Global Options</strong></div>
-					<div class="panel-body collapse in" id="options">
-						<div class="content" style="overflow: hidden; display: block;">
-							<div class="row">
-								<div class="col-md-2">
-									<blockquote>Global</blockquote>
-								</div>
-								<div class="col-md-10 form-inline">
-									<div>
-										Threads
-										<input type="text" class="form-control" name="config[global][threads]" placeholder="4" size="4">
-										Timeout
-										<input type="text" class="form-control" name="config[global][timeout]" placeholder="10" size="4">
-										Loglevel
-										<input type="text" class="form-control" name="config[global][loglevel]" placeholder="INFO" size="4">
-										GatherDepth
-										<input type="text" class="form-control" name="config[global][gatherdepth]" placeholder="1" size="4">
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-2">
-									<blockquote>Crawler</blockquote>
-								</div>
-								<div class="col-md-2">
-									<div class="checkbox">
-										<label class="mcheck">
-											<input type="checkbox" name="config[plugins][Info_Collect][issubdomain]" checked ="checked">
-											Sub-Domain
-										</label>
-									</div>
-								</div>
-								<div class="col-md-8">
-									<div class="checkbox">
-										<label class="mcheck">
-											<input type="checkbox" name="config[plugins][Info_Collect][isneiborhost]" checked ="checked">
-											Neibor-Host
-										</label>
-									</div>
-								</div>
-							</div>
-
-							<div class="row form-line">
-								<div class="col-md-2">
-									<blockquote>User Agent</blockquote>
-								</div>
-							<div class="col-md-8">
-								<div class="input-group">
-									<input type="text" class="form-control" name="config[plugins][Info_Collect][crawler][useragent]" placeholder="Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; .NET CLR 2.0.50727)" >
-									<span class="input-group-addon glyphicon glyphicon-search"></span>
-								</div>
-							</div>
-							</div>
-							<div class="row">
-								<div class="col-md-2">
-									<div>
-										<blockquote>Exlude
-											<input type="checkbox" name="config[plugins][Info_Collect][crawler][isexlude]">
-										</blockquote>
-									</div>
-								</div>
-							<div class="col-md-8">
-								<div>
-									<input type="text" class="form-control" name="config[plugins][Info_Collect][crawler][exlude]" placeholder="logout;log_out;/admin;/manage;/phpmyadmin">
-								</div>
-							</div>
-							</div>
-							<div class="row">
-								<div class="col-md-2">
-									<blockquote>Cookies</blockquote>
-								</div>
-								<div class="col-md-8">
-									<div>
-										<textarea class="form-control" rows="3" name="config[plugins][Info_Collect][crawler][cookies]"></textarea>
-									</div>
-								</div>
-							</div>
-						</div>
 					</div>
 				</div>
 				<!-- <div class="panel panel-default">
