@@ -212,55 +212,61 @@ class Scanner(object):
 			if target==None:
 				target = self.target
 			targets = []
-			if target:
-				# ip range type
-				m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$',target)
-				if m:
-					ipnet = list(netaddr.IPNetwork(target))
-					for eachip in ipnet:
-						targets.append(eachip.format())
-						
-					# ipnet = list(ipaddress.ip_network(unicode(target)).hosts())
-					# for eachipad in ipnet:
-					# 	targets.append(eachipad.compressed)
-
-				else:
-					# one ip
-					m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$',target)
+			for each_target in target.split('\n'):
+				if each_target:
+					m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$',each_target)
 					if m:
-						targets.append(target)
+						ipnet = list(netaddr.IPNetwork(each_target))
+						for eachip in ipnet:
+							targets.append(eachip.format())
+					elif re.match('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$',each_target)	\
+						or re.match('(http[s]?)://([^:^/]+):?([^/]*)/?',each_target)	\
+						or re.match('(?i)^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$',each_target):
+						targets.append(each_target)
+			# if target:
+			# 	# ip range type
+			# 	m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$',target)
+			# 	if m:
+			# 		ipnet = list(netaddr.IPNetwork(target))
+			# 		for eachip in ipnet:
+			# 			targets.append(eachip.format())
+			# 	else:
+			# 		# one ip
+			# 		m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$',target)
+			# 		if m:
+			# 			targets.append(target)
 
-					else:
-						# url type
-						m = re.match('(http[s]?)://([^:^/]+):?([^/]*)/?',target)
-						if m:
-							http_type = m.group(1)
-							# print m.group(2)
-							n = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(\/\d{1,2})?$',m.group(2))
-							# ip
-							if n:
-								# print 'is an ip type url'
-								ip = m.group(2)
-								if target[-1] == '/':
-									target = target[:-1]
-								targets.append(ip)
-								targets.append(target)
-							else:
-								host = m.group(2)
-								ports = m.group(3)
-								# print host
-								ip = socket.gethostbyname(host)
-								domain = GetFirstLevelDomain(host)
-								# print 'ip=',ip
-								if target[-1] == '/':
-									target = target[:-1]
-								targets.append(ip)
-								targets.append(target)
-								targets.append(domain)
-						else:
-							# host type
-							domain = GetFirstLevelDomain(target)
-							targets.append(domain)
+			# 		else:
+			# 			# url type
+			# 			m = re.match('(http[s]?)://([^:^/]+):?([^/]*)/?',target)
+			# 			if m:
+			# 				http_type = m.group(1)
+			# 				# print m.group(2)
+			# 				n = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(\/\d{1,2})?$',m.group(2))
+			# 				# ip
+			# 				if n:
+			# 					# print 'is an ip type url'
+			# 					ip = m.group(2)
+			# 					if target[-1] == '/':
+			# 						target = target[:-1]
+			# 					targets.append(ip)
+			# 					targets.append(target)
+			# 				else:
+			# 					host = m.group(2)
+			# 					ports = m.group(3)
+			# 					# print host
+			# 					ip = socket.gethostbyname(host)
+			# 					domain = GetFirstLevelDomain(host)
+			# 					# print 'ip=',ip
+			# 					if target[-1] == '/':
+			# 						target = target[:-1]
+			# 					targets.append(ip)
+			# 					targets.append(target)
+			# 					targets.append(domain)
+			# 			else:
+			# 				# host type
+			# 				domain = GetFirstLevelDomain(target)
+			# 				targets.append(domain)
 
 			# for each_target in globalVar.undone_targets:
 			for each_target in targets:

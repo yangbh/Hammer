@@ -128,11 +128,11 @@ if (!already_login()) {
 				<!-- <a class="glyphicon glyphicon-circle-arrow-left" id="plugin_goback" href="javascript:history.back()"></a>&nbsp; -->
 			</h1>
 			<div class="form" id="dlg_form">
-				<div class="form-inline">
+<!-- 				<div class="form-inline">
 					<div class="btn-group">
 						<select class="form-control" name="config[global][mode]" id="mode">
-							<option value="1">Common mode</option>
-							<option value="2">Plugin mode</option>
+							<option value="1">Signal Target</option>
+							<option value="2">Multi Targets</option>
 							<option value="3">Others</option>
 						</select>
 					</div>
@@ -140,7 +140,18 @@ if (!already_login()) {
 						<input type="text" class="form-control" id="target" name="config[global][target]" size="30" placeholder="testphp.vulnweb.com">
 						<label class="control-label" for="target">(Exp: http://testphp.vulnweb.com/)</label>
 					</div>
+				</div> -->
+				<div class="btn-group">
+						<select class="form-control" name="config[global][mode]" id="mode">
+							<option value="1">Signal Target</option>
+							<option value="2">Multi Targets</option>
+							<!-- <option value="3">Others</option> -->
+						</select>
+					</div>
+				<div class="form-group">
+					<textarea class="form-control" id="target" name="config[global][target]" size="50" rows="3" placeholder="one url each line"></textarea>
 				</div>
+
 				<div class="panel panel-default form-group">
 					<div class="panel-heading"><strong>Dispachers</strong></div>
 					<div class="panel-body collapse in" id="modules">

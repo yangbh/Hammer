@@ -21,9 +21,15 @@ def genFilename(url):
 	return name
 
 def genFileName_v2(target):
+	# multi targets
+	target = target.replace('\n','_')
+	if len(target) > 256:
+		target = target[:256]
+	# single target
 	target = target.replace('://','_')
 	target = target.replace('/','')
 	target = target.replace(':','')
+
 	return target
 
 def addslashes(s):

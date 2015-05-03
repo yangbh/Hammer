@@ -38,7 +38,7 @@ class WebUser(object):
 			serverurl = 'http://' + server + '/login.php'
 			postdata = {'token':token}
 
-			r = requests.post(serverurl,data=postdata)
+			r = requests.post(serverurl,data=postdata,allow_redirects=False)
 			# print r.status_code
 			if r.url.endswith('index.php'):
 				return True

@@ -125,6 +125,10 @@ EOF;
 
 				<div class="col-xs-10 col-sm-10 col-md-10" role="main" class="main">
 					<h2 id="1.4">1.4</h2>
+					<h3>1.4.4.150502_Beta</h3>
+						<p><strong>改进：</strong></p>
+						<p>a).修复-l监听模式subTarget子进程共享变量紊乱</p>
+						<p>b).初步引入全局config与插件config配置措施，方便用户配置</p>
 					<h3>1.4.3.150421_Beta</h3>
 						<p><strong>改进：</strong></p>
 						<p>a).增加插件超时机制</p>

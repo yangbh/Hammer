@@ -120,8 +120,9 @@ if ($type=='start') {
 				$sql = "UPDATE Task SET Status='running' ,Dispatcher_ID='$dispatcherId' WHERE ID='$taskid' AND Status='waiting'";
 				// echo $sql.'<br>';
 				mysql_query($sql);
-				
-				$arg = json_decode($row[2]);
+				// var_dump($row[2]);
+				$arg = json_decode(base64_decode($row[2]));
+				// var_dump($arg);
 				foreach ($arg as $key => $value){
 					$ret['data'][$key] = $value;
 				}

@@ -5,6 +5,7 @@ import sys
 import uuid
 import json
 import time
+import base64
 import platform
 import requests
 import threading
@@ -99,7 +100,7 @@ class Listener(object):
 				r = requests.post(serverurl,data=postdata)
 				# print r.status_code
 				if r.status_code == 200:
-					# print r.text
+					print r.text
 					ret = json.loads(r.text)
 					code = ret['code']
 					info = ret['info']
@@ -108,6 +109,7 @@ class Listener(object):
 					globalTaskVar.logger.debug('server: %s' % info)
 					# 添加一个任务
 					if code and 'no task' not in info:
+						# data = base64.decodestring(data)
 						pprint(data)
 						data['global']['server'] = self.server
 						data['global']['token']	= self.token

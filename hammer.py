@@ -1,6 +1,7 @@
 #!/usr/bin/python2.7
 #coding:utf-8
 
+import os
 import sys
 import getopt
 import json
@@ -182,7 +183,7 @@ def main():
 			# print '_token=',_token
 			loadPlugins(_pluginpath,_server,_token)
 
-		elif '_target' in dir() and _target:			
+		elif '_conf_file' in dir() and os.path.isfile(_conf_file):			
 			# set global config
 			config = json.load(open(_conf_file,'r'))
 			config['global']['server'] = _server

@@ -629,7 +629,8 @@ def Audit(services):
 					<h2 id="contact">联系</h2>
 						<p>github: <a target="_blank" href="https://github.com/yangbh/Hammer">https://github.com/yangbh/Hammer</a></p>
 						<p>QQ群: 397554752</p>
-						<p>感谢：Yascanner、MST、MultiProxies等众多开源的程序</p>
+						<p>感谢：Yascanner、MST、MultiProxies等众多开源及半开源程序</p>
+						<p>感谢：c4bbage、kenan@为Hammer编写插件</p>
 					<hr>	
 				</div><!--/span-->
 

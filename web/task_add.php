@@ -11,14 +11,27 @@ if (!already_login()) {
 // function: add a task
 // $target 		--	string
 // $argument 	--	dict
+//				arguments中，json_encode一遍，但是mysql会自动decode一遍，因此需要进入mysql之前编码遍
+//				$argtuments中的换行
+//					经过json_encode'\n'
+//						insert mysql 换行
+//					json_decode error
+//				采用一次check_sql
+//				$argtuments中的换行
+//					经过json_encode'\n'
+//						check_sql	'\\n'
+//							insert mysql '\n'
+//					json_decode error
+//				因此直接采用base64编码
 function add_task($target,$arguments){
 	$target = check_sql($target);
 	$time = time();
-	$argJson = json_encode($arguments);
+	$argJson = base64_encode(json_encode($arguments));
+	// $argJson = check_sql($argJson);
 	$userid = get_userid();
-	// echo $argJson;
+	var_dump($argJson);
 	$query = "INSERT INTO Task(Target,Start_Time,Arguments,Status,User_ID) VALUES('$target',$time,'$argJson','waiting',$userid)";
-	// echo $query . '<br>';
+	echo $query . '<br>';
 	$result = mysql_query($query);
 	if ($result) {
 		return True;
@@ -31,6 +44,7 @@ function add_task($target,$arguments){
 // $method = check_sql(trim($_REQUEST['method']));
 // $target = check_sql(trim($_REQUEST['target']));
 // var_dump($_REQUEST);
+
 $arguments = $_REQUEST['config'];
 $target = check_sql(trim($arguments['global']['target']));
 // var_dump($arguments);
