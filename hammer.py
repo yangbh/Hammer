@@ -54,19 +54,20 @@ def usage():
 	print "\t-T --target: target, can be an ip address, an url or an iprange"
 	print "\t   --no-gather: do not use information gather module"
 	print "\t   --gather-depth: information gather depth, default 1"
-	print "\t   --conf-file: config file, default conf/basic.conf"
+	print "\t   --conf-file: config file, default be conf/basic.conf"
 	print "\t-p --plugin: run a plugin type scan"
 	print "\t   --plugin-arg: plugin argus"
 	print "\t-l --listen: listen mode"
 	print "\t   --max-size: scan pool max size, default 50"
-	print "\t   --console: console mode"
+	print "\t--console: console mode"
 	print "[Examples]"
 	print "\thammer.py -s www.hammer.org -t 3r75... -u plugins/Info_Collect/"
-	print "\thammer.py -s www.hammer.org -t 3r75... -T http://testphp.vulnweb.com"
-	print "\thammer.py -s www.hammer.org -t 3r75... --conf-file cache/conf/basic.conf"
-	print "\thammer.py -s www.hammer.org -t 3r75... -p plugins/System/dnszone.py -T vulnweb.com"
-	print "\thammer.py -s www.hammer.org -t 3r75... -l"
 	print "\thammer.py -s www.hammer.org -t 3r75... --console"
+	print "\thammer.py -T http://testphp.vulnweb.com"
+	print "\thammer.py --conf-file conf/basic.conf"
+	print "\thammer.py -T vulnweb.com --conf-file conf/basic.conf"
+	print "\thammer.py -p plugins/System/dnszone.py -T vulnweb.com"
+	print "\thammer.py -l"
 	sys.exit(0)
 
 def main():
@@ -135,31 +136,38 @@ def main():
 		else:
 			pass
 
-	if _server and _token:
-		pass
-	else:
-		user = WebUser()
-		if user.server and user.token:
-			_server = user.server
-			_token = user.token
-
-	# init global var
-	globalVar.server = _server
-	globalVar.token = _token
-	if _auto_proxy:
-		ps = ProxyScraper()
-		ps.proxies_get(1000)
-		globalVar.proxyRequest.add_proxies(ps.format_proxie(type=1))
-
-	# pprint(globalVar.proxyRequest.proxies)
-	# globalVar.proxyRequest
-
 	# 控制台方式
 	if _console:
 		# print 'running console'
 		cn = Consoler()
 		cn.run()
 		return
+
+	if _server and _token:
+		pass
+	else:
+		try:
+			user = WebUser()
+			if user.server and user.token:
+				_server = user.server
+				_token = user.token
+
+			# init global var
+			globalVar.server = _server
+			globalVar.token = _token
+			if _auto_proxy:
+				ps = ProxyScraper()
+				ps.proxies_get(1000)
+				globalVar.proxyRequest.add_proxies(ps.format_proxie(type=1))
+
+		except Exception,e:
+			print 'Exception',e
+			if e[0] == 'WebUser.loginfail':
+				usage()
+				return
+
+	# pprint(globalVar.proxyRequest.proxies)
+	# globalVar.proxyRequest
 
 	# 其它方式
 	if _server and _token:

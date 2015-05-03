@@ -141,17 +141,32 @@ if (!already_login()) {
 						<label class="control-label" for="target">(Exp: http://testphp.vulnweb.com/)</label>
 					</div>
 				</div> -->
-				<div class="btn-group">
+			<!-- 	<div class="btn-group">
 						<select class="form-control" name="config[global][mode]" id="mode">
 							<option value="1">Signal Target</option>
 							<option value="2">Multi Targets</option>
-							<!-- <option value="3">Others</option> -->
 						</select>
+					</div> -->
+				<div class="panel panel-default form-group">
+					<div class="panel-heading"><strong>Targets</strong></div>
+					<div class="panel-body collapse in" id="modules" style="padding:5px">
+						<div class="content">
+							<div class="row">
+								<div class="col-md-6" style="margin:0px">
+									<textarea class="form-control" id="target" name="config[global][target]" size="50" rows="3" placeholder="http://testphp.vulnweb.com"></textarea>
+								</div>
+								<div class="col-md-6">
+									<div class="list-group" style="margin:0px">
+										<h4 class="list-group-item-heading">Notice: One Target Per Line</h4>
+										<p class="list-group-item-text">Targets can be: http://testphp.vulnweb.com -- url
+											<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;www.vulnweb.com -- host
+											<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;192.168.0.1/24 -- ip or ip range</p>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-				<div class="form-group">
-					<textarea class="form-control" id="target" name="config[global][target]" size="50" rows="3" placeholder="one url each line"></textarea>
 				</div>
-
 				<div class="panel panel-default form-group">
 					<div class="panel-heading"><strong>Dispachers</strong></div>
 					<div class="panel-body collapse in" id="modules">
@@ -276,7 +291,7 @@ if (!already_login()) {
 					</div>
 				</div>
 				<div class="panel panel-default form-group">
-					<div class="panel-heading"><strong>Modules</strong></div>
+					<div class="panel-heading"><strong>Plugins Config Options</strong></div>
 					<div class="panel-body collapse in" id="modules">
 						<div class="checkbox">
 							<label class="mcheck">

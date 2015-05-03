@@ -143,7 +143,7 @@ def Audit(services):
 	else:
 		urls = generateUrl(subdomains)
 		for url in urls:
-			add_scan_task(url)
+			add_target(url)
 
 	return (retinfo,output)
 # ----------------------------------------------------------------------------------------------------

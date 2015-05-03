@@ -100,7 +100,7 @@ class Listener(object):
 				r = requests.post(serverurl,data=postdata)
 				# print r.status_code
 				if r.status_code == 200:
-					print r.text
+					# print r.text
 					ret = json.loads(r.text)
 					code = ret['code']
 					info = ret['info']

@@ -37,7 +37,7 @@ def Audit(services):
 			if services.has_key('nogather') and services['nogather'] == True:
 				pass
 			else:
-				add_scan_task(each_neighbor)
+				add_target(each_neighbor)
 
 # ----------------------------------------------------------------------------------------------------
 #

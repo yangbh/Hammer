@@ -97,7 +97,7 @@ def Audit(services):
 				urls = generateUrl(ip,services['port_detail'])
 				pprint(urls)
 				for url in urls:
-					add_scan_task(url)
+					add_target(url)
 
 	# except IndexError,e:
 	except KeyError,e:

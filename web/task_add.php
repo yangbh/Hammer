@@ -29,9 +29,9 @@ function add_task($target,$arguments){
 	$argJson = base64_encode(json_encode($arguments));
 	// $argJson = check_sql($argJson);
 	$userid = get_userid();
-	var_dump($argJson);
+	// var_dump($argJson);
 	$query = "INSERT INTO Task(Target,Start_Time,Arguments,Status,User_ID) VALUES('$target',$time,'$argJson','waiting',$userid)";
-	echo $query . '<br>';
+	// echo $query . '<br>';
 	$result = mysql_query($query);
 	if ($result) {
 		return True;

@@ -2,6 +2,7 @@
 #coding:utf-8
 
 import os
+import sys
 import json
 import yaml
 import requests
@@ -24,23 +25,26 @@ class WebUser(object):
 
 		self.loadInfo()
 
-		if self.checklogin:
+		if self.checklogin(self.server,self.token):
 			color.cprint("[*] Login success",GREEN)
 		else:
 			color.cprint("[*] Login failed",RED)
-			
+			# os._exit(0)
+			raise Exception("WebUser.loginfail", "login failed")    
 
 	def checklogin(self,server,token):
 		'''检测server&token'''
 		try:
 			server = server if server else self.server
 			token = token if token else self.token
-			serverurl = 'http://' + server + '/login.php'
+			serverurl = 'http://' + server + '/index.php'
 			postdata = {'token':token}
 
-			r = requests.post(serverurl,data=postdata,allow_redirects=False)
+			r = requests.post(serverurl,data=postdata,allow_redirects=True)
 			# print r.status_code
-			if r.url.endswith('index.php'):
+			# print r.text
+			# print '<li><a href="scans.php">Scans</a></li>' in r.text
+			if '<li><a href="scans.php">Scans</a></li>' in r.text:
 				return True
 			return False
 

@@ -484,10 +484,10 @@ security_hole(vulninfo) 	# high level</pre>
 					<h3>7. 调试输出接口logger</h3>
 					<pre class="prettyprint linenums Lang-python">
 logger(debuginfo) # debuginfo为string类型，输出插件运行信息，单独运行参见时为print函数，整体运行时为logging.debug函数</pre>
-					<h3>8. 添加子扫描任务接口add_scan_task</h3>
+					<h3>8. 添加子扫描任务接口add_target</h3>
 					<p>除此之外还有一个添加子扫描任务模块</p>
 					<pre class="prettyprint linenums Lang-python">
-add_scan_task(target) 		# target可以为url\ip\host之一</pre>
+add_target(target) 		# target可以为url\ip\host之一</pre>
 					<p>注意：这个函数只能作为信息收集模块内使用，即放在Infor_Collect目录下，可以参考subdomain.py插件。</p>
 					<h3>9. Hammer框架之dummy.py</h3>
 					<p>dummy.py是仿照yascanner的，是统一导入hammer框架的一些类库，结构有些牛头马面不成样子，在每个目录都得放一个，目前暂未有好的方法解决，留待后期吧</p>
@@ -507,7 +507,7 @@ from pprint import pprint
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # very important
 # here it is common, not lib.common, because of python import strategies
-from common import genFilename,security_note,security_info,security_warning,security_hole,add_scan_task
+from common import genFilename,security_note,security_info,security_warning,security_hole,add_target
 from common import logger
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

@@ -82,7 +82,9 @@ class Scanner(object):
 		self.threads = int(config['global']['threads']) if config['global']['threads']!= '' \
 														and type(config['global']['threads']) == int \
 													else multiprocessing.cpu_count()
-		self.gatherdepth = int(config['global']['gatherdepth']) if config['global']['threads']!= '' else 0
+		# print "config['global']['gatherdepth']=",config['global']['gatherdepth']
+		self.gatherdepth = int(config['global']['gatherdepth']) if config['global']['gatherdepth']!= '' else 0
+		# print 'self.gatherdepth=',self.gatherdepth
 		self.loglevel = config['global']['loglevel'] if config['global']['threads'] == '' else 'INFO'
 		self.args = {'loglevel':self.loglevel,'threads':self.threads,'gatherdepth':self.gatherdepth}
 
@@ -213,60 +215,63 @@ class Scanner(object):
 				target = self.target
 			targets = []
 			for each_target in target.split('\n'):
+				# if each_target:
+				# 	m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$',each_target)
+				# 	if m:
+				# 		ipnet = list(netaddr.IPNetwork(each_target))
+				# 		for eachip in ipnet:
+				# 			targets.append(eachip.format())
+				# 	elif re.match('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$',each_target)	\
+				# 		or re.match('(http[s]?)://([^:^/]+):?([^/]*)/?',each_target)	\
+				# 		or re.match('(?i)^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$',each_target):
+				# 		targets.append(each_target)
 				if each_target:
+					# ip range type
 					m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$',each_target)
 					if m:
 						ipnet = list(netaddr.IPNetwork(each_target))
 						for eachip in ipnet:
 							targets.append(eachip.format())
-					elif re.match('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$',each_target)	\
-						or re.match('(http[s]?)://([^:^/]+):?([^/]*)/?',each_target)	\
-						or re.match('(?i)^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$',each_target):
-						targets.append(each_target)
-			# if target:
-			# 	# ip range type
-			# 	m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$',target)
-			# 	if m:
-			# 		ipnet = list(netaddr.IPNetwork(target))
-			# 		for eachip in ipnet:
-			# 			targets.append(eachip.format())
-			# 	else:
-			# 		# one ip
-			# 		m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$',target)
-			# 		if m:
-			# 			targets.append(target)
+					else:
+						# one ip
+						m = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$',each_target)
+						if m:
+							targets.append(each_target)
 
-			# 		else:
-			# 			# url type
-			# 			m = re.match('(http[s]?)://([^:^/]+):?([^/]*)/?',target)
-			# 			if m:
-			# 				http_type = m.group(1)
-			# 				# print m.group(2)
-			# 				n = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(\/\d{1,2})?$',m.group(2))
-			# 				# ip
-			# 				if n:
-			# 					# print 'is an ip type url'
-			# 					ip = m.group(2)
-			# 					if target[-1] == '/':
-			# 						target = target[:-1]
-			# 					targets.append(ip)
-			# 					targets.append(target)
-			# 				else:
-			# 					host = m.group(2)
-			# 					ports = m.group(3)
-			# 					# print host
-			# 					ip = socket.gethostbyname(host)
-			# 					domain = GetFirstLevelDomain(host)
-			# 					# print 'ip=',ip
-			# 					if target[-1] == '/':
-			# 						target = target[:-1]
-			# 					targets.append(ip)
-			# 					targets.append(target)
-			# 					targets.append(domain)
-			# 			else:
-			# 				# host type
-			# 				domain = GetFirstLevelDomain(target)
-			# 				targets.append(domain)
+						else:
+							# url type
+							m = re.match('(http[s]?)://([^:^/]+):?([^/]*)/?',each_target)
+							if m:
+								http_type = m.group(1)
+								# print m.group(2)
+								n = re.search('^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(\/\d{1,2})?$',m.group(2))
+								# ip
+								if n:
+									# print 'is an ip type url'
+									ip = m.group(2)
+									if each_target[-1] == '/':
+										each_target = each_target[:-1]
+									targets.append(ip)
+									targets.append(each_target)
+								else:
+									host = m.group(2)
+									ports = m.group(3)
+									# print host
+									ip = socket.gethostbyname(host)
+									domain = GetFirstLevelDomain(host)
+									# print 'ip=',ip
+									if each_target[-1] == '/':
+										each_target = each_target[:-1]
+									targets.append(ip)
+									targets.append(each_target)
+									targets.append(domain)
+							else:
+								# host type
+								domain = GetFirstLevelDomain(each_target)
+								targets.append(domain)
+
+			#	去重
+			targets = list(set(targets))
 
 			# for each_target in globalVar.undone_targets:
 			for each_target in targets:
@@ -291,6 +296,7 @@ class Scanner(object):
 			globalVar.mainlogger.error('Exception:'+str(e))
 
 	def infoGather(self,depth=None):
+		print 'self.gatherdepth=',self.gatherdepth
 		if depth == None:
 			depth = self.gatherdepth
 		try:
