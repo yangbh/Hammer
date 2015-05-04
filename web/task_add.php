@@ -37,6 +37,7 @@ function add_task($target,$arguments){
 		return True;
 	}
 	else{
+		echo(mysql_error());
 		return False;
 	}
 }
@@ -47,6 +48,9 @@ function add_task($target,$arguments){
 
 $arguments = $_REQUEST['config'];
 $target = check_sql(trim($arguments['global']['target']));
+if (strlen($target)>32) {
+	$target = substr($target, 0, 32).'...';
+}
 // var_dump($arguments);
 if ($target and $target!='') {
 	$ret = add_task($target,$arguments);

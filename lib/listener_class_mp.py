@@ -113,7 +113,7 @@ class Listener(object):
 						pprint(data)
 						data['global']['server'] = self.server
 						data['global']['token']	= self.token
-						target = data['global']['target']
+						target = data['targetname']
 						
 						conffile = BASEDIR + '/cache/conf/' + genFileName_v2(target) + '.json'
 						json.dump(data,open(conffile,'w'))
@@ -138,13 +138,13 @@ class Listener(object):
 	def deal_onetask(self,conffile):
 		try:
 			arg = json.load(open(conffile,'r'))
-			globalTaskVar.logger.debug('prepare to run a task: %s' % arg['global']['target'])
+			globalTaskVar.logger.debug('prepare to run a task: %s' % arg['targetname'])
 			sn = Scanner(conffile)
 			sn.run()
 			# sl = ScannerLoader(self.server, self.token, arg)
 			# sl.run()
 			
-			globalTaskVar.logger.info('[*] done: %s' % arg['global']['target'])
+			globalTaskVar.logger.info('[*] done: %s' % arg['targetname'])
 			# notice server this task done
 			serverurl = 'http://' + self.server +'/dist_hi.php'
 			postdata = {'token':self.token,'os':self.os,'mac':self.mac,'type':'end','taskid':arg['taskid']}
@@ -174,7 +174,7 @@ class Listener(object):
 					arg = self.tasks[0]
 					del(self.tasks[0])
 					self.lock.release()
-					target = arg['global']['target']		
+					target = arg['targetname']		
 					conffile = BASEDIR + '/cache/conf/' + genFileName_v2(target) + '.json'
 					
 					p = multiprocessing.Process(target=self.deal_onetask,args=(conffile,))

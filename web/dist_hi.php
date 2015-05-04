@@ -115,6 +115,7 @@ if ($type=='start') {
 				
 				// 更新每个task状态
 				$taskid = $row[0];
+				$ret['data']['targetname'] = $row[1];
 				$ret['data']['taskid'] = $taskid;
 				// 暂时设为others而不是running,待worker反馈接收到任务才置为running状态
 				$sql = "UPDATE Task SET Status='running' ,Dispatcher_ID='$dispatcherId' WHERE ID='$taskid' AND Status='waiting'";

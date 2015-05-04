@@ -78,10 +78,10 @@ class Scanner(object):
 		pprint(config['global'])
 		self.server = config['global']['server']
 		self.token = config['global']['token']
+		self.targetname = config['targetname']
 		self.target = config['global']['target']
-		self.threads = int(config['global']['threads']) if config['global']['threads']!= '' \
-														and type(config['global']['threads']) == int \
-													else multiprocessing.cpu_count()
+		self.threads = int(config['global']['threads']) if config['global']['threads']!= '' else multiprocessing.cpu_count()
+		print 'self.threads=',self.threads,type(self.threads)
 		# print "config['global']['gatherdepth']=",config['global']['gatherdepth']
 		self.gatherdepth = int(config['global']['gatherdepth']) if config['global']['gatherdepth']!= '' else 0
 		# print 'self.gatherdepth=',self.gatherdepth
@@ -113,7 +113,7 @@ class Scanner(object):
 			#	logging handler
 			formatter = logging.Formatter('[%(process)d] - [%(levelname)s] - %(message)s')  
 			# 创建一个handler，用于写入日志文件  
-			filepath = BASEDIR+'/output/log/' + genFilename(self.target) + '.log'
+			filepath = BASEDIR+'/output/log/' + genFilename(self.targetname) + '.log'
 			if os.path.isfile(filepath):
 				os.remove(filepath)
 			fh = logging.FileHandler(filepath,'a')    
@@ -178,8 +178,8 @@ class Scanner(object):
 			globalVar.mainlogger.error('\tserver not exists')
 			return False
 		#	save Scan table at first
-		# print 'self.target\t',self.target
-		self.web_interface.task_start(self.target,str(self.args))
+		# print 'self.targetname\t',self.targetname
+		self.web_interface.task_start(self.targetname,str(self.args))
 			
 	def _initGlobalVar(self):
 		# process information
@@ -190,6 +190,7 @@ class Scanner(object):
 		globalVar.scan_task_dict_lock.acquire()
 		globalVar.scan_task_dict['pid'] = pid
 		globalVar.scan_task_dict['target'] = self.target
+		globalVar.scan_task_dict['targetname'] = self.targetname
 		globalVar.scan_task_dict['server'] = self.web_interface.server
 		globalVar.scan_task_dict['token'] = self.web_interface.token
 		globalVar.scan_task_dict['subtargets'] = {}
@@ -336,7 +337,7 @@ class Scanner(object):
 					# pprint(services)
 					# sys.exit()
 					for each_service in services:
-						pl = PluginLoader(BASEDIR+'/plugins/Info_Collect',each_service,'_'+self.target)
+						pl = PluginLoader(BASEDIR+'/plugins/Info_Collect',each_service,'_'+self.targetname)
 						pls.append(pl)
 
 					# globalVar.target_lock.acquire()
@@ -398,7 +399,7 @@ class Scanner(object):
 
 			self.pls = []
 			for each_service in self.services:
-				pl = PluginLoader(None,each_service,self.target)
+				pl = PluginLoader(None,each_service,self.targetname)
 				self.pls.append(pl)
 
 			results = []

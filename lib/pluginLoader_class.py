@@ -135,7 +135,7 @@ class PluginLoader(object):
 			globalVar.mainlogger.error('Exception:'+str(e))
 		
 
-	def _safeRunAudit(self,audit,services,timeout=60):
+	def _safeRunAudit(self,audit,services,timeout=10):
 		'''
 		'''
 		mg = Manager()
