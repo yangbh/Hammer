@@ -11,9 +11,12 @@ info = {
 	'WEB':'http://www.wooyun.org/bugs/wooyun-2015-094886',
 	'DESCRIPTION':'MetInfo 无需登录前台直接GETSHELL'
 }
-opts = [
-	['url','http://testasp.vulnweb.com','target url']
-]
+opts = {
+	'url':'http://testasp.vulnweb.com',	#'target ip'
+}
+# opts = [
+# 	['url','http://testasp.vulnweb.com','target url']
+# ]
 
 def Assign(services):
 	if services.has_key('url') and services.has_key('cms') and services['cms']=='metinfo':

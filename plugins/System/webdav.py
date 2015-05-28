@@ -15,9 +15,12 @@ info = {
 	'WEB':'WebDAV（Web-based Distributed Authoring and Versioning）is Open',
 	'DESCRIPTION':''
 }
-opts = [
-	['url','http://WSWINCHZ0255.eguan.cn','target url'],
-]
+opts = {
+	'url':'http://testasp.vulnweb.com',	#'target ip'
+}
+# opts = [
+# 	['url','http://WSWINCHZ0255.eguan.cn','target url'],
+# ]
 
 def Assign(services):
 	if services.has_key('url'):

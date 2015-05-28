@@ -15,10 +15,18 @@ info = {
 	'VERSION':'1.0',
 	'RUNLEVEL':0
 }
-opts = [
-	['ip','176.28.50.165','target ip'],
-	['timeout',600,'pulgin run max time'],
-]
+opts = {
+	'ip':'176.28.50.165',	#'target ip'
+	'timeout':600,			#'pulgin run max time'
+	'ports':'21,22,23,25,110,53,67,80,1521,1526,3306,3389,4899,8580,873,443,465,993,995,2082,2083,2222,2601,2604,3128,3312,3311,4440,6082,6379,7001,7778,8000-9090,8080,8888,8083,8089,9200,10000,11211,11211,28017,27017',#'target ports, string type'
+	'argument':'-sV ',		#'nmap port scan argument'
+}
+# opts =[
+# 	['ip','176.28.50.165','target ip'],
+# 	['timeout',600,'pulgin run max time'],
+# 	['ports','21,22,23,25,110,53,67,80,1521,1526,3306,3389,4899,8580,873,443,465,993,995,2082,2083,2222,2601,2604,3128,3312,3311,4440,6082,6379,7001,7778,8000-9090,8080,8888,8083,8089,9200,10000,11211,11211,28017,27017','target ports, string type'],
+# 	['argument','-sV ','nmap port scan argument'],
+# ]
 def generateUrl(ip=None,ports=None):
 	''''''
 	httpports = []
@@ -63,7 +71,7 @@ def Assign(services):
 def Audit(services):
 	logger('services=%s' % services)
 	ip = services['ip']
-	np = NmapScanner(ip)
+	np = NmapScanner(hosts=ip,ports=opts['ports'],arguments=opts['argument'])
 	sc = np.scanPorts()
 	# logger('sc=%s' % str(sc))
 	try:

@@ -117,6 +117,7 @@ require_once('common.php');
 						<li><a href="index.php">Home</a></li>
 						<?php if (already_login()) {echo '<li><a href="scans.php">Scans</a></li>';}?>
 						<li class="active"><a href="plugins.php">Plugins</a></li>
+						<?php if (already_login()) {echo '<li><a href="configs.php">Configs</a></li>';}?>
 						<li><a href="documents.php">Documents</a></li>
 						<li><a href="about.php">About</a></li>
 					</ul>
@@ -171,8 +172,9 @@ EOF;
 				<div class="container" >
 					<h2 class="page-header">
 						Plugins&nbsp;
-						<a href="#"><span class="glyphicon glyphicon-plus"></span></a>
-						<a href="#"><span class="glyphicon glyphicon-search"></span></a>
+						<!-- <a href="#"><span class="glyphicon glyphicon-plus"></span></a> -->
+						<!-- <a href="#"><span class="glyphicon glyphicon-search"></span></a> -->
+						<a href="plugins_config.php"><span class="glyphicon glyphicon-cog"></span></a>
 					</h2>
 					<div class="form-inline">
 						<div class="btn-group">

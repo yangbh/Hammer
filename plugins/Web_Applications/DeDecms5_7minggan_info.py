@@ -11,9 +11,12 @@ info = {
 	'WEB':'',
 	'DESCRIPTION':'dedecms 敏感信息泄露'
 }
-opts = [
-	['url','http://testasp.vulnweb.com','target url'],
-]
+opts = {
+	'url':'http://testasp.vulnweb.com',	#'target ip'
+}
+# opts = [
+# 	['url','http://testasp.vulnweb.com','target url'],
+# ]
 
 def Assign(services):
 	if services.has_key('url') and services.has_key('cms'):

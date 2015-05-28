@@ -14,9 +14,12 @@ info = {
 	'WEB':'http://www.beebeeto.com/pdb/poc-2014-0167/',
 	'DESCRIPTION':'/wp-includes/formatting.php 中 wptexturize 函数在处理标签时过滤不严导致双引号重组绕过，最终导致 XSS 漏洞,可以获取 Cookie。'
 }
-opts = [
-	['url','http://testasp.vulnweb.com','target url'],
-]
+opts = {
+	'url':'http://testasp.vulnweb.com',	#'target ip'
+}
+# opts = [
+# 	['url','http://testasp.vulnweb.com','target url'],
+# ]
 
 def Assign(services):
 	if services.has_key('url') and services.has_key('cms'):

@@ -122,7 +122,8 @@ if ($type=='start') {
 				// echo $sql.'<br>';
 				mysql_query($sql);
 				// var_dump($row[2]);
-				$arg = json_decode(base64_decode($row[2]));
+				// $arg = json_decode(base64_decode($row[2]));
+				$arg = json_decode($row[2],true);
 				// var_dump($arg);
 				foreach ($arg as $key => $value){
 					$ret['data'][$key] = $value;

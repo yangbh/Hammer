@@ -15,10 +15,14 @@ info = {
 	'VERSION':'1.0',
 	'RUNLEVEL':1
 }
-opts = [
-	['url','http://www.sel.zju.edu.cn','target url'],
-	['timeout',300,'pulgin run max time'],
-]
+opts = {
+	'url':'http://www.sel.zju.edu.cn',	#'target ip'
+	'timeout':300,
+}
+# opts = [
+# 	['url','http://www.sel.zju.edu.cn','target url'],
+# 	['timeout',300,'pulgin run max time'],
+# ]
 
 def Assign(services):
 	if services.has_key('url'):

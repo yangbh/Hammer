@@ -18,10 +18,14 @@ info = {
 	'DESCRIPTION':' DNS AXFR zone transfer',
 	'VERSION':'2',
 }
-opts = [
-	['host','cau.edu.cn','target host'],
-	['timeout',300,'pulgin run max time'],
-]
+opts = {
+	'host':'cau.edu.cn',	#'target ip'
+	'timeout':300,
+}
+# opts = [
+# 	['host','cau.edu.cn','target host'],
+# 	['timeout',300,'pulgin run max time'],
+# ]
 
 def get_ns_records(adomain, aserver=None):
 	"""Pull NS records for our domain"""

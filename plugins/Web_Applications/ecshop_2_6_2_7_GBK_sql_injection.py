@@ -12,9 +12,12 @@ info = {
 	'WEB':'',
 	'DESCRIPTION':'ecshop 注入通杀2.6-2.7 GBK版本,http://www.shellsec.com/tech/74933.html'
 }
-opts = [
-	['url','http://testasp.vulnweb.com','target url'],
-]
+opts = {
+	'url':'http://testasp.vulnweb.com',	#'target ip'
+}
+# opts = [
+# 	['url','http://testasp.vulnweb.com','target url'],
+# ]
 
 def Assign(services):
 	if services.has_key('url') and services.has_key('cms') and services['cms'] == 'Ecshop':

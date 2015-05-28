@@ -23,35 +23,74 @@ if (!already_login()) {
 		<!-- <script type="text/javascript" charset="utf8" src="http://code.jquery.com/jquery-1.10.2.min.js"></script> -->
 		<script src="js/jquery.min.js"></script>
 
+		<link href="css/skins/line/blue.css" rel="stylesheet">
+		<script src="js/jquery.icheck.min.js"></script>
+
 		<!-- Bootstrap core JavaScript -->
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
 
+		<link href="css/live-search.css" rel="stylesheet">
+		<script type="text/javascript" src="js/foot-2-live-search.js"></script>
+
+		<link href="css/jsoneditor.css" rel="stylesheet">
+		<script src="js/jquery.jsoneditor.js"></script>
+
 		<!-- <script type="text/javascript" src="js/bootstrap-collapse.js"></script> -->
 		<style type="text/css">
-		a span{
-			color: #555;
-			text-decoration: none;
-		}
-		body{
-			/*font-size: 16px;*/
-		}
-		.mcheck {
-			width: 150px;
-		}
-		blockquote {
-			margin: 0px;
-			margin-bottom: 0px;
-		}
-		.panel {
-			margin-top: 5px;
-			margin-bottom: 5px;
-		}
-		blockquote {
-			margin:5px;
-			padding: 5px;
-			font-size: 15px;
-		}
+			a span{
+				color: #555;
+				text-decoration: none;
+			}
+			body{
+				/*font-size: 16px;*/
+			}
+			.mcheck {
+				width: 150px;
+			}
+			.panel {
+				margin-top: 5px;
+				margin-bottom: 5px;
+			}
+			blockquote {
+				margin:0px;
+				padding: 1px;
+				font-size: 15px;
+			}
+			#legend {
+				display: inline;
+				margin-left: 30px;
+			}
+			#legend h2 {
+				 display: inline;
+				 font-size: 18px;
+				 margin-right: 20px;
+			}
+			#legend a {
+				color: white;
+				margin-right: 20px;
+			}
+			#legend span {
+				padding: 2px 4px;
+				-webkit-border-radius: 5px;
+				-moz-border-radius: 5px;
+				border-radius: 5px;
+				color: white;
+				font-weight: bold;
+				text-shadow: 1px 1px 1px black;
+				background-color: black;
+			}
+			#legend .string  { background-color: #009408; }
+			#legend .array   { background-color: #2D5B89; }
+			#legend .object  { background-color: #E17000; }
+			#legend .number  { background-color: #497B8D; }
+			#legend .boolean { background-color: #B1C639; }
+			#legend .null    { background-color: #B1C639; }
+
+			#expander {
+				cursor: pointer;
+				margin-right: 20px;
+			}
 		</style>
 		<script>
 		function task_create(){
@@ -61,11 +100,13 @@ if (!already_login()) {
 			//	
 			var str_data='';
 			$("#dlg_form input,textarea,select").each(function(){
-				if ($(this).attr("type")=="checkbox") {
-					str_data += $(this).attr("name") + "=" + ($(this).attr("checked")=="checked"?1:0) + "&";
-				}
-				else{
-					str_data += $(this).attr("name") + "=" + $(this).val() + "&";
+				if($(this).attr("name") != undefined){
+					if ($(this).attr("type")=="checkbox") {
+						str_data += $(this).attr("name") + "=" + ($(this).attr("checked")=="checked"?1:0) + "&";
+					}
+					else{
+						str_data += $(this).attr("name") + "=" + $(this).val() + "&";
+					}
 				}
 			});
 			// console.log(str_data);
@@ -82,7 +123,26 @@ if (!already_login()) {
 				}
 			});
 		}
+		function show_config(span){
+			// this.text = 'hehe';
+			console.log(span);
+			// span.text('test');
+			console.log(span.id);
+			var id = span.id;
+			$('span[id="'+id+'"]').removeClass('label-info');
+			$('span[id="'+id+'"]').addClass('label-info');
+
+			// console.log(this.class);
+			// console.log($(this).html());
+		}
 		$(document).ready(function () {
+
+			// $('.input').iCheck({
+			// 	checkboxClass: 'icheckbox_minimal-blue',
+			// 	radioClass: 'iradio_minimal-blue',
+			// 	increaseArea: '20%' // optional
+			// });
+
 			$.ajax({
 				type: "POST",
 				url: "dist_search.php",
@@ -103,7 +163,117 @@ if (!already_login()) {
 						$('#dists').html(html);
 						$('#submit').removeClass('disabled');
 					}
+				}
+			});
+
+
+			$.ajax({
+				type: "GET",
+				url: 'configs_search.php',
+				data: "name=",
+				dataType: "json",
+				success: function(data){
+					console.log(data.data);
+					configs = data.data;
+					var spans = '<ul class="list-inline">';
+					for(var i =0;i < configs.length; i++){
+						config = configs[i];
+						if(config[6] == '1'){
+							spans += '<li>\
+								<input tabindex="15" type="radio" id="flat-radio-1" name="flat-radio" checked>\
+								<label for="flat-radio-1">'+ config[1] +'</label></li>';
+							// spans += '<button type="button" class="btn btn-primary btn-sm" onclick="javascript:show_config(this.id)" id="'+config[1]+'">'+config[1]+'</button>';
+						}
+						else{
+							spans += '<li>\
+								<input tabindex="15" type="radio" id="flat-radio-1" name="flat-radio">\
+								<label for="flat-radio-1">'+ config[1] +'</label></li>';
+							}
+					}
+					spans += '</ul>';
+					$('#configs').html(spans);
 					
+					$('li > input').click(function(){
+						// $(this).parent().attr("");
+						var name = $(this).parent().children("label").text();
+						// alert(name);
+						$.ajax({
+							url:'http://www.hammer.org/configs_search.php',
+							data: {name: name},
+							type: "GET",
+							dataType: 'json',
+							success: function(json){
+								jsondata = json.data[0];
+								// alert('json:'+json.data);
+								// alert(jsondata);
+								var id = jsondata[0];
+								var name = jsondata[1];
+								var time = jsondata[2];
+								var json = JSON.parse(jsondata[3]);
+								var autoi = jsondata[4];
+								// alert(json);
+							
+								function printJSON() {
+									$('#json').val(JSON.stringify(json));
+								}
+
+								function updateJSON(data) {
+									json = data;
+									printJSON();
+								}
+
+								function showPath(path) {
+									$('#path').text(path);
+								}
+
+								$(document).ready(function() {
+
+									$('#rest > button').click(function() {
+										var url = $('#rest-url').val();
+										$.ajax({
+											url: url,
+											dataType: 'jsonp',
+											jsonp: $('#rest-callback').val(),
+											success: function(data) {
+												json = data;
+												$('#editor').jsonEditor(json, { change: updateJSON, propertyclick: showPath });
+												printJSON();
+											},
+											error: function() {
+												alert('Something went wrong, double-check the URL and callback parameter.');
+											}
+										});
+									});
+
+									$('#json').change(function() {
+										var val = $('#json').val();
+
+										if (val) {
+											try { json = JSON.parse(val); }
+											catch (e) { alert('Error in parsing json. ' + e); }
+										} else {
+											json = {};
+										}
+										
+										$('#editor').jsonEditor(json, { change: updateJSON, propertyclick: showPath });
+									});
+
+									$('#expander').click(function() {
+										var editor = $('#editor');
+										editor.toggleClass('expanded');
+										$(this).text(editor.hasClass('expanded') ? 'Collapse' : 'Expand all');
+									});
+									
+									printJSON();
+									$('#editor').jsonEditor(json, { change: updateJSON, propertyclick: showPath });
+
+								});
+							}
+						});
+					});
+
+					// 默认
+					$('li > input')[0].click();
 				}
 			});
 		});
@@ -240,94 +410,56 @@ if (!already_login()) {
 									</div>
 								</div>
 							</div>
-							<!-- <div class="row">
-								<div class="col-md-2">
-									<blockquote>Crawler</blockquote>
-								</div>
-								<div class="col-md-2">
-									<div class="checkbox">
-										<label class="mcheck">
-											<input type="checkbox" name="config[plugins][Info_Collect][issubdomain]" checked ="checked">
-											Sub-Domain
-										</label>
-									</div>
-								</div>
-								<div class="col-md-8">
-									<div class="checkbox">
-										<label class="mcheck">
-											<input type="checkbox" name="config[plugins][Info_Collect][isneiborhost]" checked ="checked">
-											Neibor-Host
-										</label>
-									</div>
-								</div>
-							</div>
-
-
-							<div class="row">
-								<div class="col-md-2">
-									<div>
-										<blockquote>Exlude
-											<input type="checkbox" name="config[plugins][Info_Collect][crawler][isexlude]">
-										</blockquote>
-									</div>
-								</div>
-							<div class="col-md-8">
-								<div>
-									<input type="text" class="form-control" name="config[plugins][Info_Collect][crawler][exlude]" placeholder="logout;log_out;/admin;/manage;/phpmyadmin">
-								</div>
-							</div>
-							</div>
-							<div class="row">
-								<div class="col-md-2">
-									<blockquote>Cookies</blockquote>
-								</div>
-								<div class="col-md-8">
-									<div>
-										<textarea class="form-control" rows="3" name="config[plugins][Info_Collect][crawler][cookies]"></textarea>
-									</div>
-								</div>
-							</div> -->
 						</div>
 					</div>
 				</div>
+
 				<div class="panel panel-default form-group">
-					<div class="panel-heading"><strong>Plugins Config Options</strong></div>
-					<div class="panel-body collapse in" id="modules">
-						<div class="checkbox">
-							<label class="mcheck">
-								<input type="checkbox" id="test" name="config[plugins][Info_Collect][run]" checked ="checked"> Info Collect
-							</label>
-							<label class="mcheck">
-								<input type="checkbox" name="config[plugins][Common][run]" checked ="checked"> Common
-							</label>
-							<label class="mcheck">
-								<input type="checkbox" name="config[plugins][Sensitive_Info][run]" checked ="checked"> Sensitive Info
-							</label>
-							<label class="mcheck">
-								<input type="checkbox" name="config[plugins][System][run]" checked ="checked"> System
-							</label>
-							<label class="mcheck">
-								<input type="checkbox" name="config[plugins][Web_Applications][run]" checked ="checked"> Web Applications
-							</label>
-							<label class="mcheck">
-								<input type="checkbox" name="config[plugins][Weak_Password][run]"> Weak Password
-							</label>
-							<label class="mcheck">
-								<input type="checkbox" name="config[plugins][Others][run]"> Others
-							</label>
-						 </div>
+					<div class="panel-heading">
+						<div class="row">
+							<div class="col-md-3">
+								<strong>Plugins Config Options</strong>
+							</div>
+						</div>
 					</div>
-				</div>
-				<!-- <div class="panel panel-default">
-					<div class="panel-heading " ><button type="button" class="btn btn-danger" data-toggle="collapse" data-target="#demo" aria-expanded="true" aria-controls="demo">
-				  simple collapsible
-				</button></div>
-					<div class="panel-body collapse in" id="demo" >
+
+					<div class="panel-body collapse in" id="modules">
+						<div class="row form-line">
+							<div class="col-md-2">
+								<blockquote>Configs</blockquote>
+							</div>
+							<div class="col-md-10" id="configs">
+							</div>
+						</div>
+						<div class="panel panel-default form-group">
+							<div class="panel-body collapse in" id="modules">
+								<div class="row">
+									<div class="col-md-12">
+										<textarea id="json" class="form-control" rows="3" name="config[plugins]"></textarea>
+									</div>
+								</div>
+								<hr>
+								<div class="row">
+									<div class="col-md-12" id="legend">
+										<span id="expander">Expand all</span>
+										<span class="array">array</span>
+										<span class="object">object</span>
+										<span class="string">string</span>
+										<span class="number">number</span>
+										<span class="boolean">boolean</span>
+										<span class="null">null</span>
+										Notice: Remove item by deleting a property name.
+									</div>
+								</div>
+								<!-- <pre id="path"></pre> -->
+								<div id="editor" class="json-editor"></div>
+							</div>
+						</div>
 
 					</div>
-				</div> -->
+				</div>
 				<div>
-					<button class="btn btn-warning btn-lg disabled" id="submit" onclick="task_create()">
+					<button class="btn btn-warning btn-default disabled" id="submit" onclick="task_create()">
 						<span class="glyphicon glyphicon-flash"></span>
 						Scan it!
 					</button>

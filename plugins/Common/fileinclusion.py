@@ -14,10 +14,14 @@ info = {
 	'TIME':'20140731',
 	'WEB':'https://www.yascanner.com/#!/n/65'
 }
-opts = [
-	['url','http://testasp.vulnweb.com','target url'],
-	['timeout',600,'pulgin run max time'],
-]
+opts = {
+	'url':'http://testasp.vulnweb.com',	#'target ip'
+	'timeout':600,
+}
+# opts = [
+# 	['url','http://testasp.vulnweb.com','target url'],
+# 	['timeout',600,'pulgin run max time'],
+# ]
 # ----------------------------------------------------------------------------------------------------
 #	速度太慢，需要修改
 # ----------------------------------------------------------------------------------------------------

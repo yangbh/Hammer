@@ -11,9 +11,12 @@ info = {
 	'WEB':'',
 	'DESCRIPTION':'CVE-2012-3414'
 }
-opts = [
-	['url','http://testasp.vulnweb.com','target url'],
-]
+opts = {
+	'url':'http://testasp.vulnweb.com',	#'target ip'
+}
+# opts = [
+# 	['url','http://testasp.vulnweb.com','target url'],
+# ]
 
 def Assign(services):
 	if services.has_key('url') and services.has_key('cms'):

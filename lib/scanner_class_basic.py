@@ -74,10 +74,16 @@ class Scanner(object):
 	"""docstring for Scanner"""
 	def __init__(self,conffile):
 		super(Scanner, self).__init__()
+		
 		config = json.load(open(conffile,'r'))
-		pprint(config['global'])
+		# 1. init globalVar.config first
+		globalVar.config = config
+		pprint(globalVar.config['global'])
+
+		# 2. 
 		self.server = config['global']['server']
 		self.token = config['global']['token']
+		# 注意targetname直接在config的key,而不是config['global']的key
 		self.targetname = config['targetname']
 		self.target = config['global']['target']
 		self.threads = int(config['global']['threads']) if config['global']['threads']!= '' else multiprocessing.cpu_count()
@@ -87,6 +93,7 @@ class Scanner(object):
 		# print 'self.gatherdepth=',self.gatherdepth
 		self.loglevel = config['global']['loglevel'] if config['global']['threads'] == '' else 'INFO'
 		self.args = {'loglevel':self.loglevel,'threads':self.threads,'gatherdepth':self.gatherdepth}
+		self.pluginargs = config['plugins']
 
 		# web接口
 		self.web_interface = None
@@ -100,8 +107,8 @@ class Scanner(object):
 		
 		self.pls = []
 
+		# 3. init logging
 		self.loghandler = []
-
 		# log 模块,确保赋值一次
 		if globalVar.mainlogger is None:
 			globalVar.mainlogger = logging.getLogger('main')
@@ -276,12 +283,13 @@ class Scanner(object):
 
 			# for each_target in globalVar.undone_targets:
 			for each_target in targets:
-				globalVar.undone_targets.append(each_target)
-				service = {}
-				service_type = self._getServiceType(each_target)
-				# print service_type
-				service[service_type] = each_target
-				self.services.append(service)
+				if each_target:
+					globalVar.undone_targets.append(each_target)
+					service = {}
+					# print each_target
+					service_type = self._getServiceType(each_target)
+					service[service_type] = each_target
+					self.services.append(service)
 
 			print 'globalVar.undone_targets=',globalVar.undone_targets
 			print 'self.services=',
@@ -337,7 +345,7 @@ class Scanner(object):
 					# pprint(services)
 					# sys.exit()
 					for each_service in services:
-						pl = PluginLoader(BASEDIR+'/plugins/Info_Collect',each_service,'_'+self.targetname)
+						pl = PluginLoader(BASEDIR+'/plugins/Info_Collect',each_service,'_'+self.targetname, self.pluginargs)
 						pls.append(pl)
 
 					# globalVar.target_lock.acquire()
@@ -399,7 +407,7 @@ class Scanner(object):
 
 			self.pls = []
 			for each_service in self.services:
-				pl = PluginLoader(None,each_service,self.targetname)
+				pl = PluginLoader(None, each_service, self.targetname, self.pluginargs)
 				self.pls.append(pl)
 
 			results = []

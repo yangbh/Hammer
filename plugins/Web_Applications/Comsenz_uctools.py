@@ -12,9 +12,12 @@ info = {
 	'WEB':'',
 	'DESCRIPTION':'Comsenz 系统维护工具箱（UCenter专用版）破解登陆密码后可控制Discuz!'
 }
-opts = [
-	['url','http://testasp.vulnweb.com','target url'],
-]
+opts = {
+	'url':'http://testasp.vulnweb.com',	#'target ip'
+}
+# opts = [
+# 	['url','http://testasp.vulnweb.com','target url'],
+# ]
 
 def Assign(services):
 	if services.has_key('url') and services.has_key('cms'):

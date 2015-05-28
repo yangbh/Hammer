@@ -11,9 +11,12 @@ info = {
 	'WEB':'http://www.wooyun.org/bugs/wooyun-2010-076974',
 	'DESCRIPTION':'Kindeditor导致的目录遍历'
 }
-opts = [
-	['url','http://testasp.vulnweb.com','target url']
-]
+opts = {
+	'url':'http://testasp.vulnweb.com',	#'target ip'
+}
+# opts = [
+# 	['url','http://testasp.vulnweb.com','target url']
+# ]
 
 def Assign(services):
 	if services.has_key('url') and services.has_key('cms') and services['cms']=='douphp':

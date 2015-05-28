@@ -1,0 +1,79 @@
+.live-search-wrap {
+	position: relative;
+
+	input[type=text] {
+		width: 100%;
+	}
+}
+	div.live-search {
+		background: rgba($white-color, .8);
+
+		position: absolute;
+		left: 0;
+		top: 40px; // Height of input
+		z-index: 99;
+
+		width: 100%;
+		height: 300px;
+		overflow: auto;
+		transition: all .1s ease-out;
+
+		border: 1px solid $white-color;
+		box-shadow: 2px 2px 8px $shadow-color;
+
+		h2 {
+			@include body-text;
+			font-weight: bold;
+			padding: 10px 10px 5px;
+		}
+
+		ul {
+			margin: 0;
+			list-style: none;
+
+			li {
+				a {
+					display: block;
+					padding: 5px 10px;
+					color: inherit;
+					text-decoration: none;
+
+					&:hover {
+						font-weight: bold;
+					}
+
+					img {
+						width: 20px;
+						height: 20px;
+						margin-right: 10px;
+						vertical-align: middle;
+					}
+				}
+
+				&:nth-child(odd) a {
+					background: rgba($alt-bg, .8);
+				}
+			}
+		}
+
+		nav {
+			@include clearfix;
+			padding: 5px 10px;
+
+			a {
+				float: left;
+				color: inherit;
+				text-decoration: none;
+
+				&[rel=next] {
+					float: right;
+				}
+			}
+		}
+	}
+
+	div.live-search:empty {
+		height: 0;
+		box-shadow: none;
+	}
+

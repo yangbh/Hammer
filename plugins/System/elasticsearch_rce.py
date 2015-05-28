@@ -11,10 +11,14 @@ info = {
 	'WEB':'http://www.wooyun.org/bugs/wooyun-2014-061672',
 	'DESCRIPTION':'ElasticSearch 远程代码执行'
 }
-opts = [
-	['ip','221.123.140.66','target ip'],
-	['ports',[9200],'target ip\'s ports']
-]
+opts = {
+	'ip':'221.123.140.66',	#'target ip'
+	'ports':[9200],
+}
+# opts = [
+# 	['ip','221.123.140.66','target ip'],
+# 	['ports',[9200],'target ip\'s ports']
+# ]
 def Assign(services):
 	if services.has_key('ip') and services.has_key('ports'):
 		if 9200 in services['ports']:

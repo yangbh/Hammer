@@ -12,7 +12,7 @@ if (!already_login()) {
 $userid = get_userid();
 $proxies = $_POST['proxies'];
 // var_dump($proxies);
-$proxies = json_decode($proxies);
+$proxies = json_decode($proxies,true);
 // var_dump($proxies);
 $success = 0;
 $fail = 0;

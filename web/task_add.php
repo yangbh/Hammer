@@ -11,6 +11,11 @@ if (!already_login()) {
 // function: add a task
 // $target 		--	string
 // $argument 	--	dict
+// 
+// " --json_encode--> \\" --mysql insert--> \" --json_encode--> error
+// " --json_encode--> \\" --mysql escape--> \\\\\" --mysql insert--> \\" --json_encode--> success
+// 
+// 
 //				arguments中，json_encode一遍，但是mysql会自动decode一遍，因此需要进入mysql之前编码遍
 //				$argtuments中的换行
 //					经过json_encode'\n'
@@ -26,10 +31,13 @@ if (!already_login()) {
 function add_task($target,$arguments){
 	$target = check_sql($target);
 	$time = time();
-	$argJson = base64_encode(json_encode($arguments));
-	// $argJson = check_sql($argJson);
+	// $argJson = base64_encode(json_encode($arguments));
+	// $argJson = json_encode($arguments,JSON_FORCE_OBJECT);
+	$argJson = json_encode($arguments);
+	$argJson = mysql_real_escape_string($argJson);
+
 	$userid = get_userid();
-	// var_dump($argJson);
+	var_dump($argJson);
 	$query = "INSERT INTO Task(Target,Start_Time,Arguments,Status,User_ID) VALUES('$target',$time,'$argJson','waiting',$userid)";
 	// echo $query . '<br>';
 	$result = mysql_query($query);
@@ -47,6 +55,8 @@ function add_task($target,$arguments){
 // var_dump($_REQUEST);
 
 $arguments = $_REQUEST['config'];
+
+$arguments['plugins'] = json_decode($arguments['plugins'],true);
 $target = check_sql(trim($arguments['global']['target']));
 if (strlen($target)>32) {
 	$target = substr($target, 0, 32).'...';

@@ -78,6 +78,7 @@ require_once('common.php');
 						<li class="active"><a href="index.php">Home</a></li>
 						<?php if (already_login()) {echo '<li><a href="scans.php">Scans</a></li>';}?>
 						<li><a href="plugins.php">Plugins</a></li>
+						<?php if (already_login()) {echo '<li><a href="configs.php">Configs</a></li>';}?>
 						<li><a href="documents.php">Documents</a></li>
 						<li><a href="about.php">About</a></li>
 					</ul>

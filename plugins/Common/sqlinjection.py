@@ -10,10 +10,14 @@ info = {
 	'WEB':'https://github.com/stamparm/DSXS',
 	'DESCRIPTION':'sql 注入检测',
 }
-opts = [
-	['url','http://testasp.vulnweb.com','target url'],
-	['timeout',600,'pulgin run max time'],	
-]
+opts = {
+	'url':'http://testasp.vulnweb.com',	#'target ip'
+	'timeout':600,
+}
+# opts = [
+# 	['url','http://testasp.vulnweb.com','target url'],
+# 	['timeout',600,'pulgin run max time'],	
+# ]
 
 
 def getCrawlerHrefs(url):

@@ -15,10 +15,14 @@ info = {
 	'WEB':'https://www.bugscan.net/#!/n/361,http://zone.wooyun.org/content/18915',
 	'DESCRIPTION':'Elasticsearch Groovy任意命令执行漏洞,CVE-2015-1427'
 }
-opts = [
-	['ip','221.123.140.66','target ip'],
-	['ports',[9200],'target ip\'s ports']
-]
+opts = {
+	'ip':'221.123.140.66',	#'target ip'
+	'ports':[9200],
+}
+# opts = [
+# 	['ip','221.123.140.66','target ip'],
+# 	['ports',[9200],'target ip\'s ports']
+# ]
 
 def Assign(services):
 	if services.has_key('ip') and services.has_key('ports'):

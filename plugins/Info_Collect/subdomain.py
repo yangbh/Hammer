@@ -16,10 +16,15 @@ info = {
 	'VERSION':'1.0',
 	'RUNLEVEL':0
 }
-opts = [
-	['host','kangbtall.com','target host'],
-	['timeout',600,'pulgin run max time'],
-]
+opts = {
+	'host':'kangbtall.com',	#'target ip'
+	'timeout':60,
+	'auto_add':True,
+}
+# opts = [
+# 	['host','kangbtall.com','target host'],
+# 	['timeout',600,'pulgin run max time'],
+# ]
 
 def generateUrl(hosts=[]):
 	''''''

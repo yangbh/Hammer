@@ -8,13 +8,17 @@ import nmap
 from pprint import pprint
 
 # refer to http://zone.wooyun.org/content/18959
+
 commonports = '21,22,23,25,110,53,67,80,1521,1526,3306,3389,4899,8580'
+commonports += ',137'			# netbios
+commonports += ',161'			# snmp
 commonports += ',873'			# rsync default port
 commonports += ',443,465,993,995'	# ssl services port
 	# https tcp-443
 	# imaps tcp-993
 	# pop3s tcp-995
 	# smtps tcp-465
+commonports += ',1900'			# SSDP Discovery Service，xp可能沦为DDOS源
 commonports += ',2082,2083' 	# cpanel主机管理系统登陆 （国外用较多）​
 commonports += ',2222'  		# DA虚拟主机管理系统登陆 （国外用较多）​
 commonports += ',2601,2604'		# zebra路由，默认密码zebra 
@@ -42,7 +46,8 @@ class NmapScanner(object):
 	"""docstring for nmapScanner_class"""
 
 
-	def __init__(self, hosts,ports=commonports,arguments='-sV '):
+	# def __init__(self, hosts,ports=commonports,arguments='-sV '):
+	def __init__(self, hosts,ports=commonports,arguments=' '):
 		super(NmapScanner, self).__init__()
 		self.hosts = hosts
 		self.ports = ports

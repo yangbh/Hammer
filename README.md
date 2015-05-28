@@ -38,7 +38,7 @@ Usage: hammer.py [Auth] [Options] [Targets]
 	   --max-size: listen模式的最大线程池
 	--console: 控制台模式
 [Examples]
-	hammer.py -s www.hammer.org -t 3r75... -u plugins/Info_Collect/
+	hammer.py -s www.hammer.org -t 3r75... --update-plugins plugins/Info_Collect/
 	hammer.py -s www.hammer.org -t 3r75... --console
 	hammer.py -T http://testphp.vulnweb.com
 	hammer.py --conf-file conf/basic.conf

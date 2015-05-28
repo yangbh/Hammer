@@ -50,11 +50,11 @@ class WhatWeb(object):
 				# 结果在倒数第二行
 				result = ''
 				for eachline in fp:
-					if eachline and eachline != '':
+					if eachline and eachline not in ('','\n','{}\n'):
 						result = eachline 
 				ret = json.loads(result)
 			else:
-				ret = FALSE
+				ret = False
 
 			fp.close()
 		except TypeError,e:

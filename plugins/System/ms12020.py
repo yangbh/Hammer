@@ -14,10 +14,14 @@ info = {
 	'WEB':'http://technet.microsoft.com/zh-cn/security/bulletin/ms12-020',
 	'DESCRIPTION':'ms12-020 checker'
 }
-opts = [
-	['ip','221.123.140.66','target ip'],
-	['ports',[3389],'target ip\'s ports']
-]
+opts = {
+	'ip':'221.123.140.66',	#'target ip'
+	'ports':[3389],
+}
+# opts = [
+# 	['ip','221.123.140.66','target ip'],
+# 	['ports',[3389],'target ip\'s ports']
+# ]
 def Assign(services):
 	if services.has_key('ip') and services.has_key('ports'):
 		if 3389 in services['ports']:

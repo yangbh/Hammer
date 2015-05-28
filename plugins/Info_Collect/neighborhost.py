@@ -14,9 +14,14 @@ info = {
 	'VERSION':'1.0',
 	'RUNLEVEL':0
 }
-opts = [
-	['ip','61.164.42.190','target ip'],
-]
+opts = {
+	'ip':'176.28.50.165',	#'target ip'
+	'timeout':20,
+	'auto_add':True,
+}
+# opts = [
+# 	['ip','61.164.42.190','target ip'],
+# ]
 def Assign(services):
 	if services.has_key('ip'):
 		return True

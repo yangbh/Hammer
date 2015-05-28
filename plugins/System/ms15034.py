@@ -15,9 +15,12 @@ info = {
 	'WEB':'http://www.secpulse.com/archives/6009.html',
 	'DESCRIPTION':'MS15-034 checker'
 }
-opts = [
-	['url','http://testasp.vulnweb.com','target url']
-]
+opts = {
+	'url':'http://testasp.vulnweb.com',	#'target ip'
+}
+# opts = [
+# 	['url','http://testasp.vulnweb.com','target url']
+# ]
 
 def Assign(services):
 	if services.has_key('url'):

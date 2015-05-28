@@ -12,21 +12,36 @@ info = {
 	'VERSION':'1.0',
 	'RUNLEVEL':1
 }
-opts = [
-	['url','http://testasp.vulnweb.com','target url'],
-	['timeout',3000,'pulgin run max time'],
-	['max_depth',5,'crawler max depth'],
-	['max_count',500,'crawler max count'],
-	['concurrency',20,'threads'],
-	['timeout',10,'each request timeout'],
-	['time',6*3600,'crawler max count'],
-	['headers',None,'http request headers'],
-	['cookies',None,'http cookies'],
-	['ssl_verify',False,''],
-	['same_host',True,''],
-	['same_domain',True,''],
-	['keyword',None,''],
-]
+
+opts = {
+	'url':'http://testasp.vulnweb.com',	#'target ip'
+	'timeout':3000,			#'pulgin run max time'
+	'max_depth':5,
+	'max_count':500,
+	'time':6*3600,
+	'headers':'',
+	'cookies':'',
+	'ssl_verify':False,
+	'same_host':True,
+	'same_domain':True,
+	'keyword':'',
+}
+
+# opts = [
+# 	['url','http://testasp.vulnweb.com','target url'],
+# 	['timeout',3000,'pulgin run max time'],
+# 	['max_depth',5,'crawler max depth'],
+# 	['max_count',500,'crawler max count'],
+# 	['concurrency',20,'threads'],
+# 	['timeout',10,'each request timeout'],
+# 	['time',6*3600,'crawler max count'],
+# 	['headers',None,'http request headers'],
+# 	['cookies',None,'http cookies'],
+# 	['ssl_verify',False,''],
+# 	['same_host',True,''],
+# 	['same_domain',True,''],
+# 	['keyword',None,''],
+# ]
 
 def Assign(services):
 	if services.has_key('url'):

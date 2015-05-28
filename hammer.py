@@ -13,6 +13,7 @@ import globalVar
 
 from pprint import pprint
 from common import genFileName_v2
+from commonFun import genTargetName
 from scanner_class_basic import Scanner
 from scanner_class_pluginrunner import PluginMultiRunner
 # from listener_class import Listener
@@ -46,6 +47,7 @@ def usage():
 	print "[Options]"
 	print "\t-u --update-plugins: update new added plugins to web"
 	print "\t   --update-proxies: update proxies to web server"
+	print "\t   --update-config: update config to web server"
 	print "\t-v --verbose: increase verbosity level"
 	print "\t   --threads: max number of process, default cpu number"
 	print "\t   --auto-proxy: use auto proxy, make sure server exist proxies first"
@@ -61,7 +63,7 @@ def usage():
 	print "\t   --max-size: scan pool max size, default 50"
 	print "\t--console: console mode"
 	print "[Examples]"
-	print "\thammer.py -s www.hammer.org -t 3r75... -u plugins/Info_Collect/"
+	print "\thammer.py -s www.hammer.org -t 3r75... --update-plugins plugins/Info_Collect/"
 	print "\thammer.py -s www.hammer.org -t 3r75... --console"
 	print "\thammer.py -T http://testphp.vulnweb.com"
 	print "\thammer.py --conf-file conf/basic.conf"
@@ -73,7 +75,7 @@ def usage():
 def main():
 
 	try :
-		opts, args = getopt.getopt(sys.argv[1:], "hvls:t:u:T:p:",['help','verbose=','server=','token=','update-plugins=','update-proxies','auto-proxy','target=','plugin=','plugin-arg=','no-gather','gather-depth=','threads=','conf-file=','listen','console'])
+		opts, args = getopt.getopt(sys.argv[1:], "hvls:t:u:T:p:",['help','verbose=','server=','token=','update-plugins=','update-proxies','update-config','auto-proxy','target=','plugin=','plugin-arg=','no-gather','gather-depth=','threads=','conf-file=','listen','console'])
 	except getopt.GetoptError,e:
 		print 'getopt.GetoptError',e
 		usage()
@@ -91,11 +93,13 @@ def main():
 	_threads = None
 	_maxsize = 50
 	_update_proxy = False
+	_update_config = False
 	_auto_proxy = False
 	_conf_file = 'conf/basic.conf'
 
 	for opt, arg in opts:
 		if opt in ('-h','--help'):
+			show()
 			usage()
 		elif opt in ('-v'):
 			_vv = 'DEBUG'
@@ -115,6 +119,8 @@ def main():
 				_pluginpath = 'plugins/'
 		elif opt in ('--update-proxies'):
 			_update_proxy = True
+		elif opt in ('--update-config'):
+			_update_config = True
 		elif opt in ('--auto-proxy'):
 			_update_proxy = True
 		elif opt in ('--conf-file'):
@@ -179,25 +185,36 @@ def main():
 			li.run()
 			return
 
-		elif _update_proxy:
+		# update proxies
+		if _update_proxy:
 			ps = ProxyScraper()
 			ps.scrap_proxies_1()
 			ps.proxies_submit()
 			return
 		
-		elif '_pluginpath' in dir() and _pluginpath:
+		# update plugins
+		if '_pluginpath' in dir() and _pluginpath:
 			# print '_pluginpath=',_pluginpath
 			# print '_server=',_server
 			# print '_token=',_token
 			loadPlugins(_pluginpath,_server,_token)
+			return
 
-		elif '_conf_file' in dir() and os.path.isfile(_conf_file):			
+		# update config
+		if '_update_config' in dir() and _update_config:
+			if '_conf_file' in dir() and os.path.isfile(_conf_file):
+				pass
+
+		if '_conf_file' in dir() and os.path.isfile(_conf_file):			
 			# set global config
 			config = json.load(open(_conf_file,'r'))
 			config['global']['server'] = _server
 			config['global']['token'] = _token
 			if _target:
 				config['global']['target'] = _target
+				# 注意targetname直接在config的key,而不是config['global']的key
+				# 参考dist_hi.php
+				config['targetname'] = genTargetName(_target)
 			else:
 				_target = config['global']['target']
 			if _threads:

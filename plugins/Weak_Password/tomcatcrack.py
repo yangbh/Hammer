@@ -14,10 +14,14 @@ info = {
 	'WEB':'http://zone.wooyun.org/content/15989',
 	'DESCRIPTION':'Tomcat 暴力破解'
 }
-opts = [
-	['url','http://testasp.vulnweb.com','target url'],
-	['timeout',3000,'pulgin run max time'],
-]
+opts = {
+	'url':'http://testasp.vulnweb.com',	#'target ip'
+	'timeout':3000,
+}
+# opts = [
+# 	['url','http://testasp.vulnweb.com','target url'],
+# 	['timeout',3000,'pulgin run max time'],
+# ]
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
@@ -38,7 +42,6 @@ def getPwds(neighborhosts):
 		if tp != '':
 			commonpwd.append(tp)
 	
-	#
 	# print neighborhosts
 	if neighborhosts:
 		for eachhost in neighborhosts:
@@ -75,64 +78,63 @@ def tomcatcrack(url,username,passwd):
 				# print username+':'+passwd,'success'
 				logger(username+':'+passwd+'success')
 				security_hole(username+':'+passwd)
-				return 'success'
-			else:
-				# print username+':'+passwd,'fail'
-				return 'fail'
 		# exceptions cased by multi threads
 		except IndexError,e:
-			# print 'IndexError',e
 			pass
 
-def Audit(services):
+def Assign(services):
 	if services.has_key('url') and services.has_key('webserver') and services['webserver'] == 'Tomcat':
-		url = services['url']
-		host = None
-		m = re.match('(http[s]?)://([^:^/]+):?([^/]*)/',url)
-		if m:
-			host = m.group(2)
-		pwddicts = getPwds(host)
-		# pprint(pwddicts)
+		return True
+	return False
 
-		fs = {}
+def Audit(services):
+	url = services['url']
+	host = None
+	m = re.match('(http[s]?)://([^:^/]+):?([^/]*)/',url)
+	if m:
+		host = m.group(2)
+	pwddicts = getPwds(host)
+	# pprint(pwddicts)
+
+	fs = {}
+	# time.clock()
+	# use ProcessPoolExecutor will faster
+	with futures.ThreadPoolExecutor(max_workers=20) as executor:      #默认10线程
 		time.clock()
-		# use ProcessPoolExecutor will faster
-		with futures.ThreadPoolExecutor(max_workers=20) as executor:      #默认10线程
-			time.clock()
-			for eachname in pwddicts.keys():
-				for eachpwd in pwddicts[eachname]:
-					# print 'starting\t',eachname+':'+eachpwd
-					future = executor.submit(tomcatcrack,url,eachname,eachpwd,)
-					fs[future] = eachname+':'+eachpwd
-					# print eachname+':'+eachpwd +' '+str(f.result())
-			# print time.clock()
-			logger(time.clock())
-
-			# 如何抓取到一个就优雅的退出？
-			# print len(fs)
-			# uncompleted_fs = fs
-			# for future in futures.as_completed(fs):
-			# 	url = fs[future]
-			# 	if future.exception() is not None:
-			# 		print('%r generated an exception: %s' % (url,future.exception()))
-			# 		#Regardless of the value of wait, the entire Python program will not exit until all pending futures are done executing.
-			# 		# executor.shutdown(wait=False)
-			# 		break
-			# 	else:
-			# 		# print url,'\t',future.result()
-			# 		uncompleted_fs.pop(future)
-			# print len(fs)
-			# print time.clock()
-			# for future in uncompleted_fs:
-			# 	url = uncompleted_fs[future]
-			# 	fg = future.cancel()
-			# 	# print 'canceling',url,'\t',fg
-			# donefs,notdonefs = futures.wait(fs)
-			# # print notdonefs
-			# print time.clock()
-		# 找到一个不立即停止，把所有子进程都跑完，最后返回，所花时间更长
+		for eachname in pwddicts.keys():
+			for eachpwd in pwddicts[eachname]:
+				# print 'starting\t',eachname+':'+eachpwd
+				future = executor.submit(tomcatcrack,url,eachname,eachpwd,)
+				fs[future] = eachname+':'+eachpwd
+				# print eachname+':'+eachpwd +' '+str(f.result())
 		# print time.clock()
-		logger(time.clock())
+		# logger(time.clock())
+
+		# 如何抓取到一个就优雅的退出？
+		# print len(fs)
+		# uncompleted_fs = fs
+		# for future in futures.as_completed(fs):
+		# 	url = fs[future]
+		# 	if future.exception() is not None:
+		# 		print('%r generated an exception: %s' % (url,future.exception()))
+		# 		#Regardless of the value of wait, the entire Python program will not exit until all pending futures are done executing.
+		# 		# executor.shutdown(wait=False)
+		# 		break
+		# 	else:
+		# 		# print url,'\t',future.result()
+		# 		uncompleted_fs.pop(future)
+		# print len(fs)
+		# print time.clock()
+		# for future in uncompleted_fs:
+		# 	url = uncompleted_fs[future]
+		# 	fg = future.cancel()
+		# 	# print 'canceling',url,'\t',fg
+		# donefs,notdonefs = futures.wait(fs)
+		# # print notdonefs
+		# print time.clock()
+	# 找到一个不立即停止，把所有子进程都跑完，最后返回，所花时间更长
+	# print time.clock()
+	# logger(time.clock())
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------

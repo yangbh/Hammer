@@ -12,9 +12,12 @@ info = {
 	'WEB':'http://beebeeto.com/pdb/poc-2014-0013/',
 	'DESCRIPTION':'struts2 代码执行'
 }
-opts = [
-	['url','http://testasp.vulnweb.com','target url'],
-]
+opts = {
+	'url':'http://testasp.vulnweb.com',	#'target ip'
+}
+# opts = [
+# 	['url','http://testasp.vulnweb.com','target url'],
+# ]
 
 SIGNATURE = "7JMJJMJJ-X3Y3-9527-86F5-CGHMJSTVSMJJ"
 COOKIE, UA, REFERER = "Cookie", "User-Agent", "Referer"

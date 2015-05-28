@@ -59,6 +59,7 @@ require_once('common.php');
 						<li><a href="index.php">Home</a></li>
 						<?php if (already_login()) {echo '<li><a href="scans.php">Scans</a></li>';}?>
 						<li><a href="plugins.php">Plugins</a></li>
+						<?php if (already_login()) {echo '<li><a href="configs.php">Configs</a></li>';}?>
 						<li><a href="documents.php">Documents</a></li>
 						<li class="active"><a href="about.php">About</a></li>
 					</ul>
@@ -125,6 +126,11 @@ EOF;
 
 				<div class="col-xs-10 col-sm-10 col-md-10" role="main" class="main">
 					<h2 id="1.4">1.4</h2>
+					<h3>1.4.5.150530_Beta</h3>
+						<p><strong>改进：</strong></p>
+						<p>a).全面引入全局config变量，规范config接口</p>
+						<p>b).web config管理以及更细粒度的创建任务、插件参数配置</p>
+						<p>c).插件接口变量opts更改,以适应通过web可配置</p>
 					<h3>1.4.4.150502_Beta</h3>
 						<p><strong>改进：</strong></p>
 						<p>a).修复-l监听模式subTarget子进程共享变量紊乱</p>

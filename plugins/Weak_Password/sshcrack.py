@@ -15,11 +15,14 @@ info = {
 	'TIME':'20140716',
 	'WEB':''
 }
-opts = [
-	['ip','176.28.50.165','target url'],
-	['timeout',3000,'pulgin run max time'],
-]
-ret = ''
+opts = {
+	'ip':'176.28.50.165',	#'target ip'
+	'timeout':3000,
+}
+# opts = [
+# 	['ip','176.28.50.165','target url'],
+# 	['timeout',3000,'pulgin run max time'],
+# ]
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
@@ -67,48 +70,32 @@ def getPwds(neighborhosts):
 	return pwddicts
 
 def ssh2(ip,port,username,passwd,lock):  
-	global ret
-	printinfo = 'ssh://%s:%s@%s:%d' % (username,passwd,ip,port)
-	sshcmd = printinfo
-	printinfo += os.linesep
-	flg = False
+	sshcmd = 'ssh://%s:%s@%s:%d' % (username,passwd,ip,port)
+	logger(sshcmd)
 	for i in range(5):
 		try:  
 			ssh = paramiko.SSHClient()  
 			ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())  
 			ssh.connect(ip,port,username,passwd,timeout=5) 
-			#print 'login success'
-			printinfo +=  'login success' + os.linesep
+			logger('login success %s' % sshcmd)
 			ssh.close()
 			security_hole(sshcmd)
-			flg = True
 			break
 
 		except paramiko.AuthenticationException,e:  
-			#print 'paramiko.AuthenticationException',e
-			printinfo +=  'paramiko.AuthenticationException:\t' + str(e) + os.linesep
+			logger('paramiko.AuthenticationException:\t%s' % str(e))
 			break
 		except socket.timeout,e:
-			#print 'socket.timeout',e
-			printinfo +=  'socket.timeout:\t' + str(e) + os.linesep
+			logger('socket.timeout:\t%s' % str(e))
 			break
 		except socket.error,e:
-			#print 'socket.error',e
-			printinfo +=  'socket.error:\t' + str(e) + os.linesep
+			logger('socket.error:\t%s' % str(e))
 			break
 		except paramiko.SSHException,e:
 			#print 'paramiko.SSHException',e
-			printinfo +=  'paramiko.SSHException:\t' + str(e) + os.linesep
+			logger('paramiko.SSHException:\t%s' % str(e))
 			time.sleep(1)
 		ssh.close()
-
-	lock.acquire()
-	print printinfo
-	if flg:
-		ret += printinfo
-	lock.release()
-
-	return (flg, printinfo)
 
 def getPortByService(services,scname):
 	try:
@@ -116,79 +103,85 @@ def getPortByService(services,scname):
 		for eachport in services['port_detail'].keys():
 			if services['port_detail'][eachport]['name'] == scname:
 				ret.append(eachport)
-				#break
 		print ret
 		return ret
 	except KeyError,e:
 		print 'KeyError:\t', e
 
-def Audit(services):
-	if services.has_key('ip') and services.has_key('ports') and False:
-		# get ssh port
-		ssh_port  = 0
+def Assign(services):
+	if services.has_key('ip') and services.has_key('ports'):
 		if 22 in services['ports']:
 			# name maybe tcpwrapped
 			if services['port_detail'][22]['name'] == 'ssh':
-				ssh_port = 22
-
+				return True
 		else:
 			ports = getPortByService(services,'ssh')
 			if ports and len(ports):
-				ssh_port = ports[0]
-		if ssh_port == 0:
-			return
+				return True
+	return False
 
-		pwddicts = {}
-		# 
-		neighborhosts = []
-		if services.has_key('neighborhosts'):
-			neighborhosts = services['neighborhosts']
-		pwddicts = getPwds(neighborhosts)
+def Audit(services):
+	# get ssh port
+	ssh_port  = 0
+	if 22 in services['ports']:
+		# name maybe tcpwrapped
+		if services['port_detail'][22]['name'] == 'ssh':
+			ssh_port = 22
 
-		pprint(pwddicts)
-		#sys.exit(0)
+	else:
+		ports = getPortByService(services,'ssh')
+		if ports and len(ports):
+			ssh_port = ports[0]
+	if ssh_port == 0:
+		return
 
-		#  threads
-		lock = threading.Lock()
-		threads = []
-		ip = services['ip']
-		maxthreads = 20
+	pwddicts = {}
+	# 
+	neighborhosts = []
+	if services.has_key('neighborhosts'):
+		neighborhosts = services['neighborhosts']
+	pwddicts = getPwds(neighborhosts)
 
-		# for eachname in pwddicts.keys():
-		# 	for eachpwd in pwddicts[eachname]:
-		# 		th = threading.Thread(target=ssh2,args=(ip,ssh_port,eachname,eachpwd,lock))
-		# 		threads.append(th)
+	# pprint(pwddicts)
+	#sys.exit(0)
 
-		# i = 0
-		# while i<len(threads):
-		# 	if i+maxthreads >len(threads):
-		# 		numthreads = len(threads) - i
-		# 	else:
-		# 		numthreads = maxthreads
-		# 	print 'threads:',i,' - ', i + numthreads
+	#  threads
+	lock = threading.Lock()
+	threads = []
+	ip = services['ip']
+	maxthreads = 20
 
-		# 	# start threads
-		# 	for j in range(numthreads):
-		# 		threads[i+j].start()
+	# for eachname in pwddicts.keys():
+	# 	for eachpwd in pwddicts[eachname]:
+	# 		th = threading.Thread(target=ssh2,args=(ip,ssh_port,eachname,eachpwd,lock))
+	# 		threads.append(th)
 
-		# 	# wait for threads
-		# 	for j in range(numthreads):
-		# 		threads[i+j].join()
+	# i = 0
+	# while i<len(threads):
+	# 	if i+maxthreads >len(threads):
+	# 		numthreads = len(threads) - i
+	# 	else:
+	# 		numthreads = maxthreads
+	# 	print 'threads:',i,' - ', i + numthreads
 
-		# 	i += maxthreads
+	# 	# start threads
+	# 	for j in range(numthreads):
+	# 		threads[i+j].start()
+
+	# 	# wait for threads
+	# 	for j in range(numthreads):
+	# 		threads[i+j].join()
+
+	# 	i += maxthreads
 
 
-		with futures.ThreadPoolExecutor(max_workers=maxthreads) as executor:      #默认10线程
-			for eachname in pwddicts.keys():
-				for eachpwd in pwddicts[eachname]:
-					# print 'starting\t',eachname+':'+eachpwd
-					future = executor.submit(ssh2,ip,ssh_port,eachname,eachpwd,lock)
-
-	# else:
-	# 	output += 'plugin does not run' + os.linesep
-
-	if ret != '':
-		security_hole(str(ret))
+	with futures.ThreadPoolExecutor(max_workers=maxthreads) as executor:      #默认10线程
+		for eachname in pwddicts.keys():
+			for eachpwd in pwddicts[eachname]:
+				# print 'starting\t',eachname+':'+eachpwd
+				future = executor.submit(ssh2,ip,ssh_port,eachname,eachpwd,lock)
+	# if ret != '':
+	# 	security_hole(str(ret))
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------
@@ -197,6 +190,6 @@ if __name__=='__main__':
 	if len(sys.argv) ==  2:
 		ip = sys.argv[1]
 	# services={'ip':'127.0.0.1','ports':[80,8080],'port_detail':{22:{'name':'ssh'}}, 'neighborhosts': ['eguan.cn']}
-	services={'ip':ip,'ports':[80,8080],'port_detail':{22:{'name':'ssh'}}, 'neighborhosts': ['eguan.cn']}
+	services={'ip':ip,'ports':[22],'port_detail':{22:{'name':'ssh'}}, 'neighborhosts': ['netlab.pkusz.edu.cn']}
 	pprint(Audit(services))
 	pprint(services)

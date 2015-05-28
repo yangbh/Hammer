@@ -11,10 +11,14 @@ info = {
 	'WEB':'http://drops.wooyun.org/%E8%BF%90%E7%BB%B4%E5%AE%89%E5%85%A8/2470',
 	'DESCRIPTION':'MongoDB配置不当导致未授权访问'
 }
-opts = [
-	['ip','221.123.140.66','target ip'],
-	['ports',[27017],'target ip\'s ports']
-]
+opts = {
+	'ip':'221.123.140.66',	#'target ip'
+	'ports':[27017],
+}
+# opts = [
+# 	['ip','221.123.140.66','target ip'],
+# 	['ports',[27017],'target ip\'s ports']
+# ]
 
 def Assign(services):
 	if services.has_key('ip') and services.has_key('ports'):

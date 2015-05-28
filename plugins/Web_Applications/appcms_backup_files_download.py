@@ -12,10 +12,12 @@ info = {
 	'WEB':'http://www.wooyun.org/bugs/wooyun-2014-077157',
 	'DESCRIPTION':'appcms 备份文件下载'
 }
-
-opts = [
-	['url','http://testasp.vulnweb.com','target url'],
-]
+opts = {
+	'url':'http://testasp.vulnweb.com',	#'target ip'
+}
+# opts = [
+# 	['url','http://testasp.vulnweb.com','target url'],
+# ]
 
 def Assign(services):
 	if services.has_key('url') and services.has_key('cms'):

@@ -11,9 +11,12 @@ info = {
 	'WEB':'',
 	'DESCRIPTION':'DedeCMS recommend.php文件通杀SQL注入漏洞，详见http://www.cnseay.com/3714/'
 }
-opts = [
-	['url','http://testasp.vulnweb.com','target url'],
-]
+opts = {
+	'url':'http://testasp.vulnweb.com',	#'target ip'
+}
+# opts = [
+# 	['url','http://testasp.vulnweb.com','target url'],
+# ]
 
 def Assign(services):
 	if services.has_key('url') and services.has_key('cms'):

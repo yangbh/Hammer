@@ -30,3 +30,6 @@
 %com%_conn
 %com%_backup
 %com%-backup
+
+# mac os DS_store
+%com%.DS_store 

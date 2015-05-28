@@ -11,9 +11,12 @@ info = {
 	'WEB':'https://gist.github.com/brandonprry/0ac151a8479b48a40099,https://twitter.com/BrandonPrry/status/572800017867517952',
 	'DESCRIPTION':'PHPMoAdmin Unauthorized Remote Code Execution'
 }
-opts = [
-	['url','http://testasp.vulnweb.com','target url'],
-]
+opts = {
+	'url':'http://testasp.vulnweb.com',	#'target ip'
+}
+# opts = [
+# 	['url','http://testasp.vulnweb.com','target url'],
+# ]
 
 def Assign(services):
 	if services.has_key('url') and services.has_key('cms'):

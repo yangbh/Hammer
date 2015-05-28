@@ -59,6 +59,7 @@ function login_check($username,$password){
 		$result = mysql_query($query);
 		if ($row = mysql_fetch_array($result)) {
 			$_SESSION['user'] = $row['Name'];
+			$_SESSION['userID'] = $row['ID'];
 			$_SESSION['isadmin'] = $row['Is_Admin'];
 			return True;
 		}
@@ -72,6 +73,7 @@ function login_check($username,$password){
 		$result = mysql_query($query);
 		if ($row = mysql_fetch_array($result)) {
 			$_SESSION['user'] = $row['Name'];
+			$_SESSION['userID'] = $row['ID'];
 			$_SESSION['isadmin'] = $row['Is_Admin'];
 			return True;
 		}

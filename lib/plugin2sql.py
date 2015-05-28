@@ -2,8 +2,10 @@
 #coding:utf-8
 import os
 import sys
+import json
 import MySQLdb
 import requests
+from pprint import pprint
 from dummy import BASEDIR
 from mysql_class import MySQLHelper
 from common import addslashes
@@ -24,6 +26,7 @@ def write2sql(filepath=None):
 
 		pName = addslashes(info['NAME'])
 		pType = os.path.basename(os.path.dirname(filepath))
+		pFile = os.path.basename(filepath).replace('.py', '')
 		pAuthor = ''
 		if info.has_key('AUTHOR'):
 			pAuthor = addslashes(info['AUTHOR'])
@@ -57,13 +60,15 @@ def write2web(filepath=None,server='localhost',token=''):
 	try:
 		filepath = os.path.realpath(filepath)
 		print 'loading', filepath
-		info = runEachPlugin(filepath)
+		info, opts = runEachPlugin(filepath)
+
 		fp = open(filepath,'r')
 		code = fp.read()
 		fp.close()
 
 		pName = info['NAME']
 		pType = os.path.basename(os.path.dirname(filepath))
+		pFile = os.path.basename(filepath).replace('.py', '')
 		pAuthor = ''
 		if info.has_key('AUTHOR'):
 			pAuthor = info['AUTHOR']
@@ -81,10 +86,18 @@ def write2web(filepath=None,server='localhost',token=''):
 			pDescription = info['DESCRIPTION']
 		pCode = code
 
+		tp = {}
+		for each_key in opts.keys():
+			if each_key not in ('ip','url','host'):
+				tp[each_key] = opts[each_key]
+
+		pprint(tp)
+		json_opts = json.dumps(tp)
+
 		# send to  web server
 		serverurl = 'http://' + server +'/plugins_add.php'
 		# cookies = {'PHPSESSID':token}
-		postdata = {'name':pName,'type':pType,'token':token,'author':pAuthor,'time':pTime,'version':pVersion,'web':pWeb,'description':pDescription,'code':pCode}
+		postdata = {'name':pName,'type':pType,'token':token,'author':pAuthor,'time':pTime,'version':pVersion,'web':pWeb,'description':pDescription,'code':pCode,'opts':json_opts,'file':pFile}
 		# print postdata
 		r = requests.post(serverurl,data=postdata)
 		print r.status_code,r.text
@@ -111,13 +124,13 @@ def runEachPlugin(pluginfilepath):
 	modulepath = modulepath.replace('/','.')
 	print 'modulepath',modulepath
 
-	importcmd = 'from ' + modulepath + ' import info'
+	importcmd = 'from ' + modulepath + ' import info, opts'
 	exec(importcmd)
 
 	# print importcmd
 	# print sys.path
-	print info
-	return info
+	# print info
+	return (info, opts)
 
 def loadPlugins(path=None,server='localhost',token=''):
 	print '>>>loading plugins'

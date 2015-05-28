@@ -21,9 +21,12 @@ info = {
 	'WEB':'https://www.marshut.net/krtqnk/ip-board-3-4-7-sql-injection.html',
 	'DESCRIPTION':''
 }
-opts = [
-	['url','http://testasp.vulnweb.com','target url']
-]
+opts = {
+	'url':'http://testasp.vulnweb.com',	#'target ip'
+}
+# opts = [
+# 	['url','http://testasp.vulnweb.com','target url']
+# ]
 # ----------------------------------------------------------------------------------------------------
 #
 # ----------------------------------------------------------------------------------------------------

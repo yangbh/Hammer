@@ -4,7 +4,7 @@ import os
 import sys
 import logging
 import globalVar
-
+import traceback
 # from globalVar import mainlogger
 from multiprocessing import Process,Manager
 from dummy import BASEDIR
@@ -17,7 +17,13 @@ from mlogging_class import StreamHandler_MP
 # ----------------------------------------------------------------------------------------------------
 class PluginLoader(object):
 	"""docstring for PluginLoader"""
-	def __init__(self, pluginpath=None, services = None,outputpath=''):
+	def __init__(self, pluginpath=None, services = None,outputpath='', pluginargs=None):
+		'''
+		@pluginpath:
+		@services:
+		@outputpath:
+		@pluginpath:
+		'''
 		super(PluginLoader, self).__init__()
 		if pluginpath == None:
 			pluginpath = BASEDIR +'/plugins'
@@ -25,6 +31,7 @@ class PluginLoader(object):
 		# print 'self.path=',self.path
 
 		self.services = services
+		self.pluginargs = pluginargs
 
 		self.plugindict = {}
 		self.retinfo = []
@@ -135,20 +142,27 @@ class PluginLoader(object):
 			globalVar.mainlogger.error('Exception:'+str(e))
 		
 
-	def _safeRunAudit(self,audit,services,timeout=10):
+	def _safeRunAudit(self,Audit,services,timeout=10):
 		'''
 		'''
-		mg = Manager()
-		gservices = mg.dict(services)
-
-		p = Process(target=audit, args=(gservices,))
-		p.start()
-		p.join(timeout=timeout)
-		if p.is_alive():
-			p.terminate()
-			globalVar.mainlogger.warning('%s plugin run time out, stop it', globalVar.plugin_now)
-			# print 'plugin run time out, stop it'
-		return gservices
+		try:
+			mg = Manager()
+			gservices = mg.dict(services)
+			# pprint(Audit)
+			# print 'yes0'
+			# Audit.func_globals['services'] = services
+			p = Process(target=Audit,args=(gservices,))
+			# print 'yes1'
+			p.start()
+			# print 'yes2'
+			p.join(timeout=timeout)
+			if p.is_alive():
+				p.terminate()
+				globalVar.mainlogger.warning('%s plugin run time out, stop it', globalVar.plugin_now)
+				# print 'plugin run time out, stop it'
+			return gservices
+		except Exception,e:
+			traceback.print_exc(file=sys.stdout)
 
 	def getPluginInfo(self,pluginfilepath):
 		# print '>>>running plugin:',pluginfilepath
@@ -203,9 +217,17 @@ class PluginLoader(object):
 		self._saveRunningInfo('>>>loading plugins'+os.linesep)
 		self._saveRunningInfo(os.linesep+str(self.plugindict)+os.linesep*2)
 
-	def runEachPlugin(self, pluginfilepath, services=None):
+	def runEachPlugin(self, pluginfilepath, pluginopts=None, services=None):
+		''' 执行每一个插件
+		@pluginfilepath: 插件路径
+		@pluginopts: 插件opts参数，注意这里非插件自带的opts，而是从conf文件读取的opts
+		@services: 扫描参数services，默认为self.services
+		'''
 		# self._initSubProcess()
 		try:
+			if services == None:
+				services = dict(self.services)
+			
 			# print '>>>running plugin:',pluginfilepath
 			self._saveRunningInfo(os.linesep + '>>>running plugin:' + pluginfilepath + os.linesep)
 			globalVar.mainlogger.info('[*][*][-] running plugin:'+pluginfilepath)
@@ -219,20 +241,12 @@ class PluginLoader(object):
 			# pprint(globalVar.plugin_now)
 			# globalVar.plugin_now_lock.release()
 
-			# set each plugin timeout value
-			pluginopts = self.getPluginOpts(pluginfilepath)
-			timeout = None
-			for eachline in pluginopts:
-				if eachline[0] == 'timeout':
-					timeout = eachline[1]
-
-			if services == None:
-				services = dict(self.services)
-
 			modulepath = pluginfilepath.replace(BASEDIR+'/plugins/','')
 			modulepath = modulepath.replace('.py','')
+			filename = modulepath.split('/')
 			modulepath = modulepath.replace('.','')
 			modulepath = modulepath.replace('/','.')
+
 			# print modulepath
 			# logger = globalVar.mainlogger
 			# 如果有Assign函数，则导入
@@ -259,21 +273,38 @@ class PluginLoader(object):
 			# print 'id(globalVar)=\t',id(globalVar)
 			# print 'globalVar.scan_task_dict=\t',globalVar.scan_task_dict
 			
+			# globalVar.mainlogger.error('id1=%s' % id(Audit))
 			retflag = True
 			if locals().has_key('Assign'):
 				retflag = False
 				retflag = Assign(services)
 
-			globalVar.mainlogger.debug('retflag='+str(retflag))
+			globalVar.mainlogger.info('retflag='+str(retflag))
 
 			if retflag and locals().has_key('Audit'):
 				ret, output = ({},'')
 				try:
+					# patch Audit function
+					# 直接替换掉Audit函数的opts变量
+					# globalVar.mainlogger.error('id2=%s' % id(Audit))
+					# pprint(Audit.func_globals)
+					# pprint(Audit.func_globals['opts'])
+					Audit.func_globals['opts'] = pluginopts
+					pprint(Audit.func_globals['opts'])
+					# return
+					# set each plugin timeout value
+					# pluginopts = self.getPluginOpts(pluginfilepath)
+					timeout = None
+					if pluginopts.has_key('timeout'):
+						timeout = pluginopts['timeout']
+					# print Audit,services,timeout
+					services = self._safeRunAudit(Audit,services,timeout) 
+					
 					# Audit(services)
 					# ret,output = Audit(services)
-					services = self._safeRunAudit(Audit,services,timeout) 
-				
+
 				except Exception,e:
+					traceback.print_exc(file=sys.stdout)
 					globalVar.mainlogger.error('Audit Function Exception:\t'+str(e))
 
 				# services info
@@ -339,7 +370,34 @@ class PluginLoader(object):
 		except Exception,e:
 			globalVar.mainlogger.error('Run Plugin Exception:\t:'+str(e))
 
+	def _formatOpts(self,pluginopts):
+		'''	规范plugin opts 参数（php json_encode的一个坑，会将null的array decode成'[]'）
+			参考：http://stackoverflow.com/questions/8595627/best-way-to-create-an-empty-object-in-json-with-php
+			1. 在此将list类型的pluginopts转换成dict型，并加上默认timeout
+			2. 默认为unicode类型，更改为str类型
+		@pluginopts: 源pluginopts参数
+		'''
+		ret = {}
+		defaulttimeout = 10
+		if type(pluginopts) == list:
+			return {'timeout':defaulttimeout}
+		elif type(pluginopts) == dict:
+			if not pluginopts.has_key(u'timeout'):
+				ret['timeout'] = defaulttimeout
+			for key in pluginopts.keys():
+				if type(key) == unicode:
+					key = key.encode('utf-8')
+				if type(pluginopts[key]) == unicode:
+					ret[key] = pluginopts[key].encode('utf-8')
+				else:
+					ret[key] = pluginopts[key]
+			# pprint(pluginopts)
+			# pprint(ret)
+		return ret
+
 	def runPlugins(self, services=None):
+		'''
+		'''
 		self._initSubProcess()
 
 		if services == None:
@@ -353,24 +411,36 @@ class PluginLoader(object):
 		# self.plugindict = {path1:['whatweb.py'],path2:['iisshort.py']}
 
 		for path in self.plugindict:
-			if path[-12:]=='Info_Collect':
+			if path.endswith('Info_Collect'):
 				auxpath = path
 				break
 
+		# pprint(self.pluginargs)
+		# pprint(self.plugindict)
 		self._saveRunningInfo(os.linesep+'Step 1. Running Auxiliary Plugins'+os.linesep*2)
 		# step1: run auxiliary plugins
 		if self.services.has_key('alreadyrun') and self.services['alreadyrun'] == True:
 			pass
 		else:
 			for eachfile in self.plugindict[auxpath]:
-				self.runEachPlugin(auxpath+'/'+eachfile)
+				plugintype = 'Info_Collect'
+				pluginfile = eachfile.replace('.py','')
+				if type(self.pluginargs[plugintype]) == dict and self.pluginargs[plugintype].has_key(pluginfile):
+					opts = self.pluginargs[plugintype][pluginfile]
+					opts = self._formatOpts(opts)
+					self.runEachPlugin(auxpath+'/'+eachfile,pluginopts=opts)
 
 		self._saveRunningInfo(os.linesep+'Step 2. Running Other Plugins'+os.linesep*2)
 		# step2: run other plugins
 		for path in self.plugindict:
 			if path != auxpath:
 				for eachfile in self.plugindict[path]:
-					self.runEachPlugin(path+'/'+eachfile)
+					plugintype = path.split('/')[-1]
+					pluginfile = eachfile.replace('.py','')
+					if type(self.pluginargs[plugintype]) == dict and self.pluginargs[plugintype].has_key(pluginfile):
+						opts = self.pluginargs[plugintype][pluginfile]
+						opts = self._formatOpts(opts)
+						self.runEachPlugin(path+'/'+eachfile,pluginopts=opts)
 
 		self._saveRunningInfo(isret=True)
 
