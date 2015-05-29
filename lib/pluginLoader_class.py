@@ -328,7 +328,7 @@ class PluginLoader(object):
 		except Exception,e:
 			globalVar.mainlogger.error('Run Plugin Exception:\t:'+str(e))
 
-	def runAudit(self,pluginfilepath,services=None):
+	def runAudit(self,pluginfilepath,pluginopts=None,services=None):
 		self._initSubProcess(services)
 		try:
 			globalVar.mainlogger.info('[*][*][-] running plugin:'+pluginfilepath)
@@ -363,7 +363,12 @@ class PluginLoader(object):
 
 			if locals().has_key('Audit'):
 				try:
-					Audit(services)
+					# Audit(services)
+					Audit.func_globals['opts'] = pluginopts
+					timeout = None
+					if pluginopts.has_key('timeout'):
+						timeout = pluginopts['timeout']
+					self._safeRunAudit(Audit,services,timeout) 
 				except Exception,e:
 					globalVar.mainlogger.error('Audit Function Exception:\t'+str(e))
 

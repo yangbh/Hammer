@@ -19,18 +19,24 @@ class m:
 		print self.pluginOpts
 		self.pluginInfo = self.plugin.getPluginInfo(self.pluginPath)
 		
-		for t in self.pluginOpts:
-			o=t[0]
-			v=t[1]
-			# print o,v
-			if type(v)!=int:
-				# print type(v)
-				if(v[0]=='[' and v[-1] == ']') or (v[0]=='{' and v[-1] == '}'):
-					v = eval(v)
-					# print v
-			self.services[o] = v
-			# print self.services
-		print 'done'
+		# for t in self.pluginOpts:
+		# 	o=t[0]
+		# 	v=t[1]
+		# 	# print o,v
+		# 	if type(v)!=int:
+		# 		# print type(v)
+		# 		if(v[0]=='[' and v[-1] == ']') or (v[0]=='{' and v[-1] == '}'):
+		# 			v = eval(v)
+		# 			# print v
+		# 	self.services[o] = v
+		# 	# print self.services
+
+		self.services.update(self.pluginOpts)
+		# for key in self.pluginOpts:
+		# 	if key in ('url','ip','host','timeout'):
+		# 		self.services[key] = self.pluginOpts[key]
+
+		# print 'done'
 
 	def info(self):
 		'''display plugin infos'''
@@ -51,21 +57,28 @@ class m:
 		color.cprint("===========",GREY)
 		color.cprint("%-15s %-20s %-40s"%("PARAMETER","VALUE","DESCRIPTION"),YELLOW)
 		color.cprint("%-15s %-20s %-40s"%("-"*15,"-"*20,"-"*40),GREY)
-		for n in self.pluginOpts:
-			p=n[0]
-			v=n[1]
-			d=n[2]
+		# for n in self.pluginOpts:
+		# 	p=n[0]
+		# 	v=n[1]
+		# 	d=n[2]
+		# 	color.cprint("%-15s"%p,CYAN,0)
+		# 	color.cprint("%-20s"%self.services[p],PURPLE,0)
+		# 	color.cprint("%-40s"%d,GREEN)
+
+		for key in self.pluginOpts.keys():
+			p=key
 			color.cprint("%-15s"%p,CYAN,0)
-			color.cprint("%-20s"%self.services[p],PURPLE,0)
-			color.cprint("%-40s"%d,GREEN)
+			color.cprint("%-20s"%self.pluginOpts[p],PURPLE)
 
 	def setp(self,p,v):
 		'''set plugin par value'''
 		# p=p.upper()
-		if self.services.has_key(p):
+		if self.pluginOpts.has_key(p):
 			color.cprint("[*] SET %s=>%s"%(p,v),YELLOW)
-			self.services[p]=eval(v) if (v[0]=='[' and v[-1] == ']') or (v[0]=='{' and v[-1] == '}') else v
-			print self.services
+			value = eval(v) if (v[0]=='[' and v[-1] == ']') or (v[0]=='{' and v[-1] == '}') else v
+			self.pluginOpts[p] = value
+			self.services[p] = value
+			print self.pluginOpts
 		else:
 			color.cprint("[*] NO PARA %s" % p,YELLOW)
 
@@ -73,7 +86,7 @@ class m:
 		'''start run !!'''
 		try:
 			color.cprint("[*] Start run..",YELLOW)
-			self.plugin.runAudit(self.pluginPath,self.services)
+			self.plugin.runAudit(self.pluginPath, self.pluginOpts, self.services)
 		except Exception,e:
 			color.cprint("[!] Err:%s"%e,RED)
 
@@ -117,6 +130,8 @@ class m:
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
+import sys
+sys.path.append(BASEDIR+'/plugin')
 if __name__ == '__main__':
 	pluginpath = 'System/iismethod'
 	if len(sys.argv) ==  2:
