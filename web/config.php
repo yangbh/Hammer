@@ -7,7 +7,7 @@
 // $DB_SALT = 'hammer';
 
 $DB_HOST = 'localhost';
-$DB_PORT = '3389';
+$DB_PORT = '3306';
 $DB_NAME = 'Hammer';
 $DB_USER = 'ham_usr';
 $DB_PWD = 'ham_pwd';

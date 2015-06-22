@@ -427,20 +427,21 @@ class PluginLoader(object):
 		if self.services.has_key('alreadyrun') and self.services['alreadyrun'] == True:
 			pass
 		else:
-			for eachfile in self.plugindict[auxpath]:
-				plugintype = 'Info_Collect'
-				pluginfile = eachfile.replace('.py','')
-				if type(self.pluginargs[plugintype]) == dict and self.pluginargs[plugintype].has_key(pluginfile):
-					opts = self.pluginargs[plugintype][pluginfile]
-					opts = self._formatOpts(opts)
-					self.runEachPlugin(auxpath+'/'+eachfile,pluginopts=opts)
+			plugintype = 'Info_Collect'
+			if self.pluginargs.has_key(plugintype):
+				for eachfile in self.plugindict[auxpath]:
+					pluginfile = eachfile.replace('.py','')
+					if type(self.pluginargs[plugintype]) == dict and self.pluginargs[plugintype].has_key(pluginfile):
+						opts = self.pluginargs[plugintype][pluginfile]
+						opts = self._formatOpts(opts)
+						self.runEachPlugin(auxpath+'/'+eachfile,pluginopts=opts)
 
 		self._saveRunningInfo(os.linesep+'Step 2. Running Other Plugins'+os.linesep*2)
 		# step2: run other plugins
 		for path in self.plugindict:
-			if path != auxpath:
+			plugintype = path.split('/')[-1]
+			if path != auxpath and self.pluginargs.has_key(plugintype):
 				for eachfile in self.plugindict[path]:
-					plugintype = path.split('/')[-1]
 					pluginfile = eachfile.replace('.py','')
 					if type(self.pluginargs[plugintype]) == dict and self.pluginargs[plugintype].has_key(pluginfile):
 						opts = self.pluginargs[plugintype][pluginfile]

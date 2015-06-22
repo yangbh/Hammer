@@ -39,9 +39,11 @@ else{
 $result = mysql_query($query);
 if ($row = mysql_fetch_array($result)) {
 	// echo $row;
+	echo 'true';
 }
-echo 'true';
-
+else{
+	echo 'false';
+}
 
 // 第二步：更新config表
 // 

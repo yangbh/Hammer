@@ -103,7 +103,7 @@ def Audit(services):
 		time.clock()
 		for eachname in pwddicts.keys():
 			for eachpwd in pwddicts[eachname]:
-				# print 'starting\t',eachname+':'+eachpwd
+				print 'starting\t',eachname+':'+eachpwd
 				future = executor.submit(tomcatcrack,url,eachname,eachpwd,)
 				fs[future] = eachname+':'+eachpwd
 				# print eachname+':'+eachpwd +' '+str(f.result())

@@ -119,7 +119,7 @@ if (!already_login()) {
 				});
 			}
 			$.ajax({
-				url:'http://www.hammer.org/configs_search.php',
+				url:'configs_search.php',
 				data: {name: location.hash.substr(1)},
 				type: "GET",
 				dataType: 'json',

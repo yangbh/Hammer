@@ -67,7 +67,7 @@ if (!already_login()) {
 				"order":    [6, "desc" ],
 				"columnDefs": [
 					{
-						"targets": [0],
+						"targets": [0,3],
 						"visible": false,
 						"searchable": false
 					},

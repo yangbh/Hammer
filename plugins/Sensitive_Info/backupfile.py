@@ -33,17 +33,27 @@ ret = ''
 # ----------------------------------------------------------------------------------------------------
 http404page = ''
 
-def get404Page(url='404.html'):
+def get404Page(url):
 	try:
 		# print url
 		logger('url='+url)
-		rq = requests.get(url,timeout=30)
+		rq = requests.get(url,timeout=10)
 		http404page = rq.text
 		return http404page
 	except Exception,e:
 		# print 'Exception',e
 		logger('Exception:\t'+str(e))
 		return None
+def getNoExists(url):
+	try:
+		logger('url='+url)
+		rq = requests.get(url,timeout=10)
+		if rq.status_code == 200:
+			return False
+	except Exception,e:
+		logger('Exception:\t'+str(e))
+		return None	
+	return True
 
 def getCrawlerHrefs(url):
 	''' '''
@@ -172,10 +182,16 @@ def Audit(services):
 	global ret, http404page
 	retinfo = {}
 	output = 'plugin run' + os.linesep
+	# first check no exists file
+	noexistscode = getNoExists(services['url']+'/noexists_1231232.html')
+	if not noexistscode:
+		logger('no exists file return code 200, stop plugin')
+		return 
 	# first get http404 code page
 	http404page = get404Page(services['url']+'/404.html')
 	# print 'http404page=',http404page
 	# logger('http404page='+str(http404page))
+
 	urls = generateUrls(services['url'])
 	# pprint(urls)
 

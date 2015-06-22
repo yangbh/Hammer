@@ -198,7 +198,7 @@ if (!already_login()) {
 						var name = $(this).parent().children("label").text();
 						// alert(name);
 						$.ajax({
-							url:'http://www.hammer.org/configs_search.php',
+							url:'configs_search.php',
 							data: {name: name},
 							type: "GET",
 							dataType: 'json',
