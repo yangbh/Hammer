@@ -89,6 +89,7 @@ Install
 	2) 若未设置token，则以后的扫描需要带上server和token，具体扫描命令参考web/documents.php,常用的命令：
 	python hammer.py -l
 	python hammer.py -T yourtargethere
+7. 推荐使用web进行任务分发，在configs.php中设置插件参数
 ```
  Require
 ----------------------------------- 
