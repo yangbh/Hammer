@@ -58,18 +58,18 @@ Install
 	sudo apt-get install python-pip python-dev
 	sudo pip install -r requirement.txt
 2. 下载项目
-	~$>mkdir Hammer
-	~$>cd Hammer
-	Hammer$>git init
-	Hammer$>git remote add origin https://github.com/yangbh/Hammer.git
-	Hammer$>git pull origin master
+	~$>git clone https://github.com/yangbh/Hammer.git & cd Hammer
+	Hammer$>git clone https://github.com/yangbh/Hammer.git
 	以后更新就可以直接用git pull origin master解决了
-3. 数据库导入sql文件，地址在bin/hammer.sql，并为Hammer数据库分配账户密码
+3. 数据库
+	1）mysql>create database Hammer;
+	2) 并为Hammer数据库分配账户密码
+	3）导入sql文件，地址在bin/hammer.sql
 	source bin/hammer.sql
 4. 配置web，修改web/config.php配置文件
 	$DB_HOST = 'localhost';
 	$DB_PORT = '3306';
-	$DB_NAME = 'Hammer';
+	$DB_NAME = 'Hammer';	
 	$DB_USER = 'user';
 	$DB_PWD = 'password';	
 	$DB_SALT = 'hammer';	# salt是盐，建议修改，改动后请手动修改数据库中web admin密码hash
