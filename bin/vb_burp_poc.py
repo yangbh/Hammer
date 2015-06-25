@@ -4,7 +4,7 @@
 import sys
 import time
 import requests
-import futures
+from concurrent import futures
 import threading
 
 # 把字符串转成时间戳  

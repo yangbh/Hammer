@@ -8,35 +8,43 @@ Func: Gather company information from wooyun.org, including company name and hos
 import urllib2
 import re
 import socket
+import requests
+import time
 
 import sys
 sys.path.insert(0, '../lib')
 
 try:
-		import mysql_class
+	import mysql_class
 except ImportError:
-		print '[!] mysql_class not found.'
-		#print sys.path
-		sys.exit(0)
+	print '[!] mysql_class not found.'
+	#print sys.path
+	sys.exit(0)
 
 # ----------------------------------------------------------------------------------------------------
 # 
 # ----------------------------------------------------------------------------------------------------
 def main():
 	''' '''
-	sql = mysql_class.MySQLHelper('192.168.1.2','mac_usr','mac_pwd')
-	sql.selectDb('hammer')
+	# sql = mysql_class.MySQLHelper('192.168.1.2','mac_usr','mac_pwd')
+	# sql.selectDb('hammer')
 
 	comps=[]
-	for x in xrange(1,50):
+	headers = {'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.81 Safari/537.36'}
+	for x in xrange(1,36):
 		url = 'http://wooyun.org/corps/page/'+str(x)
-	
+		
 		try:  
-			html = urllib2.urlopen(url).read() 
+			rq = requests.get(url,headers=headers)
+			time.sleep(2)
+			# html = urllib2.urlopen(url).read() 
+			html = rq.text
 			comps = re.findall('">([0-9]{4}-[0-9]{2}-[0-9]{2})</td>\r\n\t\t\t\t\t<td width="\w+"><a[^>]+>([^<]+)</a></td>\r\n\t\t\t\t\t<td width="\w+"><a[^>]+>([^<]+)</a>',html)
 			for eachcomp in comps:
 				#print eachcomp[0],eachcomp[1].decode('utf-8'),eachcomp[2]
 				print eachcomp[0],eachcomp[1],eachcomp[2]
+				continue
+				
 				sqlcmd="INSERT INTO company(Name,Remark) VALUES('"+eachcomp[1]+"','"+eachcomp[0]+"')"
 				print sqlcmd
 				sql.cur.execute(sqlcmd)
@@ -71,8 +79,8 @@ def main():
 		except socket.gaierror, e:
 			print e
 	
-	sql.commit()
-	sql.close()
+	# sql.commit()
+	# sql.close()
 
 # ----------------------------------------------------------------------------------------------------
 # 

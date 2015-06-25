@@ -1,7 +1,7 @@
 #!/usr/bin/python2.7
 #coding:utf-8
 
-import futures
+from concurrent import futures
 from pprint import pprint
 from DSSS.dsss import init_options,scan_page
 

@@ -68,7 +68,7 @@ Install
 	source bin/hammer.sql
 4. 配置web，修改web/config.php配置文件
 	$DB_HOST = 'localhost';
-	$DB_PORT = '3389';
+	$DB_PORT = '3306';
 	$DB_NAME = 'Hammer';
 	$DB_USER = 'user';
 	$DB_PWD = 'password';	

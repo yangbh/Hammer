@@ -6,7 +6,7 @@
 import time
 import random
 import requests
-import futures
+from concurrent import futures
 import json
 
 import globalVar

@@ -6,7 +6,7 @@ import os
 import urllib2
 import socket
 import threading
-import futures
+from concurrent import futures
 import requests
 
 from urlparse import urlparse

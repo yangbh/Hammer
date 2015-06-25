@@ -4,7 +4,7 @@ import os
 import socket
 import paramiko
 import threading
-import futures
+from concurrent import futures
 import sys
 import time
 from dummy import *

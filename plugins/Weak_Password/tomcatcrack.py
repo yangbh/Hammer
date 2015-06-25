@@ -4,7 +4,7 @@
 import time
 import re
 import requests
-import futures
+from concurrent import futures
 from dummy import *
 
 info = {
