@@ -28,6 +28,9 @@ from spider.domain import GetFirstLevelDomain
 from webInterface_class import WebInterface
 from dummy import *
 
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 '''
 这是一个scan基类
 你可以重写BasicScanner的setTasks函数
